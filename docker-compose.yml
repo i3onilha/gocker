@@ -1,0 +1,12 @@
+services:
+  app-dev:
+    build:
+      dockerfile: Dockerfile
+      context: .
+      # Only will build development stage from our dockerfile
+      target: development
+    volumes:
+      - .:/opt/dborasource
+    ports:
+      - 8888:8888
+    command: tail -f /dev/null
