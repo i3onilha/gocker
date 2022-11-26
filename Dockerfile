@@ -1,7 +1,7 @@
 FROM golang:1.19.3-buster AS development
 
 ENV NODE_VERSION v16.17.1
-ENV NVM_DIR /home/devuser/.nvm
+ENV NVM_DIR /home/go/.nvm
 ENV NPM_FETCH_RETRIES 2
 ENV NPM_FETCH_RETRY_FACTOR 10
 ENV NPM_FETCH_RETRY_MINTIMEOUT 10000
@@ -26,9 +26,9 @@ RUN apt install \
               build-essential \
               libssl-dev -y
 
-RUN useradd -ms /bin/bash devuser
+RUN useradd -ms /bin/bash go
 
-USER devuser
+USER go
 
 # Install Node.js NPM and Yarn through NVM
 RUN mkdir -p $NVM_DIR && \
@@ -41,7 +41,7 @@ RUN mkdir -p $NVM_DIR && \
               && npm config set fetch-retry-factor ${NPM_FETCH_RETRY_FACTOR} \
               && npm config set fetch-retry-mintimeout ${NPM_FETCH_RETRY_MINTIMEOUT} \
               && npm config set fetch-retry-maxtimeout ${NPM_FETCH_RETRY_MAXTIMEOUT} \
-              && ln -s `npm bin --global` /home/devuser/.node-bin \
+              && ln -s `npm bin --global` /home/go/.node-bin \
               && npm install -g yarn \
               && npm install -g npm
 
@@ -64,15 +64,13 @@ RUN git clone --bare -b last-stable https://github.com/jean-bonilha/.dotfiles.gi
               git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME reset HEAD . && \
               git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME checkout -- .
 
-WORKDIR /opt/dborasource
+WORKDIR /home/go/sourcecode
 
 COPY . .
 
-RUN go mod download
-
 FROM golang:1.19.3-bullseye AS builder
 
-WORKDIR /opt/dborasource
+WORKDIR /home/go/sourcecode
 
 COPY go.mod .
 COPY go.sum .
@@ -87,7 +85,7 @@ RUN go build .
 
 FROM scratch
 
-COPY --from=builder /opt/dborasource/main /app/main
+COPY --from=builder /home/go/sourcecode/main /app/main
 
 EXPOSE 8080
 

@@ -6,7 +6,27 @@ services:
       # Only will build development stage from our dockerfile
       target: development
     volumes:
-      - .:/opt/dborasource
+      - .:/home/go/sourcecode
     ports:
       - 8888:8888
+    depends_on:
+      - mysql-dev
+    networks:
+      - backend
     command: tail -f /dev/null
+  mysql-dev:
+    image: mysql:5.7
+    container_name: mysql-dev
+    restart: always
+    platform: linux/amd64
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: devdb
+      MYSQL_PASSWORD: root
+    ports:
+      - 3306:3306
+    networks:
+      - backend
+networks:
+  backend:
+    driver: bridge
