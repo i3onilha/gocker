@@ -21,7 +21,7 @@ services:
     platform: linux/amd64
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: devdb
+      MYSQL_DATABASE: dbdev
       MYSQL_PASSWORD: root
     ports:
       - 3306:3306
