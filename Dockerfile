@@ -49,9 +49,9 @@ RUN mkdir -p $NVM_DIR && \
 RUN git clone --depth 1 https://github.com/junegunn/fzf.git $HOME/.fzf && $HOME/.fzf/install
 
 # Customizations
-RUN git clone --bare -b godevenv https://github.com/jean-bonilha/.dotfiles.git $HOME/.dotfiles && \
-              git clone -b heavenly2 https://github.com/jean-bonilha/.vim.git $HOME/.vim && \
-              git clone https://github.com/jean-bonilha/.tmux.git $HOME/.tmux && \
+RUN git clone --bare -b godevenv https://github.com/i3onilha/.dotfiles.git $HOME/.dotfiles && \
+              git clone -b heavenly2 https://github.com/i3onilha/.vim.git $HOME/.vim && \
+              git clone https://github.com/i3onilha/.tmux.git $HOME/.tmux && \
               ln -sf .vim/.vimrc $HOME && \
               ln -sf .tmux/.tmux.conf $HOME && \
               cp $HOME/.tmux/.tmux.conf.local $HOME && \
