@@ -1,6 +1,6 @@
-code: upd vim
+code: upddev vim
 
-dev: upd bash
+dev: upddev bashdev
 
 vim:
 	@docker compose exec app-dev vim
@@ -8,8 +8,8 @@ vim:
 up:
 	@docker compose up
 
-upd:
-	@docker compose up -d
+upddev:
+	@docker compose up -d app-dev
 
 ps:
 	@docker compose ps
@@ -17,11 +17,11 @@ ps:
 logs:
 	@docker compose logs --follow
 
-build:
-	@docker compose up -d --build
+build-dev:
+	@docker compose up -d --build app-dev
 
 down:
 	@docker compose down
 
-bash:
+bashdev:
 	@docker compose exec app-dev bash

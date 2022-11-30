@@ -16,6 +16,7 @@ RUN apt install curl
 RUN apt install \
               git \
               vim \
+              nano \
               tmux \
               tmuxinator \
               xclip \
