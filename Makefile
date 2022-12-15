@@ -20,8 +20,14 @@ logs:
 build-dev:
 	@docker-compose down && docker-compose build --no-cache app-dev && docker-compose up -d app-dev && docker-compose exec app-dev bash
 
+build-prod:
+	@docker-compose down && docker-compose build --no-cache app-prod && docker-compose up -d app-prod && docker-compose exec app-prod bash
+
 down:
 	@docker compose down
 
 bashdev:
 	@docker compose exec app-dev bash
+
+test:
+	go test -v ./...
