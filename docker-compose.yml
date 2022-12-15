@@ -7,13 +7,21 @@ services:
       target: development
     volumes:
       - .:/home/go/sourcecode
-    ports:
-      - 8888:8888
     depends_on:
       - mysql-dev
     networks:
       - backend
     command: tail -f /dev/null
+  app-prod:
+    build:
+      dockerfile: Dockerfile
+      context: .
+      # Only will build production stage from our dockerfile
+      target: production
+    volumes:
+      - .:/home/go/sourcecode
+    networks:
+      - backend
   mysql-dev:
     image: mysql:5.7
     container_name: mysql-dev

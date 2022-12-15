@@ -9,13 +9,19 @@ ENV NPM_FETCH_RETRY_MAXTIMEOUT 60000
 
 RUN go install golang.org/x/tools/gopls@latest
 
+RUN apt-key adv --keyserver pgp.mit.edu --recv-keys 3A79BD29
+
+RUN echo "deb http://repo.mysql.com/apt/ubuntu/ bionic mysql-8.0" | tee /etc/apt/sources.list.d/mysql.list > /dev/null
+
 RUN apt update && apt upgrade -y
 
 RUN apt install curl
 
 RUN apt install \
+              mysql-client \
               git \
               vim \
+              tree \
               nano \
               tmux \
               tmuxinator \
@@ -80,9 +86,7 @@ RUN go mod download
 
 COPY . .
 
-RUN CGO_ENABLED=0 go test -v
-
-RUN go build .
+RUN go build -o main .
 
 FROM scratch
 
