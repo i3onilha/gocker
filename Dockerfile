@@ -18,6 +18,7 @@ RUN apt update && apt upgrade -y
 RUN apt install curl
 
 RUN apt install \
+              sudo \
               mysql-client \
               git \
               vim \
@@ -33,7 +34,7 @@ RUN apt install \
               build-essential \
               libssl-dev -y
 
-RUN useradd -ms /bin/bash go
+RUN useradd -ms /bin/bash go && echo "go:pass" | chpasswd && adduser go sudo
 
 USER go
 
