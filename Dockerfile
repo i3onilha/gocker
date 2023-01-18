@@ -7,9 +7,11 @@ ENV NPM_FETCH_RETRY_FACTOR 10
 ENV NPM_FETCH_RETRY_MINTIMEOUT 10000
 ENV NPM_FETCH_RETRY_MAXTIMEOUT 60000
 
+RUN apt-key adv --keyserver pgp.mit.edu --recv-keys 3A79BD29
+
 RUN go install golang.org/x/tools/gopls@latest
 
-RUN apt-key adv --keyserver pgp.mit.edu --recv-keys 3A79BD29
+RUN go install github.com/go-delve/delve/cmd/dlv@latest
 
 RUN echo "deb http://repo.mysql.com/apt/ubuntu/ bionic mysql-8.0" | tee /etc/apt/sources.list.d/mysql.list > /dev/null
 
