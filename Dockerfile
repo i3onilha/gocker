@@ -9,7 +9,7 @@ ENV NPM_FETCH_RETRY_MAXTIMEOUT 60000
 
 RUN apt-key adv --keyserver pgp.mit.edu --recv-keys 3A79BD29
 
-RUN go install golang.org/x/tools/gopls@latest
+RUN go install golang.org/x/tools/gopls@v0.11.0
 
 RUN go install github.com/go-delve/delve/cmd/dlv@latest
 
@@ -17,13 +17,14 @@ RUN echo "deb http://repo.mysql.com/apt/ubuntu/ bionic mysql-8.0" | tee /etc/apt
 
 RUN apt update && apt upgrade -y
 
-RUN apt install curl
-
 RUN apt install \
               sudo \
               mysql-client \
               git \
-              vim \
+              curl \
+              make \
+              ncurses-dev \
+              build-essential \
               tree \
               nano \
               tmux \
@@ -35,6 +36,13 @@ RUN apt install \
               software-properties-common \
               build-essential \
               libssl-dev -y
+
+RUN git clone --depth 1 --branch v9.0.1224 https://github.com/vim/vim.git /tmp/vim-installation && \
+                  cd /tmp/vim-installation/src/ && \
+                  ./configure && \
+                  make && \
+                  make install && \
+                  rm -rf /tmp/vim-installation
 
 RUN useradd -ms /bin/bash go && echo "go:pass" | chpasswd && adduser go sudo
 
