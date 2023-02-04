@@ -11,7 +11,9 @@ services:
       - mysql-dev
     networks:
       - backend
-    command: tail -f /dev/null
+    ports:
+      - 6060:6060 # godoc
+    command: godoc -http=:6060
   app-prod:
     build:
       dockerfile: Dockerfile
