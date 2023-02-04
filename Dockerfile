@@ -11,7 +11,8 @@ RUN apt-key adv --keyserver pgp.mit.edu --recv-keys 3A79BD29
 
 RUN go install golang.org/x/tools/gopls@v0.11.0
 
-RUN go install github.com/go-delve/delve/cmd/dlv@latest
+RUN go install github.com/go-delve/delve/cmd/dlv@v1.20.1
+RUN go install golang.org/x/tools/cmd/godoc@v0.5.0
 
 RUN echo "deb http://repo.mysql.com/apt/ubuntu/ bionic mysql-8.0" | tee /etc/apt/sources.list.d/mysql.list > /dev/null
 
