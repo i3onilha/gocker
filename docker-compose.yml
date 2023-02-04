@@ -12,7 +12,7 @@ services:
     networks:
       - backend
     ports:
-      - 6060:6060 # godoc
+      - 6060:6060
     command: godoc -http=:6060
   app-prod:
     build:
