@@ -7,6 +7,7 @@ services:
       target: development
     volumes:
       - .:/home/go/sourcecode
+      - ~/.ssh:/home/go/.ssh:ro
     depends_on:
       - mysql-dev
     networks:
