@@ -1,7 +1,15 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+	"net/http"
+)
 
 func main() {
-	fmt.Println("hello world!!!")
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("Hello World!!!"))
+	})
+	fmt.Println("Running webservice...")
+	log.Fatal(http.ListenAndServe(":6565", nil))
 }

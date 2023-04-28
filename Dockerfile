@@ -91,19 +91,16 @@ FROM golang:1.19.3-bullseye AS builder
 
 WORKDIR /home/go/sourcecode
 
-COPY go.mod .
-COPY go.sum .
+COPY go.* .
 
 RUN go mod download
 
 COPY . .
 
-RUN go build -o main .
+RUN CGO_ENABLED=0 go build -o main .
 
-FROM scratch
+FROM scratch AS production
 
 COPY --from=builder /home/go/sourcecode/main /app/main
-
-EXPOSE 8080
 
 CMD ["/app/main"]

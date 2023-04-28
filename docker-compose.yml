@@ -13,8 +13,9 @@ services:
     networks:
       - backend
     ports:
-      - 6060:6060
-    command: godoc -http=:6060
+      - 6464:6464
+      - 6565:6565
+    command: godoc -http=:6464
   app-prod:
     build:
       dockerfile: Dockerfile
@@ -25,6 +26,8 @@ services:
       - .:/home/go/sourcecode
     networks:
       - backend
+    ports:
+      - 6565:6565
   mysql-dev:
     image: mysql:5.7
     container_name: mysql-dev
