@@ -1,5 +1,3 @@
-code: upddev vim
-
 dev: upddev bashdev
 
 vim:
