@@ -29,5 +29,11 @@ down:
 bashdev:
 	@docker compose exec app-dev bash
 
-test:
-	go test -v ./...
+t:
+	@clear;go test ./...
+
+tv:
+	@clear;go test -v ./...
+
+cover:
+	@go test -coverprofile=test/coverage.out ./... && go tool cover -html=test/coverage.out -o test/coverage.html && go run test/cover.go
