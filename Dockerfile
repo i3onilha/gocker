@@ -22,6 +22,7 @@ RUN apt update && apt upgrade -y
 
 RUN apt install \
               sudo \
+              bash-completion \
               mysql-client \
               git \
               curl \
