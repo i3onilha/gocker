@@ -40,19 +40,20 @@ RUN apt install -y \
               build-essential \
               libssl-dev
 
+# Install VIM
 RUN git clone --depth 1 --branch v9.0.1224 https://github.com/vim/vim.git /tmp/vim-installation && \
                   cd /tmp/vim-installation/src/ && \
                   ./configure && \
                   make && \
                   make install && \
                   rm -rf /tmp/vim-installation
-
+# Set sudo password
 RUN useradd -ms /bin/bash go && echo "go:secret" | chpasswd && adduser go sudo
 
 USER go
 
 # Install Node.js NPM and Yarn through NVM
-RUN mkdir -p $NVM_DIR
+RUN mkdir -p $NVM_DIR \
               && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash \
               && . $NVM_DIR/nvm.sh \
               && nvm install ${NODE_VERSION} \
