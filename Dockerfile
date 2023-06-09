@@ -48,7 +48,7 @@ RUN git clone --depth 1 --branch v9.0.1224 https://github.com/vim/vim.git /tmp/v
                   make install && \
                   rm -rf /tmp/vim-installation
 
-RUN useradd -ms /bin/bash go && echo "go:pass" | chpasswd && adduser go sudo
+RUN useradd -ms /bin/bash go && echo "go:secret" | chpasswd && adduser go sudo
 
 USER go
 
