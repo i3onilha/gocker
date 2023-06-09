@@ -1,8 +1,5 @@
 dev: upddev bashdev
 
-vim:
-	@docker compose exec app-dev vim
-
 up:
 	@docker compose up
 
