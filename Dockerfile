@@ -10,9 +10,8 @@ ENV NPM_FETCH_RETRY_MAXTIMEOUT 60000
 RUN apt-key adv --keyserver pgp.mit.edu --recv-keys 3A79BD29
 
 RUN go install golang.org/x/tools/gopls@v0.11.0
-
-RUN go install github.com/go-delve/delve/cmd/dlv@v1.20.1
 RUN go install golang.org/x/tools/cmd/godoc@v0.5.0
+RUN go install github.com/go-delve/delve/cmd/dlv@v1.20.1
 
 RUN echo "deb http://repo.mysql.com/apt/ubuntu/ bionic mysql-8.0" | tee /etc/apt/sources.list.d/mysql.list > /dev/null
 RUN echo "deb http://security.debian.org/ buster/updates main contrib non-free" >> /etc/apt/sources.list
@@ -20,7 +19,7 @@ RUN echo "deb http://deb.debian.org/debian buster-proposed-updates main contrib 
 
 RUN apt update && apt upgrade -y
 
-RUN apt install \
+RUN apt install -y \
               sudo \
               bash-completion \
               mysql-client \
@@ -39,7 +38,7 @@ RUN apt install \
               gnupg-agent \
               software-properties-common \
               build-essential \
-              libssl-dev -y
+              libssl-dev
 
 RUN git clone --depth 1 --branch v9.0.1224 https://github.com/vim/vim.git /tmp/vim-installation && \
                   cd /tmp/vim-installation/src/ && \
@@ -53,8 +52,8 @@ RUN useradd -ms /bin/bash go && echo "go:secret" | chpasswd && adduser go sudo
 USER go
 
 # Install Node.js NPM and Yarn through NVM
-RUN mkdir -p $NVM_DIR && \
-              curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash \
+RUN mkdir -p $NVM_DIR
+              && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash \
               && . $NVM_DIR/nvm.sh \
               && nvm install ${NODE_VERSION} \
               && nvm use ${NODE_VERSION} \
