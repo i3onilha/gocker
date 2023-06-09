@@ -28,7 +28,7 @@ services:
     networks:
       - backend
     ports:
-      - 6565:6565
+      - 6000:6000
   mysql-dev:
     image: mysql:5.7
     container_name: mysql-dev
