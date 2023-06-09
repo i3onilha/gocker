@@ -86,6 +86,9 @@ RUN git clone --bare -b godevenv https://github.com/i3onilha/.dotfiles.git $HOME
               git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME reset HEAD . && \
               git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME checkout -- .
 
+RUN export PATH="$HOME/.nvm/versions/node/$NODE_VERSION/bin:$PATH" \
+              && yarn install --cwd ~/.vim/bundle/coc.nvim
+
 WORKDIR /home/go/sourcecode
 
 COPY . .
