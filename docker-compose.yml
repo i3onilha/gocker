@@ -15,6 +15,7 @@ services:
     ports:
       - 6464:6464
       - 6565:6565
+      - 6767:6767
     command: godoc -http=:6464
   app-prod:
     build:
