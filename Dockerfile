@@ -1,4 +1,4 @@
-FROM golang:1.19.3-buster AS development
+FROM golang:1.20.5-buster AS development
 
 ENV NODE_VERSION v16.17.1
 ENV NVM_DIR /home/go/.nvm
@@ -93,7 +93,7 @@ WORKDIR /home/go/sourcecode
 
 COPY . .
 
-FROM golang:1.19.3-bullseye AS builder
+FROM golang:1.20.5-bullseye AS builder
 
 WORKDIR /home/go/sourcecode
 
