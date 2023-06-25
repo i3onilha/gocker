@@ -1,3 +1,3 @@
-module github.com/jean-bonilha/dborasource
+module github.com/i3onilha/dborasource
 
-go 1.19
+go 1.20
