@@ -23,8 +23,6 @@ services:
       context: .
       # Only will build production stage from our dockerfile
       target: production
-    volumes:
-      - .:/home/go/sourcecode
     networks:
       - backend
     ports:
