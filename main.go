@@ -1,15 +1,28 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
-	"log"
-	"net/http"
+	_ "github.com/godror/godror"
 )
 
 func main() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello World!!!"))
-	})
-	fmt.Println("Running webservice...")
-	log.Fatal(http.ListenAndServe(":6565", nil))
+	db, err := sql.Open("godror", "system/oracle@oracle-db/xe")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer db.Close()
+	rows, err := db.Query("select sysdate from dual")
+	if err != nil {
+		fmt.Println("Error running query")
+		fmt.Println(err)
+		return
+	}
+	defer rows.Close()
+	var thedate string
+	for rows.Next() {
+		rows.Scan(&thedate)
+	}
+	fmt.Printf("The date is: %s\n", thedate)
 }

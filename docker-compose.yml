@@ -9,7 +9,7 @@ services:
       - .:/home/go/sourcecode
       - ~/.ssh:/home/go/.ssh:ro
     depends_on:
-      - mysql-dev
+      - oracle-db
     networks:
       - backend
     ports:
@@ -23,21 +23,15 @@ services:
       context: .
       # Only will build production stage from our dockerfile
       target: production
-    networks:
-      - backend
     ports:
       - 6000:6000
-  mysql-dev:
-    image: mysql:5.7
-    container_name: mysql-dev
-    restart: always
-    platform: linux/amd64
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: dbdev
-      MYSQL_PASSWORD: root
+    networks:
+      - backend
+  oracle-db:
+    image: oracleinanutshell/oracle-xe-11g:1.0.0
     ports:
-      - 3306:3306
+      - 1521:1521
+      - 5500:5500
     networks:
       - backend
 networks:
