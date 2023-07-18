@@ -24,6 +24,9 @@ down:
 bashdev:
 	@docker compose exec app-dev bash
 
+
+bashdb:
+	@docker compose exec oracle-db bash
 t:
 	@clear;go test ./...
 
