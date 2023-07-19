@@ -141,9 +141,26 @@ RUN go build -o main .
 
 FROM scratch AS production
 
-COPY --from=builder /home/go/sourcecode/main /app/main
+LABEL "provider"="Oracle"                                               \
+    "issues"="https://github.com/oracle/docker-images/issues"
 
 RUN rm -rf /etc/localtime && \
-    ln -s /usr/share/zoneinfo/America/Manaus /etc/localtime
+        ln -s /usr/share/zoneinfo/America/Manaus /etc/localtime
+
+ARG release=19
+ARG update=8
+
+ENV PATH=$PATH:/usr/lib/oracle/${release}.${update}/client64/bin
+
+RUN  yum -y install oracle-release-el7 openssh git cronie && \
+        yum -y install oracle-instantclient${release}.${update}-basic oracle-instantclient${release}.${update}-devel oracle-instantclient${release}.${update}-sqlplus && \
+        rm -rf /var/cache/yum
+
+WORKDIR /app
+
+COPY .env-prod .
+COPY --from=builder /home/go/sourcecode/main /app/main
+
+RUN cp .env-prod .env
 
 CMD ["/app/main"]
