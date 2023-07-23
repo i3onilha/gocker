@@ -28,6 +28,7 @@ RUN go install golang.org/x/tools/gopls@v0.11.0
 RUN go install golang.org/x/tools/cmd/godoc@v0.5.0
 RUN go install github.com/go-delve/delve/cmd/dlv@v1.20.1
 RUN go install github.com/kyleconroy/sqlc/cmd/sqlc@v1.18.0
+RUN go install github.com/wailsapp/wails/v2/cmd/wails@v2.5.1
 
 RUN sed -i 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/' /etc/apt/sources.list && \
     sed -i 's/security.debian.org/mirrors.tuna.tsinghua.edu.cn/' /etc/apt/sources.list && \
@@ -61,7 +62,10 @@ RUN set -xe; \
     ca-certificates \
     gnupg-agent \
     software-properties-common \
-    libssl-dev
+    libssl-dev \
+    libgtk-3-dev \
+    libwebkit2gtk-4.0-dev \
+    nsis
 
 RUN mkdir /opt/oracle \
     && cd /opt/oracle \
