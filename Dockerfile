@@ -24,6 +24,8 @@ ENV NPM_FETCH_RETRY_FACTOR 10
 ENV NPM_FETCH_RETRY_MINTIMEOUT 10000
 ENV NPM_FETCH_RETRY_MAXTIMEOUT 60000
 
+RUN apt-key adv --keyserver pgp.mit.edu --recv-keys 3A79BD29
+
 RUN go install golang.org/x/tools/gopls@v0.11.0
 RUN go install golang.org/x/tools/cmd/godoc@v0.5.0
 RUN go install github.com/go-delve/delve/cmd/dlv@v1.20.1
@@ -133,7 +135,7 @@ COPY . .
 
 FROM golang:1.20.5-bullseye AS builder
 
-WORKDIR /home/go/sourcecode
+WORKDIR $HOME_USER/sourcecode
 
 COPY go.* .
 
@@ -163,7 +165,7 @@ RUN  yum -y install oracle-release-el7 openssh git cronie && \
 WORKDIR /app
 
 COPY .env-prod .
-COPY --from=builder /home/go/sourcecode/main /app/main
+COPY --from=builder $HOME_USER/sourcecode/main /app/main
 
 RUN cp .env-prod .env
 
