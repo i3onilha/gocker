@@ -26,7 +26,7 @@ bashdev:
 
 
 bashdb:
-	@docker compose exec oracle-db bash
+	@docker compose exec oracle-dev bash
 t:
 	@clear;go test ./...
 
