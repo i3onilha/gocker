@@ -131,7 +131,7 @@ COPY . .
 
 FROM golang:1.20.5-bullseye AS builder
 
-WORKDIR /home/go/sourcecode
+WORKDIR $HOME_USER/sourcecode
 
 COPY go.* .
 
@@ -161,7 +161,7 @@ RUN  yum -y install oracle-release-el7 openssh git cronie && \
 WORKDIR /app
 
 COPY .env-prod .
-COPY --from=builder /home/go/sourcecode/main /app/main
+COPY --from=builder $HOME_USER/sourcecode/main /app/main
 
 RUN cp .env-prod .env
 
