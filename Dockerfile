@@ -9,6 +9,7 @@ ARG ORACLE_INSTANT_CLIENT_MINOR=3
 ARG ORACLE_INSTANT_CLIENT_MIRROR=https://github.com/the-paulus/oracle-instantclient/raw/master/
 ARG ORACLE_INSTANT_CLIENT_PATH=/opt/oracle/instantclient_
 
+ENV GOENV="development"
 ENV DEBIAN_FRONTEND noninteractive
 ENV ORACLE_INSTANT_CLIENT_VERSION="${ORACLE_INSTANT_CLIENT_MAJOR}_${ORACLE_INSTANT_CLIENT_MINOR}"
 ENV LD_LIBRARY_PATH="${ORACLE_INSTANT_CLIENT_PATH}${ORACLE_INSTANT_CLIENT_VERSION}"
@@ -156,6 +157,7 @@ RUN rm -rf /etc/localtime && \
 ARG release=19
 ARG update=8
 
+ENV GOENV="development"
 ENV PATH=$PATH:/usr/lib/oracle/${release}.${update}/client64/bin
 
 RUN  yum -y install oracle-release-el7 openssh git cronie && \
