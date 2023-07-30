@@ -12,20 +12,20 @@ var (
 )
 
 type db struct {
-	Driver   string
-	Host     string
-	Port     string
-	Database string
-	Username string
-	Password string
+	driver   string
+	host     string
+	port     string
+	database string
+	username string
+	password string
 }
 
 func (d *db) GetDriver() string {
-	return d.Driver
+	return d.driver
 }
 
 func (d *db) GetDataSourceName() string {
-	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", d.Username, d.Password, d.Host, d.Port, d.Database)
+	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", d.username, d.password, d.host, d.port, d.database)
 }
 
 type config struct {
@@ -44,12 +44,12 @@ func New() (*config, error) {
 	}
 	return &config{
 		db: &db{
-			Driver:   viper.GetString("DB_DRIVER"),
-			Host:     viper.GetString("DB_HOST"),
-			Port:     viper.GetString("DB_PORT"),
-			Database: viper.GetString("DB_DATABASE"),
-			Username: viper.GetString("DB_USERNAME"),
-			Password: viper.GetString("DB_PASSWORD"),
+			driver:   viper.GetString("DB_DRIVER"),
+			host:     viper.GetString("DB_HOST"),
+			port:     viper.GetString("DB_PORT"),
+			database: viper.GetString("DB_DATABASE"),
+			username: viper.GetString("DB_USERNAME"),
+			password: viper.GetString("DB_PASSWORD"),
 		},
 	}, nil
 }

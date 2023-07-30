@@ -11,10 +11,6 @@ func TestNew(t *testing.T) {
 	c, err := config.New()
 	assert.Nil(t, err)
 	db := c.GetDB()
-	assert.Equal(t, "mysql", db.Driver)
-	assert.Equal(t, "mysql-dev", db.Host)
-	assert.Equal(t, "3306", db.Port)
-	assert.Equal(t, "dbdev", db.Database)
-	assert.Equal(t, "default", db.Username)
-	assert.Equal(t, "secret", db.Password)
+	assert.Equal(t, "mysql", db.GetDriver())
+	assert.Equal(t, "default:secret@tcp(mysql-dev:3306)/dbdev", db.GetDataSourceName())
 }
