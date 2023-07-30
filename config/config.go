@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	folder = "."
+	envFolder = "."
 )
 
 type config struct {
@@ -26,9 +26,9 @@ type db struct {
 
 func New() *config {
 	if os.Getenv("GOENV") == "development" {
-		folder = ".."
+		envFolder = ".."
 	}
-	path := fmt.Sprintf("%s/.env", folder)
+	path := fmt.Sprintf("%s/.env", envFolder)
 	viper.SetConfigFile(path)
 	viper.ReadInConfig()
 	return &config{
