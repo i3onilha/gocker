@@ -1,4 +1,4 @@
--- name: CreateLabel :exec
+-- name: CreateLabel :execresult
 INSERT IGNORE INTO labels (uuid) VALUES (uuid());
 
 -- name: GetLabel :one
@@ -12,7 +12,7 @@ WHERE labels_deletes.uuid IS NULL
 ORDER BY labels_data.created_at DESC
 LIMIT 1;
 
--- name: UpdateLabel :exec
+-- name: UpdateLabel :execresult
 INSERT INTO labels_data (uuid, customer, family, model, part_number, station, label)
   VALUES(?, ?, ?, ?, ?, ?, ?);
 

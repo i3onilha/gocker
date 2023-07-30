@@ -7,15 +7,15 @@ package labels
 
 import (
 	"context"
+	"database/sql"
 )
 
-const createLabel = `-- name: CreateLabel :exec
+const createLabel = `-- name: CreateLabel :execresult
 INSERT IGNORE INTO labels (uuid) VALUES (uuid())
 `
 
-func (q *Queries) CreateLabel(ctx context.Context) error {
-	_, err := q.db.ExecContext(ctx, createLabel)
-	return err
+func (q *Queries) CreateLabel(ctx context.Context) (sql.Result, error) {
+	return q.db.ExecContext(ctx, createLabel)
 }
 
 const deleteLabel = `-- name: DeleteLabel :exec
@@ -55,7 +55,7 @@ func (q *Queries) GetLabel(ctx context.Context) (LabelsDatum, error) {
 	return i, err
 }
 
-const updateLabel = `-- name: UpdateLabel :exec
+const updateLabel = `-- name: UpdateLabel :execresult
 INSERT INTO labels_data (uuid, customer, family, model, part_number, station, label)
   VALUES(?, ?, ?, ?, ?, ?, ?)
 `
@@ -70,8 +70,8 @@ type UpdateLabelParams struct {
 	Label      string
 }
 
-func (q *Queries) UpdateLabel(ctx context.Context, arg UpdateLabelParams) error {
-	_, err := q.db.ExecContext(ctx, updateLabel,
+func (q *Queries) UpdateLabel(ctx context.Context, arg UpdateLabelParams) (sql.Result, error) {
+	return q.db.ExecContext(ctx, updateLabel,
 		arg.Uuid,
 		arg.Customer,
 		arg.Family,
@@ -80,5 +80,4 @@ func (q *Queries) UpdateLabel(ctx context.Context, arg UpdateLabelParams) error 
 		arg.Station,
 		arg.Label,
 	)
-	return err
 }
