@@ -44,7 +44,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: dbdev
-      MYSQL_PASSWORD: root
+      MYSQL_USER: default
+      MYSQL_PASSWORD: secret
     ports:
       - 3306:3306
     networks:
