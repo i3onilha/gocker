@@ -24,13 +24,16 @@ type db struct {
 	Password string
 }
 
-func New() *config {
+func New() (*config, error) {
 	if os.Getenv("GOENV") == "development" {
 		envFolder = ".."
 	}
 	path := fmt.Sprintf("%s/.env", envFolder)
 	viper.SetConfigFile(path)
-	viper.ReadInConfig()
+	err := viper.ReadInConfig()
+	if err != nil {
+		return nil, fmt.Errorf("check if already have the .env file: %v", err)
+	}
 	return &config{
 		db: &db{
 			Driver:   viper.GetString("DB_DRIVER"),
@@ -40,7 +43,7 @@ func New() *config {
 			Username: viper.GetString("DB_USERNAME"),
 			Password: viper.GetString("DB_PASSWORD"),
 		},
-	}
+	}, nil
 }
 
 func (c *config) GetDB() *db {

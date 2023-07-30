@@ -8,7 +8,8 @@ import (
 )
 
 func TestNew(t *testing.T) {
-	c := config.New()
+	c, err := config.New()
+	assert.Nil(t, err)
 	db := c.GetDB()
 	assert.Equal(t, "mysql", db.Driver)
 	assert.Equal(t, "mysql-dev", db.Host)
