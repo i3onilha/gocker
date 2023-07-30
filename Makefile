@@ -35,3 +35,6 @@ tv:
 
 cover:
 	@go test -coverprofile=test/coverage.out ./... && go tool cover -html=test/coverage.out -o test/coverage.html && go run test/cover.go
+
+sqlc:
+	@sqlc generate -f sqlc.mysql.yaml
