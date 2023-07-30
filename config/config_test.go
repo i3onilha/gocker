@@ -10,10 +10,10 @@ import (
 func TestNew(t *testing.T) {
 	c := config.New()
 	db := c.GetDB()
-	assert.Equal(t, "mysql", db.DBDriver)
-	assert.Equal(t, "mysql-dev", db.DBHost)
-	assert.Equal(t, "3306", db.DBPort)
-	assert.Equal(t, "dbdev", db.DBDatabase)
-	assert.Equal(t, "default", db.DBUsername)
-	assert.Equal(t, "secret", db.DBPassword)
+	assert.Equal(t, "mysql", db.Driver)
+	assert.Equal(t, "mysql-dev", db.Host)
+	assert.Equal(t, "3306", db.Port)
+	assert.Equal(t, "dbdev", db.Database)
+	assert.Equal(t, "default", db.Username)
+	assert.Equal(t, "secret", db.Password)
 }

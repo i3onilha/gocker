@@ -1,7 +1,14 @@
 package config
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/spf13/viper"
+)
+
+var (
+	folder = "."
 )
 
 type config struct {
@@ -9,25 +16,29 @@ type config struct {
 }
 
 type db struct {
-	DBDriver   string
-	DBHost     string
-	DBPort     string
-	DBDatabase string
-	DBUsername string
-	DBPassword string
+	Driver   string
+	Host     string
+	Port     string
+	Database string
+	Username string
+	Password string
 }
 
 func New() *config {
-	viper.SetConfigFile("../.env")
+	if os.Getenv("GOENV") == "development" {
+		folder = ".."
+	}
+	path := fmt.Sprintf("%s/.env", folder)
+	viper.SetConfigFile(path)
 	viper.ReadInConfig()
 	return &config{
 		db: &db{
-			DBDriver:   viper.GetString("DB_DRIVER"),
-			DBHost:     viper.GetString("DB_HOST"),
-			DBPort:     viper.GetString("DB_PORT"),
-			DBDatabase: viper.GetString("DB_DATABASE"),
-			DBUsername: viper.GetString("DB_USERNAME"),
-			DBPassword: viper.GetString("DB_PASSWORD"),
+			Driver:   viper.GetString("DB_DRIVER"),
+			Host:     viper.GetString("DB_HOST"),
+			Port:     viper.GetString("DB_PORT"),
+			Database: viper.GetString("DB_DATABASE"),
+			Username: viper.GetString("DB_USERNAME"),
+			Password: viper.GetString("DB_PASSWORD"),
 		},
 	}
 }
