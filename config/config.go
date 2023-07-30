@@ -11,10 +11,6 @@ var (
 	envFolder = "."
 )
 
-type config struct {
-	db *db
-}
-
 type db struct {
 	Driver   string
 	Host     string
@@ -22,6 +18,18 @@ type db struct {
 	Database string
 	Username string
 	Password string
+}
+
+func (d *db) GetDriver() string {
+	return d.Driver
+}
+
+func (d *db) GetDataSourceName() string {
+	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", d.Username, d.Password, d.Host, d.Port, d.Database)
+}
+
+type config struct {
+	db *db
 }
 
 func New() (*config, error) {
