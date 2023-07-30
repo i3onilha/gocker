@@ -1,32 +1,29 @@
-dev: upddev bashdev
+dev: up bash
 
 up:
-	@docker compose up
-
-upddev:
-	@docker compose up -d app-dev
+	@docker compose up -d
 
 ps:
 	@docker compose ps
 
 logs:
-	@docker compose logs --follow
+	@docker compose logs app-dev --follow
 
-build-dev:
+build:
 	@docker compose down && docker compose build --no-cache app-dev && docker compose up -d app-dev && docker compose exec app-dev bash
-
-build-prod:
-	@docker compose down && docker compose build --no-cache app-prod && docker compose up -d app-prod
 
 down:
 	@docker compose down
 
-bashdev:
+bash:
 	@docker compose exec app-dev bash
 
-
-bashdb:
+bashoracle:
 	@docker compose exec oracle-dev bash
+
+bashmysql:
+	@docker compose exec mysql-dev bash
+
 t:
 	@clear;go test ./...
 
