@@ -3,6 +3,7 @@ module github.com/i3onilha/MESEnterpriseSmart
 go 1.20
 
 require (
+	github.com/go-sql-driver/mysql v1.7.1
 	github.com/spf13/viper v1.16.0
 	github.com/stretchr/testify v1.8.3
 	github.com/wailsapp/wails/v2 v2.5.1
