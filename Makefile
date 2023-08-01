@@ -22,7 +22,7 @@ bashoracle:
 	@docker compose exec oracle-dev bash
 
 bashmysql:
-	@docker compose exec mysql-dev bash
+	@mysql -h mysql-dev -u default -p
 
 t:
 	@clear;go test ./...
@@ -35,3 +35,9 @@ cover:
 
 sqlc:
 	@sqlc generate -f sqlc.mysql.yaml
+
+dbup:
+	@mysql -h mysql-dev -u default -p < databases/sql/mysql/schema/labels.sql
+
+dbdown:
+	@mysql -h mysql-dev -u default -p < databases/sql/mysql/down.sql
