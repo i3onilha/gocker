@@ -12,5 +12,5 @@ func TestNew(t *testing.T) {
 	assert.Nil(t, err)
 	db := c.GetDB()
 	assert.Equal(t, "mysql", db.GetDriver())
-	assert.Equal(t, "default:secret@tcp(mysql-dev:3306)/dbdev", db.GetDataSourceName())
+	assert.Equal(t, "default:secret@tcp(mysql-dev:3306)/dbdev?parseTime=true", db.GetDataSourceName())
 }

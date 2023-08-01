@@ -25,7 +25,7 @@ func (d *db) GetDriver() string {
 }
 
 func (d *db) GetDataSourceName() string {
-	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", d.username, d.password, d.host, d.port, d.database)
+	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", d.username, d.password, d.host, d.port, d.database)
 }
 
 type config struct {
