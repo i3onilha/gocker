@@ -11,7 +11,7 @@ import (
 )
 
 const createLabel = `-- name: CreateLabel :execresult
-INSERT IGNORE INTO labels (uuid) VALUES (uuid())
+INSERT IGNORE INTO labels () VALUES ()
 `
 
 func (q *Queries) CreateLabel(ctx context.Context) (sql.Result, error) {
@@ -19,31 +19,30 @@ func (q *Queries) CreateLabel(ctx context.Context) (sql.Result, error) {
 }
 
 const deleteLabel = `-- name: DeleteLabel :exec
-INSERT INTO labels_deletes (uuid) VALUES (?)
+INSERT INTO labels_deletes (id) VALUES (?)
 `
 
-func (q *Queries) DeleteLabel(ctx context.Context, uuid string) error {
-	_, err := q.db.ExecContext(ctx, deleteLabel, uuid)
+func (q *Queries) DeleteLabel(ctx context.Context, id int32) error {
+	_, err := q.db.ExecContext(ctx, deleteLabel, id)
 	return err
 }
 
 const getLabel = `-- name: GetLabel :one
 SELECT
-  labels_data.uuid, labels_data.customer, labels_data.family, labels_data.model, labels_data.part_number, labels_data.station, labels_data.label, labels_data.created_at
+  labels_data.id, labels_data.customer, labels_data.family, labels_data.model, labels_data.part_number, labels_data.station, labels_data.label, labels_data.created_at
 FROM
   labels_data
-  INNER JOIN labels ON labels_data.uuid = labels.uuid
-  LEFT JOIN labels_deletes on labels.uuid = labels_deletes.uuid
-WHERE labels_deletes.uuid IS NULL
+  LEFT JOIN labels_deletes ON labels_data.id = labels_deletes.id
+WHERE labels_deletes.id IS NULL AND labels_data.id = ?
 ORDER BY labels_data.created_at DESC
 LIMIT 1
 `
 
-func (q *Queries) GetLabel(ctx context.Context) (LabelsDatum, error) {
-	row := q.db.QueryRowContext(ctx, getLabel)
+func (q *Queries) GetLabel(ctx context.Context, id int32) (LabelsDatum, error) {
+	row := q.db.QueryRowContext(ctx, getLabel, id)
 	var i LabelsDatum
 	err := row.Scan(
-		&i.Uuid,
+		&i.ID,
 		&i.Customer,
 		&i.Family,
 		&i.Model,
@@ -55,13 +54,61 @@ func (q *Queries) GetLabel(ctx context.Context) (LabelsDatum, error) {
 	return i, err
 }
 
+const getLabelList = `-- name: GetLabelList :many
+SELECT
+  labels_data.id, labels_data.customer, labels_data.family, labels_data.model, labels_data.part_number, labels_data.station, labels_data.label, labels_data.created_at
+FROM
+  labels_data
+  LEFT JOIN labels_deletes ON labels_data.id = labels_deletes.id
+WHERE labels_deletes.id IS NULL
+ORDER BY labels_data.created_at DESC
+LIMIT ? OFFSET ?
+`
+
+type GetLabelListParams struct {
+	Limit  int32
+	Offset int32
+}
+
+func (q *Queries) GetLabelList(ctx context.Context, arg GetLabelListParams) ([]LabelsDatum, error) {
+	rows, err := q.db.QueryContext(ctx, getLabelList, arg.Limit, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []LabelsDatum
+	for rows.Next() {
+		var i LabelsDatum
+		if err := rows.Scan(
+			&i.ID,
+			&i.Customer,
+			&i.Family,
+			&i.Model,
+			&i.PartNumber,
+			&i.Station,
+			&i.Label,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateLabel = `-- name: UpdateLabel :execresult
-INSERT INTO labels_data (uuid, customer, family, model, part_number, station, label)
+INSERT INTO labels_data (id, customer, family, model, part_number, station, label)
   VALUES(?, ?, ?, ?, ?, ?, ?)
 `
 
 type UpdateLabelParams struct {
-	Uuid       string
+	ID         int32
 	Customer   string
 	Family     string
 	Model      string
@@ -72,7 +119,7 @@ type UpdateLabelParams struct {
 
 func (q *Queries) UpdateLabel(ctx context.Context, arg UpdateLabelParams) (sql.Result, error) {
 	return q.db.ExecContext(ctx, updateLabel,
-		arg.Uuid,
+		arg.ID,
 		arg.Customer,
 		arg.Family,
 		arg.Model,

@@ -9,12 +9,12 @@ import (
 )
 
 type Label struct {
-	Uuid      string
+	ID        int32
 	CreatedAt sql.NullTime
 }
 
 type LabelsDatum struct {
-	Uuid       string
+	ID         int32
 	Customer   string
 	Family     string
 	Model      string
@@ -25,6 +25,6 @@ type LabelsDatum struct {
 }
 
 type LabelsDelete struct {
-	Uuid      string
+	ID        int32
 	CreatedAt sql.NullTime
 }
