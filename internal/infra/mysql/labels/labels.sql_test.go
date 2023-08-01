@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCreateLabel(t *testing.T) {
+func TestLabelCRUD(t *testing.T) {
 	ctx := context.Background()
 	c, err := config.New()
 	assert.Nil(t, err)
