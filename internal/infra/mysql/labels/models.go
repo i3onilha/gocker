@@ -5,12 +5,12 @@
 package labels
 
 import (
-	"database/sql"
+	"time"
 )
 
 type Label struct {
 	ID        int32
-	CreatedAt sql.NullTime
+	CreatedAt time.Time
 }
 
 type LabelsDatum struct {
@@ -21,10 +21,10 @@ type LabelsDatum struct {
 	PartNumber string
 	Station    string
 	Label      string
-	CreatedAt  sql.NullTime
+	CreatedAt  time.Time
 }
 
 type LabelsDelete struct {
 	ID        int32
-	CreatedAt sql.NullTime
+	CreatedAt time.Time
 }
