@@ -62,3 +62,20 @@ func TestLabelCRUD(t *testing.T) {
 	assert.NotNil(t, err)
 	assert.NotNil(t, deletedLabel)
 }
+
+func TestGetLabelList(t *testing.T) {
+	ctx := context.Background()
+	c, err := config.New()
+	assert.Nil(t, err)
+	db := c.GetDB()
+	conn, err := sql.Open(db.GetDriver(), db.GetDataSourceName())
+	assert.Nil(t, err)
+	lb := labels.New(conn)
+	paramns := labels.GetLabelListParams{
+		Limit:  10,
+		Offset: 0,
+	}
+	result, err := lb.GetLabelList(ctx, paramns)
+	assert.Nil(t, err)
+	assert.NotNil(t, result)
+}
