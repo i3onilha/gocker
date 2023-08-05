@@ -35,5 +35,5 @@ func (m *MySQL) GetDriver() string {
 }
 
 func (m *MySQL) GetDataSourceName() string {
-	return m.driver
+	return m.dataSourceName
 }
