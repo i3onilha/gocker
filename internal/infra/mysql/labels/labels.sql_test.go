@@ -37,6 +37,7 @@ func TestLabelCRUD(t *testing.T) {
 		PartNumber: "PartNumber",
 		Station:    "Station",
 		Label:      "Label",
+		Author:     "bc0g8100",
 	}
 	result, err = lb.UpdateLabel(ctx, updateParams)
 	assert.Nil(t, err)

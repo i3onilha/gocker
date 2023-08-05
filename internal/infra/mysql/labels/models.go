@@ -21,6 +21,7 @@ type LabelsDatum struct {
 	PartNumber string
 	Station    string
 	Label      string
+	Author     string
 	CreatedAt  time.Time
 }
 

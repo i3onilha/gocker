@@ -29,7 +29,7 @@ func (q *Queries) DeleteLabel(ctx context.Context, id int32) error {
 
 const getLabel = `-- name: GetLabel :one
 SELECT
-  labels_data.id, labels_data.customer, labels_data.family, labels_data.model, labels_data.part_number, labels_data.station, labels_data.label, labels_data.created_at
+  labels_data.id, labels_data.customer, labels_data.family, labels_data.model, labels_data.part_number, labels_data.station, labels_data.label, labels_data.author, labels_data.created_at
 FROM
   labels_data
   LEFT JOIN labels_deletes ON labels_data.id = labels_deletes.id
@@ -50,6 +50,7 @@ func (q *Queries) GetLabel(ctx context.Context, id int32) (LabelsDatum, error) {
 		&i.PartNumber,
 		&i.Station,
 		&i.Label,
+		&i.Author,
 		&i.CreatedAt,
 	)
 	return i, err
@@ -57,7 +58,7 @@ func (q *Queries) GetLabel(ctx context.Context, id int32) (LabelsDatum, error) {
 
 const getLabelList = `-- name: GetLabelList :many
 SELECT
-  labels_data.id, labels_data.customer, labels_data.family, labels_data.model, labels_data.part_number, labels_data.station, labels_data.label, labels_data.created_at
+  labels_data.id, labels_data.customer, labels_data.family, labels_data.model, labels_data.part_number, labels_data.station, labels_data.label, labels_data.author, labels_data.created_at
 FROM
   labels_data
   LEFT JOIN labels_deletes ON labels_data.id = labels_deletes.id
@@ -93,6 +94,7 @@ func (q *Queries) GetLabelList(ctx context.Context, arg GetLabelListParams) ([]L
 			&i.PartNumber,
 			&i.Station,
 			&i.Label,
+			&i.Author,
 			&i.CreatedAt,
 		); err != nil {
 			return nil, err
@@ -109,8 +111,8 @@ func (q *Queries) GetLabelList(ctx context.Context, arg GetLabelListParams) ([]L
 }
 
 const updateLabel = `-- name: UpdateLabel :execresult
-INSERT INTO labels_data (id, customer, family, model, part_number, station, label)
-  VALUES(?, ?, ?, ?, ?, ?, ?)
+INSERT INTO labels_data (id, customer, family, model, part_number, station, label, author)
+  VALUES(?, ?, ?, ?, ?, ?, ?, ?)
 `
 
 type UpdateLabelParams struct {
@@ -121,6 +123,7 @@ type UpdateLabelParams struct {
 	PartNumber string
 	Station    string
 	Label      string
+	Author     string
 }
 
 func (q *Queries) UpdateLabel(ctx context.Context, arg UpdateLabelParams) (sql.Result, error) {
@@ -132,5 +135,6 @@ func (q *Queries) UpdateLabel(ctx context.Context, arg UpdateLabelParams) (sql.R
 		arg.PartNumber,
 		arg.Station,
 		arg.Label,
+		arg.Author,
 	)
 }
