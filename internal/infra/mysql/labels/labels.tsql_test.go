@@ -29,6 +29,7 @@ func TestCreateAndUpdateLabel(t *testing.T) {
 		Label:      "label created",
 		Author:     "bc0g8101",
 	}
-	err = lb.CreateAndUpdateLabel(ctx, db.GetDataSourceName(), params)
+	id, err := lb.CreateAndUpdateLabel(ctx, db.GetDataSourceName(), params)
 	assert.Nil(t, err)
+	assert.NotEqual(t, 0, id)
 }

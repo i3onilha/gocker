@@ -28,8 +28,9 @@ func TestNew(t *testing.T) {
 		Label:      "label created",
 		Author:     "bc0g8101",
 	}
-	err = db.Labels.CreateAndUpdateLabel(ctx, dataSourceName, params)
+	id, err := db.Labels.CreateAndUpdateLabel(ctx, dataSourceName, params)
 	assert.Nil(t, err)
+	assert.NotEqual(t, 0, id)
 }
 
 func TestGetDriver(t *testing.T) {
