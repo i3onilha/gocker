@@ -30,3 +30,11 @@ func TestNew(t *testing.T) {
 	}
 	db.Labels.CreateAndUpdateLabel(ctx, dataSourceName, params)
 }
+
+func TestGetDriver(t *testing.T) {
+	db, err := mysql.New("")
+	assert.Nil(t, err)
+	assert.NotNil(t, db)
+	driver := db.GetDriver()
+	assert.Equal(t, "mysql", driver)
+}
