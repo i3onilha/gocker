@@ -20,16 +20,16 @@ func NewLabels(queries *mysql.MySQL) *Labels {
 	}
 }
 
-func (l *Labels) CreateLabel(dto *entity.LabelDTO) (entity.LabelDTO, error) {
+func (l *Labels) CreateLabel(dto *entity.LabelDTO) (*entity.LabelDTO, error) {
 	ctx := context.Background()
 	data := labels.CreateLabelParams{}
 	id, err := l.queries.CreateAndUpdateLabel(ctx, l.dataSourceName, data)
 	if err != nil {
-		return entity.LabelDTO{}, err
+		return &entity.LabelDTO{}, err
 	}
 	label, err := l.queries.GetLabel(ctx, int32(id))
 	if err != nil {
-		return entity.LabelDTO{}, err
+		return &entity.LabelDTO{}, err
 	}
 	result := entity.LabelDTO{
 		ID:         label.ID,
@@ -42,7 +42,7 @@ func (l *Labels) CreateLabel(dto *entity.LabelDTO) (entity.LabelDTO, error) {
 		Author:     label.Author,
 		CreatedAt:  label.CreatedAt,
 	}
-	return result, nil
+	return &result, nil
 }
 
 func (l *Labels) DeleteLabel(id int) error {
@@ -94,7 +94,7 @@ func (l *Labels) GetLabelList() ([]*entity.LabelDTO, error) {
 	return result, nil
 }
 
-func (l *Labels) UpdateLabel(dto *entity.LabelUpdateDTO) (entity.LabelDTO, error) {
+func (l *Labels) UpdateLabel(dto *entity.LabelUpdateDTO) (*entity.LabelDTO, error) {
 	ctx := context.Background()
 	arg := labels.UpdateLabelParams{
 		ID:         dto.ID,
@@ -108,15 +108,15 @@ func (l *Labels) UpdateLabel(dto *entity.LabelUpdateDTO) (entity.LabelDTO, error
 	}
 	result, err := l.queries.UpdateLabel(ctx, arg)
 	if err != nil {
-		return entity.LabelDTO{}, err
+		return &entity.LabelDTO{}, err
 	}
 	id, err := result.LastInsertId()
 	if err != nil {
-		return entity.LabelDTO{}, err
+		return &entity.LabelDTO{}, err
 	}
 	label, err := l.queries.GetLabel(ctx, int32(id))
 	if err != nil {
-		return entity.LabelDTO{}, err
+		return &entity.LabelDTO{}, err
 	}
 	resultDTO := entity.LabelDTO{
 		ID:         label.ID,
@@ -129,5 +129,5 @@ func (l *Labels) UpdateLabel(dto *entity.LabelUpdateDTO) (entity.LabelDTO, error
 		Author:     label.Author,
 		CreatedAt:  label.CreatedAt,
 	}
-	return resultDTO, nil
+	return &resultDTO, nil
 }
