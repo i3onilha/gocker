@@ -40,3 +40,11 @@ func TestGetDriver(t *testing.T) {
 	driver := db.GetDriver()
 	assert.Equal(t, "mysql", driver)
 }
+
+func TestGetDataSourceName(t *testing.T) {
+	db, err := mysql.New("default:secret@tcp(mysql-dev:3306)/dbdev?parseTime=true")
+	assert.Nil(t, err)
+	assert.NotNil(t, db)
+	dataSourceName := db.GetDataSourceName()
+	assert.Equal(t, "default:secret@tcp(mysql-dev:3306)/dbdev?parseTime=true", dataSourceName)
+}
