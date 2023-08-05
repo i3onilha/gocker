@@ -19,27 +19,31 @@ type CreateLabelParams struct {
 	Author     string
 }
 
-func (q *Queries) CreateAndUpdateLabel(ctx context.Context, dataSourceName string, data CreateLabelParams) error {
+func (q *Queries) CreateAndUpdateLabel(ctx context.Context, dataSourceName string, data CreateLabelParams) (int, error) {
 	conn, err := sql.Open(Driver, dataSourceName)
 	if err != nil {
-		return err
+		return 0, err
 	}
 	defer conn.Close()
 	tx, err := conn.Begin()
 	if err != nil {
-		return err
+		return 0, err
 	}
 	queries := q.WithTx(tx)
 	if err != nil {
-		return err
+		return 0, err
 	}
-	resultCreated, err := queries.CreateLabel(ctx)
+	result, err := queries.CreateLabel(ctx)
 	if err != nil {
-		return err
+		return 0, err
 	}
-	id, err := resultCreated.LastInsertId()
+	result, err = queries.CreateLabel(ctx)
 	if err != nil {
-		return err
+		return 0, err
+	}
+	id, err := result.LastInsertId()
+	if err != nil {
+		return 0, err
 	}
 	params := UpdateLabelParams{
 		ID:         int32(id),
@@ -51,9 +55,13 @@ func (q *Queries) CreateAndUpdateLabel(ctx context.Context, dataSourceName strin
 		Label:      data.Label,
 		Author:     data.Author,
 	}
-	_, err = queries.UpdateLabel(ctx, params)
+	result, err = queries.UpdateLabel(ctx, params)
 	if err != nil {
-		return err
+		return 0, err
 	}
-	return tx.Commit()
+	err = tx.Commit()
+	if err != nil {
+		return 0, err
+	}
+	return int(id), nil
 }
