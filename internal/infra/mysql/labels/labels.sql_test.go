@@ -18,6 +18,7 @@ func TestLabelCRUD(t *testing.T) {
 	db := c.GetDB()
 	conn, err := sql.Open(db.GetDriver(), db.GetDataSourceName())
 	assert.Nil(t, err)
+	defer conn.Close()
 	lb := labels.New(conn)
 	result, err := lb.CreateLabel(ctx)
 
@@ -71,6 +72,7 @@ func TestGetLabelList(t *testing.T) {
 	db := c.GetDB()
 	conn, err := sql.Open(db.GetDriver(), db.GetDataSourceName())
 	assert.Nil(t, err)
+	defer conn.Close()
 	lb := labels.New(conn)
 	paramns := labels.GetLabelListParams{
 		Limit:  10,

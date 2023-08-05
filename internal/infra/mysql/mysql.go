@@ -21,6 +21,7 @@ func New() (*MySQL, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer conn.Close()
 	labels := labels.New(conn)
 	return &MySQL{
 		Labels: labels,
