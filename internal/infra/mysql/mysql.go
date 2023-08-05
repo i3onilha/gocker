@@ -27,3 +27,7 @@ func New(dataSourceName string) (*MySQL, error) {
 		driver: driver,
 	}, nil
 }
+
+func (m *MySQL) GetDriver() string {
+	return m.driver
+}
