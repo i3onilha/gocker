@@ -20,7 +20,7 @@ func TestCreateAndUpdateLabel(t *testing.T) {
 	assert.Nil(t, err)
 	defer conn.Close()
 	lb := labels.New(conn)
-	params := labels.UpdateLabelParams{
+	params := labels.CreateLabelParams{
 		Customer:   "customer created",
 		Family:     "family",
 		Model:      "model created",
