@@ -3,21 +3,20 @@ package mysql
 import (
 	"database/sql"
 
-	"github.com/i3onilha/MESEnterpriseSmart/config"
 	"github.com/i3onilha/MESEnterpriseSmart/internal/infra/mysql/labels"
 )
 
+const (
+	driver = "mysql"
+)
+
 type MySQL struct {
+	driver string
 	Labels *labels.Queries
 }
 
-func New() (*MySQL, error) {
-	c, err := config.New()
-	if err != nil {
-		return nil, err
-	}
-	db := c.GetDB()
-	conn, err := sql.Open(db.GetDriver(), db.GetDataSourceName())
+func New(dataSourceName string) (*MySQL, error) {
+	conn, err := sql.Open(labels.Driver, dataSourceName)
 	if err != nil {
 		return nil, err
 	}
@@ -25,5 +24,6 @@ func New() (*MySQL, error) {
 	labels := labels.New(conn)
 	return &MySQL{
 		Labels: labels,
+		driver: driver,
 	}, nil
 }
