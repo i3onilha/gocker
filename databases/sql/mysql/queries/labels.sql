@@ -12,7 +12,7 @@ WHERE labels_deletes.id IS NULL
 ORDER BY labels_data.created_at DESC
 LIMIT 1;
 
--- name: List :many
+-- name: ListPaginate :many
 SELECT
   labels_data.*
 FROM

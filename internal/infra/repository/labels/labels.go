@@ -76,12 +76,12 @@ func (l *Labels) GetByID(id int) (*entity.CreateDTO, error) {
 	return result, nil
 }
 
-func (l *Labels) List(limit, offset int) ([]*entity.CreateDTO, error) {
-	arg := labels.ListParams{
+func (l *Labels) ListPaginate(limit, offset int) ([]*entity.CreateDTO, error) {
+	arg := labels.ListPaginateParams{
 		Limit:  int32(limit),
 		Offset: int32(offset),
 	}
-	list, err := l.queries.List(context.Background(), arg)
+	list, err := l.queries.ListPaginate(context.Background(), arg)
 	if err != nil {
 		return nil, err
 	}

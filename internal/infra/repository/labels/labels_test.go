@@ -68,7 +68,7 @@ func TestGetAll(t *testing.T) {
 	assert.Nil(t, err)
 	lb := labels.New(queries)
 	assert.NotNil(t, lb)
-	list, err := lb.List(10, 0)
+	list, err := lb.ListPaginate(10, 0)
 	assert.Nil(t, err)
 	assert.NotNil(t, list)
 	assert.Greater(t, len(list), 0)

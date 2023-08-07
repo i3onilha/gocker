@@ -56,7 +56,7 @@ func (q *Queries) GetByID(ctx context.Context, id int32) (LabelsDatum, error) {
 	return i, err
 }
 
-const list = `-- name: List :many
+const listPaginate = `-- name: ListPaginate :many
 SELECT
   labels_data.id, labels_data.customer, labels_data.family, labels_data.model, labels_data.part_number, labels_data.station, labels_data.label, labels_data.author, labels_data.created_at
 FROM
@@ -72,13 +72,13 @@ ORDER BY labels_data.created_at DESC
 LIMIT ? OFFSET ?
 `
 
-type ListParams struct {
+type ListPaginateParams struct {
 	Limit  int32
 	Offset int32
 }
 
-func (q *Queries) List(ctx context.Context, arg ListParams) ([]LabelsDatum, error) {
-	rows, err := q.db.QueryContext(ctx, list, arg.Limit, arg.Offset)
+func (q *Queries) ListPaginate(ctx context.Context, arg ListPaginateParams) ([]LabelsDatum, error) {
+	rows, err := q.db.QueryContext(ctx, listPaginate, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}

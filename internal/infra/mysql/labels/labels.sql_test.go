@@ -74,11 +74,12 @@ func TestList(t *testing.T) {
 	assert.Nil(t, err)
 	defer conn.Close()
 	lb := labels.New(conn)
-	paramns := labels.ListParams{
+	paramns := labels.ListPaginateParams{
+
 		Limit:  10,
 		Offset: 0,
 	}
-	result, err := lb.List(ctx, paramns)
+	result, err := lb.ListPaginate(ctx, paramns)
 	assert.Nil(t, err)
 	assert.NotNil(t, result)
 }
