@@ -2,7 +2,7 @@ package entity
 
 import "time"
 
-type LabelDTO struct {
+type CreateDTO struct {
 	ID         int32
 	Customer   string
 	Family     string
@@ -14,7 +14,7 @@ type LabelDTO struct {
 	CreatedAt  time.Time
 }
 
-type LabelUpdateDTO struct {
+type UpdateDTO struct {
 	ID         int32
 	Customer   string
 	Family     string
