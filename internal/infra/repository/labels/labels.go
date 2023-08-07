@@ -22,7 +22,15 @@ func New(queries *mysql.MySQL) *Labels {
 
 func (l *Labels) Create(dto *entity.CreateDTO) (*entity.CreateDTO, error) {
 	ctx := context.Background()
-	data := labels.CreateParams{}
+	data := labels.CreateParams{
+		Customer:   dto.Customer,
+		Family:     dto.Family,
+		Model:      dto.Model,
+		PartNumber: dto.PartNumber,
+		Station:    dto.Station,
+		Label:      dto.Label,
+		Author:     dto.Author,
+	}
 	id, err := l.queries.CreateAndUpdate(ctx, l.dataSourceName, data)
 	if err != nil {
 		return &entity.CreateDTO{}, err
