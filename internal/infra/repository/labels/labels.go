@@ -45,7 +45,7 @@ func (l *Labels) Create(dto *entity.LabelDTO) (*entity.LabelDTO, error) {
 	return &result, nil
 }
 
-func (l *Labels) DeleteByID(id int) error {
+func (l *Labels) Delete(id int) error {
 	return l.queries.DeleteByID(context.Background(), int32(id))
 }
 
