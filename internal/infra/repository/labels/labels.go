@@ -45,7 +45,7 @@ func (l *Labels) Create(dto *entity.CreateDTO) (*entity.CreateDTO, error) {
 	return &result, nil
 }
 
-func (l *Labels) Delete(id int) error {
+func (l *Labels) DeleteByID(id int) error {
 	return l.queries.DeleteByID(context.Background(), int32(id))
 }
 
@@ -68,10 +68,10 @@ func (l *Labels) GetByID(id int) (*entity.CreateDTO, error) {
 	return result, nil
 }
 
-func (l *Labels) List() ([]*entity.CreateDTO, error) {
+func (l *Labels) List(limit, offset int) ([]*entity.CreateDTO, error) {
 	arg := labels.ListParams{
-		Limit:  10,
-		Offset: 0,
+		Limit:  int32(limit),
+		Offset: int32(offset),
 	}
 	list, err := l.queries.List(context.Background(), arg)
 	if err != nil {
