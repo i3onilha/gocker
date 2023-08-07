@@ -1,18 +1,18 @@
 package usecase
 
-import "github.com/i3onilha/MESEnterpriseSmart/internal/entity"
+import entity "github.com/i3onilha/MESEnterpriseSmart/internal/entity/labels"
 
 type Repository interface {
-	Create(dto *entity.LabelDTO) (*entity.LabelDTO, error)
+	Create(dto *entity.CreateDTO) (*entity.CreateDTO, error)
 	DeleteByID(id int) error
-	GetByID(id int) (*entity.LabelDTO, error)
-	List() ([]*entity.LabelDTO, error)
-	Update(dto *entity.LabelUpdateDTO) (*entity.LabelDTO, error)
+	GetByID(id int) (*entity.CreateDTO, error)
+	ListPaginate(limit, offset int) ([]*entity.CreateDTO, error)
+	Update(dto *entity.UpdateDTO) (*entity.CreateDTO, error)
 }
 
 type Validator interface {
-	ValidateDTO(dto *entity.LabelDTO) error
-	ValidateUpdateDTO(dto *entity.LabelUpdateDTO) error
+	ValidateDTO(dto *entity.CreateDTO) error
+	ValidateUpdateDTO(dto *entity.UpdateDTO) error
 	ValidateID(id int) error
 }
 
@@ -28,10 +28,10 @@ func New(r Repository, v Validator) *labels {
 	}
 }
 
-func (l *labels) Create(dto *entity.LabelDTO) (*entity.LabelDTO, error) {
+func (l *labels) Create(dto *entity.CreateDTO) (*entity.CreateDTO, error) {
 	err := l.validator.ValidateDTO(dto)
 	if err != nil {
-		return &entity.LabelDTO{}, err
+		return &entity.CreateDTO{}, err
 	}
 	return l.repository.Create(dto)
 }
@@ -44,7 +44,7 @@ func (l *labels) DeleteByID(id int) error {
 	return l.repository.DeleteByID(id)
 }
 
-func (l *labels) GetByID(id int) (*entity.LabelDTO, error) {
+func (l *labels) GetByID(id int) (*entity.CreateDTO, error) {
 	err := l.validator.ValidateID(id)
 	if err != nil {
 		return nil, err
@@ -52,14 +52,14 @@ func (l *labels) GetByID(id int) (*entity.LabelDTO, error) {
 	return l.repository.GetByID(id)
 }
 
-func (l *labels) List() ([]*entity.LabelDTO, error) {
-	return l.repository.List()
+func (l *labels) List(limit int, offset int) ([]*entity.CreateDTO, error) {
+	return l.repository.ListPaginate(limit, offset)
 }
 
-func (l *labels) Update(dto *entity.LabelUpdateDTO) (*entity.LabelDTO, error) {
+func (l *labels) Update(dto *entity.UpdateDTO) (*entity.CreateDTO, error) {
 	err := l.validator.ValidateUpdateDTO(dto)
 	if err != nil {
-		return &entity.LabelDTO{}, err
+		return &entity.CreateDTO{}, err
 	}
 	return l.repository.Update(dto)
 }
