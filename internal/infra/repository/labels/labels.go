@@ -3,7 +3,7 @@ package labels
 import (
 	"context"
 
-	"github.com/i3onilha/MESEnterpriseSmart/internal/entity"
+	entity "github.com/i3onilha/MESEnterpriseSmart/internal/entity/labels"
 	"github.com/i3onilha/MESEnterpriseSmart/internal/infra/mysql"
 	"github.com/i3onilha/MESEnterpriseSmart/internal/infra/mysql/labels"
 )
