@@ -20,18 +20,18 @@ func New(queries *mysql.MySQL) *Labels {
 	}
 }
 
-func (l *Labels) Create(dto *entity.LabelDTO) (*entity.LabelDTO, error) {
+func (l *Labels) Create(dto *entity.CreateDTO) (*entity.CreateDTO, error) {
 	ctx := context.Background()
 	data := labels.CreateParams{}
 	id, err := l.queries.CreateAndUpdate(ctx, l.dataSourceName, data)
 	if err != nil {
-		return &entity.LabelDTO{}, err
+		return &entity.CreateDTO{}, err
 	}
 	label, err := l.queries.GetByID(ctx, int32(id))
 	if err != nil {
-		return &entity.LabelDTO{}, err
+		return &entity.CreateDTO{}, err
 	}
-	result := entity.LabelDTO{
+	result := entity.CreateDTO{
 		ID:         label.ID,
 		Customer:   label.Customer,
 		Family:     label.Family,
@@ -49,12 +49,12 @@ func (l *Labels) Delete(id int) error {
 	return l.queries.DeleteByID(context.Background(), int32(id))
 }
 
-func (l *Labels) GetByID(id int) (*entity.LabelDTO, error) {
+func (l *Labels) GetByID(id int) (*entity.CreateDTO, error) {
 	label, err := l.queries.GetByID(context.Background(), int32(id))
 	if err != nil {
 		return nil, err
 	}
-	result := &entity.LabelDTO{
+	result := &entity.CreateDTO{
 		ID:         label.ID,
 		Customer:   label.Customer,
 		Family:     label.Family,
@@ -68,7 +68,7 @@ func (l *Labels) GetByID(id int) (*entity.LabelDTO, error) {
 	return result, nil
 }
 
-func (l *Labels) List() ([]*entity.LabelDTO, error) {
+func (l *Labels) List() ([]*entity.CreateDTO, error) {
 	arg := labels.ListParams{
 		Limit:  10,
 		Offset: 0,
@@ -77,9 +77,9 @@ func (l *Labels) List() ([]*entity.LabelDTO, error) {
 	if err != nil {
 		return nil, err
 	}
-	result := make([]*entity.LabelDTO, len(list))
+	result := make([]*entity.CreateDTO, len(list))
 	for i, label := range list {
-		result[i] = &entity.LabelDTO{
+		result[i] = &entity.CreateDTO{
 			ID:         label.ID,
 			Customer:   label.Customer,
 			Family:     label.Family,
@@ -94,7 +94,7 @@ func (l *Labels) List() ([]*entity.LabelDTO, error) {
 	return result, nil
 }
 
-func (l *Labels) Update(dto *entity.LabelUpdateDTO) (*entity.LabelDTO, error) {
+func (l *Labels) Update(dto *entity.UpdateDTO) (*entity.CreateDTO, error) {
 	ctx := context.Background()
 	arg := labels.UpdateParams{
 		ID:         dto.ID,
@@ -108,17 +108,17 @@ func (l *Labels) Update(dto *entity.LabelUpdateDTO) (*entity.LabelDTO, error) {
 	}
 	result, err := l.queries.Update(ctx, arg)
 	if err != nil {
-		return &entity.LabelDTO{}, err
+		return &entity.CreateDTO{}, err
 	}
 	id, err := result.LastInsertId()
 	if err != nil {
-		return &entity.LabelDTO{}, err
+		return &entity.CreateDTO{}, err
 	}
 	label, err := l.queries.GetByID(ctx, int32(id))
 	if err != nil {
-		return &entity.LabelDTO{}, err
+		return &entity.CreateDTO{}, err
 	}
-	resultDTO := entity.LabelDTO{
+	resultDTO := entity.CreateDTO{
 		ID:         label.ID,
 		Customer:   label.Customer,
 		Family:     label.Family,
