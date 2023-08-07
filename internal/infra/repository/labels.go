@@ -13,7 +13,7 @@ type Labels struct {
 	dataSourceName string
 }
 
-func NewLabels(queries *mysql.MySQL) *Labels {
+func New(queries *mysql.MySQL) *Labels {
 	return &Labels{
 		queries:        queries.Labels,
 		dataSourceName: queries.GetDataSourceName(),

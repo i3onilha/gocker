@@ -21,7 +21,7 @@ type labels struct {
 	validator  Validator
 }
 
-func NewLabels(r Repository, v Validator) *labels {
+func New(r Repository, v Validator) *labels {
 	return &labels{
 		repository: r,
 		validator:  v,
