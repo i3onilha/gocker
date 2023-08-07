@@ -114,15 +114,11 @@ func (l *Labels) Update(dto *entity.UpdateDTO) (*entity.CreateDTO, error) {
 		Label:      dto.Label,
 		Author:     dto.Author,
 	}
-	result, err := l.queries.Update(ctx, arg)
+	_, err := l.queries.Update(ctx, arg)
 	if err != nil {
 		return &entity.CreateDTO{}, err
 	}
-	id, err := result.LastInsertId()
-	if err != nil {
-		return &entity.CreateDTO{}, err
-	}
-	label, err := l.queries.GetByID(ctx, int32(id))
+	label, err := l.queries.GetByID(ctx, dto.ID)
 	if err != nil {
 		return &entity.CreateDTO{}, err
 	}
