@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCreateAndUpdateLabel(t *testing.T) {
+func TestCreateAndUpdate(t *testing.T) {
 	ctx := context.Background()
 	c, err := config.New()
 	assert.Nil(t, err)
@@ -20,7 +20,7 @@ func TestCreateAndUpdateLabel(t *testing.T) {
 	assert.Nil(t, err)
 	defer conn.Close()
 	lb := labels.New(conn)
-	params := labels.CreateLabelParams{
+	params := labels.CreateParams{
 		Customer:   "customer created",
 		Family:     "family",
 		Model:      "model created",
@@ -29,7 +29,7 @@ func TestCreateAndUpdateLabel(t *testing.T) {
 		Label:      "label created",
 		Author:     "bc0g8101",
 	}
-	id, err := lb.CreateAndUpdateLabel(ctx, db.GetDataSourceName(), params)
+	id, err := lb.CreateAndUpdate(ctx, db.GetDataSourceName(), params)
 	assert.Nil(t, err)
 	assert.NotEqual(t, 0, id)
 }

@@ -19,7 +19,7 @@ func TestNew(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, db)
 	ctx := context.Background()
-	params := labels.CreateLabelParams{
+	params := labels.CreateParams{
 		Customer:   "customer mysql",
 		Family:     "family",
 		Model:      "model created",
@@ -28,7 +28,7 @@ func TestNew(t *testing.T) {
 		Label:      "label created",
 		Author:     "bc0g8101",
 	}
-	id, err := db.Labels.CreateAndUpdateLabel(ctx, dataSourceName, params)
+	id, err := db.Labels.CreateAndUpdate(ctx, dataSourceName, params)
 	assert.Nil(t, err)
 	assert.NotEqual(t, 0, id)
 }

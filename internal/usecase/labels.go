@@ -3,11 +3,11 @@ package usecase
 import "github.com/i3onilha/MESEnterpriseSmart/internal/entity"
 
 type Repository interface {
-	CreateLabel(dto *entity.LabelDTO) (*entity.LabelDTO, error)
-	DeleteLabel(id int) error
-	GetLabel(id int) (*entity.LabelDTO, error)
-	GetLabelList() ([]*entity.LabelDTO, error)
-	UpdateLabel(dto *entity.LabelUpdateDTO) (*entity.LabelDTO, error)
+	Create(dto *entity.LabelDTO) (*entity.LabelDTO, error)
+	DeleteByID(id int) error
+	GetByID(id int) (*entity.LabelDTO, error)
+	List() ([]*entity.LabelDTO, error)
+	Update(dto *entity.LabelUpdateDTO) (*entity.LabelDTO, error)
 }
 
 type Validator interface {
@@ -28,38 +28,38 @@ func New(r Repository, v Validator) *labels {
 	}
 }
 
-func (l *labels) CreateLabel(dto *entity.LabelDTO) (*entity.LabelDTO, error) {
+func (l *labels) Create(dto *entity.LabelDTO) (*entity.LabelDTO, error) {
 	err := l.validator.ValidateDTO(dto)
 	if err != nil {
 		return &entity.LabelDTO{}, err
 	}
-	return l.repository.CreateLabel(dto)
+	return l.repository.Create(dto)
 }
 
-func (l *labels) DeleteLabel(id int) error {
+func (l *labels) DeleteByID(id int) error {
 	err := l.validator.ValidateID(id)
 	if err != nil {
 		return err
 	}
-	return l.repository.DeleteLabel(id)
+	return l.repository.DeleteByID(id)
 }
 
-func (l *labels) GetLabel(id int) (*entity.LabelDTO, error) {
+func (l *labels) GetByID(id int) (*entity.LabelDTO, error) {
 	err := l.validator.ValidateID(id)
 	if err != nil {
 		return nil, err
 	}
-	return l.repository.GetLabel(id)
+	return l.repository.GetByID(id)
 }
 
-func (l *labels) GetLabelList() ([]*entity.LabelDTO, error) {
-	return l.repository.GetLabelList()
+func (l *labels) List() ([]*entity.LabelDTO, error) {
+	return l.repository.List()
 }
 
-func (l *labels) UpdateLabel(dto *entity.LabelUpdateDTO) (*entity.LabelDTO, error) {
+func (l *labels) Update(dto *entity.LabelUpdateDTO) (*entity.LabelDTO, error) {
 	err := l.validator.ValidateUpdateDTO(dto)
 	if err != nil {
 		return &entity.LabelDTO{}, err
 	}
-	return l.repository.UpdateLabel(dto)
+	return l.repository.Update(dto)
 }

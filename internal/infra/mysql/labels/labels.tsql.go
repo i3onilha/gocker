@@ -9,7 +9,7 @@ const (
 	Driver = "mysql"
 )
 
-type CreateLabelParams struct {
+type CreateParams struct {
 	Customer   string
 	Family     string
 	Model      string
@@ -19,7 +19,7 @@ type CreateLabelParams struct {
 	Author     string
 }
 
-func (q *Queries) CreateAndUpdateLabel(ctx context.Context, dataSourceName string, data CreateLabelParams) (int, error) {
+func (q *Queries) CreateAndUpdate(ctx context.Context, dataSourceName string, data CreateParams) (int, error) {
 	conn, err := sql.Open(Driver, dataSourceName)
 	if err != nil {
 		return 0, err
@@ -33,11 +33,11 @@ func (q *Queries) CreateAndUpdateLabel(ctx context.Context, dataSourceName strin
 	if err != nil {
 		return 0, err
 	}
-	result, err := queries.CreateLabel(ctx)
+	result, err := queries.Create(ctx)
 	if err != nil {
 		return 0, err
 	}
-	result, err = queries.CreateLabel(ctx)
+	result, err = queries.Create(ctx)
 	if err != nil {
 		return 0, err
 	}
@@ -45,7 +45,7 @@ func (q *Queries) CreateAndUpdateLabel(ctx context.Context, dataSourceName strin
 	if err != nil {
 		return 0, err
 	}
-	params := UpdateLabelParams{
+	params := UpdateParams{
 		ID:         int32(id),
 		Customer:   data.Customer,
 		Family:     data.Family,
@@ -55,7 +55,7 @@ func (q *Queries) CreateAndUpdateLabel(ctx context.Context, dataSourceName strin
 		Label:      data.Label,
 		Author:     data.Author,
 	}
-	result, err = queries.UpdateLabel(ctx, params)
+	result, err = queries.Update(ctx, params)
 	if err != nil {
 		return 0, err
 	}

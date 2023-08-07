@@ -1,7 +1,7 @@
--- name: CreateLabel :execresult
+-- name: Create :execresult
 INSERT IGNORE INTO labels () VALUES ();
 
--- name: GetLabel :one
+-- name: GetByID :one
 SELECT
   labels_data.*
 FROM
@@ -12,7 +12,7 @@ WHERE labels_deletes.id IS NULL
 ORDER BY labels_data.created_at DESC
 LIMIT 1;
 
--- name: GetLabelList :many
+-- name: List :many
 SELECT
   labels_data.*
 FROM
@@ -27,9 +27,9 @@ WHERE labels_deletes.id IS NULL
 ORDER BY labels_data.created_at DESC
 LIMIT ? OFFSET ?;
 
--- name: UpdateLabel :execresult
+-- name: Update :execresult
 INSERT INTO labels_data (id, customer, family, model, part_number, station, label, author)
   VALUES(?, ?, ?, ?, ?, ?, ?, ?);
 
--- name: DeleteLabel :exec
+-- name: DeleteByID :exec
 INSERT INTO labels_deletes (id) VALUES (?);

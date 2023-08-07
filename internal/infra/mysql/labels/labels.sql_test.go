@@ -20,7 +20,7 @@ func TestLabelCRUD(t *testing.T) {
 	assert.Nil(t, err)
 	defer conn.Close()
 	lb := labels.New(conn)
-	result, err := lb.CreateLabel(ctx)
+	result, err := lb.Create(ctx)
 
 	assert.Nil(t, err)
 	assert.NotNil(t, result)
@@ -30,7 +30,7 @@ func TestLabelCRUD(t *testing.T) {
 	id, err := result.LastInsertId()
 	assert.Nil(t, err)
 	assert.NotEqual(t, int64(0), id)
-	updateParams := labels.UpdateLabelParams{
+	updateParams := labels.UpdateParams{
 		ID:         int32(id),
 		Customer:   "Customer",
 		Family:     "Family",
@@ -40,7 +40,7 @@ func TestLabelCRUD(t *testing.T) {
 		Label:      "Label",
 		Author:     "bc0g8100",
 	}
-	result, err = lb.UpdateLabel(ctx, updateParams)
+	result, err = lb.Update(ctx, updateParams)
 	assert.Nil(t, err)
 	assert.NotNil(t, result)
 	rows, err = result.RowsAffected()
@@ -49,7 +49,7 @@ func TestLabelCRUD(t *testing.T) {
 	id2, err := result.LastInsertId()
 	assert.Nil(t, err)
 	assert.NotEqual(t, id, id2)
-	updatedLabel, err := lb.GetLabel(ctx, int32(id))
+	updatedLabel, err := lb.GetByID(ctx, int32(id))
 	assert.Nil(t, err)
 	assert.NotNil(t, updatedLabel)
 	assert.Equal(t, updateParams.Customer, updatedLabel.Customer)
@@ -58,14 +58,14 @@ func TestLabelCRUD(t *testing.T) {
 	assert.Equal(t, updateParams.PartNumber, updatedLabel.PartNumber)
 	assert.Equal(t, updateParams.Station, updatedLabel.Station)
 	assert.Equal(t, updateParams.Label, updatedLabel.Label)
-	err = lb.DeleteLabel(ctx, int32(id))
+	err = lb.DeleteByID(ctx, int32(id))
 	assert.Nil(t, err)
-	deletedLabel, err := lb.GetLabel(ctx, int32(id))
+	deletedLabel, err := lb.GetByID(ctx, int32(id))
 	assert.NotNil(t, err)
 	assert.NotNil(t, deletedLabel)
 }
 
-func TestGetLabelList(t *testing.T) {
+func TestList(t *testing.T) {
 	ctx := context.Background()
 	c, err := config.New()
 	assert.Nil(t, err)
@@ -74,11 +74,11 @@ func TestGetLabelList(t *testing.T) {
 	assert.Nil(t, err)
 	defer conn.Close()
 	lb := labels.New(conn)
-	paramns := labels.GetLabelListParams{
+	paramns := labels.ListParams{
 		Limit:  10,
 		Offset: 0,
 	}
-	result, err := lb.GetLabelList(ctx, paramns)
+	result, err := lb.List(ctx, paramns)
 	assert.Nil(t, err)
 	assert.NotNil(t, result)
 }

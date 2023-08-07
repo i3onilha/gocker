@@ -10,24 +10,24 @@ import (
 	"database/sql"
 )
 
-const createLabel = `-- name: CreateLabel :execresult
+const create = `-- name: Create :execresult
 INSERT IGNORE INTO labels () VALUES ()
 `
 
-func (q *Queries) CreateLabel(ctx context.Context) (sql.Result, error) {
-	return q.db.ExecContext(ctx, createLabel)
+func (q *Queries) Create(ctx context.Context) (sql.Result, error) {
+	return q.db.ExecContext(ctx, create)
 }
 
-const deleteLabel = `-- name: DeleteLabel :exec
+const deleteByID = `-- name: DeleteByID :exec
 INSERT INTO labels_deletes (id) VALUES (?)
 `
 
-func (q *Queries) DeleteLabel(ctx context.Context, id int32) error {
-	_, err := q.db.ExecContext(ctx, deleteLabel, id)
+func (q *Queries) DeleteByID(ctx context.Context, id int32) error {
+	_, err := q.db.ExecContext(ctx, deleteByID, id)
 	return err
 }
 
-const getLabel = `-- name: GetLabel :one
+const getByID = `-- name: GetByID :one
 SELECT
   labels_data.id, labels_data.customer, labels_data.family, labels_data.model, labels_data.part_number, labels_data.station, labels_data.label, labels_data.author, labels_data.created_at
 FROM
@@ -39,8 +39,8 @@ ORDER BY labels_data.created_at DESC
 LIMIT 1
 `
 
-func (q *Queries) GetLabel(ctx context.Context, id int32) (LabelsDatum, error) {
-	row := q.db.QueryRowContext(ctx, getLabel, id)
+func (q *Queries) GetByID(ctx context.Context, id int32) (LabelsDatum, error) {
+	row := q.db.QueryRowContext(ctx, getByID, id)
 	var i LabelsDatum
 	err := row.Scan(
 		&i.ID,
@@ -56,7 +56,7 @@ func (q *Queries) GetLabel(ctx context.Context, id int32) (LabelsDatum, error) {
 	return i, err
 }
 
-const getLabelList = `-- name: GetLabelList :many
+const list = `-- name: List :many
 SELECT
   labels_data.id, labels_data.customer, labels_data.family, labels_data.model, labels_data.part_number, labels_data.station, labels_data.label, labels_data.author, labels_data.created_at
 FROM
@@ -72,13 +72,13 @@ ORDER BY labels_data.created_at DESC
 LIMIT ? OFFSET ?
 `
 
-type GetLabelListParams struct {
+type ListParams struct {
 	Limit  int32
 	Offset int32
 }
 
-func (q *Queries) GetLabelList(ctx context.Context, arg GetLabelListParams) ([]LabelsDatum, error) {
-	rows, err := q.db.QueryContext(ctx, getLabelList, arg.Limit, arg.Offset)
+func (q *Queries) List(ctx context.Context, arg ListParams) ([]LabelsDatum, error) {
+	rows, err := q.db.QueryContext(ctx, list, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
@@ -110,12 +110,12 @@ func (q *Queries) GetLabelList(ctx context.Context, arg GetLabelListParams) ([]L
 	return items, nil
 }
 
-const updateLabel = `-- name: UpdateLabel :execresult
+const update = `-- name: Update :execresult
 INSERT INTO labels_data (id, customer, family, model, part_number, station, label, author)
   VALUES(?, ?, ?, ?, ?, ?, ?, ?)
 `
 
-type UpdateLabelParams struct {
+type UpdateParams struct {
 	ID         int32
 	Customer   string
 	Family     string
@@ -126,8 +126,8 @@ type UpdateLabelParams struct {
 	Author     string
 }
 
-func (q *Queries) UpdateLabel(ctx context.Context, arg UpdateLabelParams) (sql.Result, error) {
-	return q.db.ExecContext(ctx, updateLabel,
+func (q *Queries) Update(ctx context.Context, arg UpdateParams) (sql.Result, error) {
+	return q.db.ExecContext(ctx, update,
 		arg.ID,
 		arg.Customer,
 		arg.Family,
