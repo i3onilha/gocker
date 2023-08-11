@@ -28,8 +28,8 @@ ORDER BY labels_data.created_at DESC
 LIMIT ? OFFSET ?;
 
 -- name: Update :execresult
-INSERT INTO labels_data (id, customer, family, model, part_number, order_number, line, station, label, author)
-  VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+INSERT INTO labels_data (id, customer, family, model, part_number, order_number, line, station, dpi, label, author)
+  VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
 -- name: DeleteByID :exec
 INSERT INTO labels_deletes (id) VALUES (?);

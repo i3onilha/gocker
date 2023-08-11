@@ -35,6 +35,7 @@ func TestCRUD(t *testing.T) {
 		OrderNumber: "repo cre",
 		Line:        "03A",
 		Station:     "repo cre",
+		Dpi:         300,
 		Label:       "repo cre",
 		Author:      "bc0g8984",
 	}
@@ -50,6 +51,7 @@ func TestCRUD(t *testing.T) {
 		OrderNumber: "repo cre",
 		Line:        "03A",
 		Station:     "repo upt",
+		Dpi:         300,
 		Label:       "repo upt",
 		Author:      "bc0g8984",
 	}

@@ -28,6 +28,7 @@ func TestCreateAndUpdate(t *testing.T) {
 		OrderNumber: "38D45675",
 		Line:        "03",
 		Station:     "station created",
+		Dpi:         300,
 		Label:       "label created",
 		Author:      "bc0g8101",
 	}

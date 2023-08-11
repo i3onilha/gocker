@@ -11,6 +11,7 @@ type CreateDTO struct {
 	OrderNumber string `validate:"required,max=9"`
 	Line        string `validate:"required,max=9"`
 	Station     string `validate:"required,max=32"`
+	Dpi         int32  `validate:"required,gte=0,lte=600"`
 	Label       string `validate:"required,min=6,max=65535"`
 	Author      string `validate:"required"`
 	CreatedAt   time.Time
@@ -25,6 +26,7 @@ type UpdateDTO struct {
 	OrderNumber string `validate:"required,max=9"`
 	Line        string `validate:"required,max=9"`
 	Station     string `validate:"required,max=32"`
+	Dpi         int32  `validate:"required,gte=0,lte=600"`
 	Label       string `validate:"required,min=6,max=65535"`
 	Author      string `validate:"required"`
 }

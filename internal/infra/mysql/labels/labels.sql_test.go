@@ -39,6 +39,7 @@ func TestLabelCRUD(t *testing.T) {
 		OrderNumber: "45D91234",
 		Line:        "01B",
 		Station:     "Station",
+		Dpi:         300,
 		Label:       "Label",
 		Author:      "bc0g8100",
 	}
@@ -61,6 +62,7 @@ func TestLabelCRUD(t *testing.T) {
 	assert.Equal(t, updateParams.OrderNumber, updatedLabel.OrderNumber)
 	assert.Equal(t, updateParams.Line, updatedLabel.Line)
 	assert.Equal(t, updateParams.Station, updatedLabel.Station)
+	assert.Equal(t, updateParams.Dpi, updatedLabel.Dpi)
 	assert.Equal(t, updateParams.Label, updatedLabel.Label)
 	err = lb.DeleteByID(ctx, int32(id))
 	assert.Nil(t, err)

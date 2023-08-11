@@ -22,6 +22,7 @@ type LabelsDatum struct {
 	OrderNumber string
 	Line        string
 	Station     string
+	Dpi         int32
 	Label       string
 	Author      string
 	CreatedAt   time.Time

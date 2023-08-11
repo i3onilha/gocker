@@ -17,6 +17,7 @@ type CreateParams struct {
 	OrderNumber string
 	Line        string
 	Station     string
+	Dpi         int32
 	Label       string
 	Author      string
 }
@@ -56,6 +57,7 @@ func (q *Queries) CreateAndUpdate(ctx context.Context, dataSourceName string, da
 		OrderNumber: data.OrderNumber,
 		Line:        data.Line,
 		Station:     data.Station,
+		Dpi:         data.Dpi,
 		Label:       data.Label,
 		Author:      data.Author,
 	}

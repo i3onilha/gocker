@@ -29,7 +29,7 @@ func (q *Queries) DeleteByID(ctx context.Context, id int32) error {
 
 const getByID = `-- name: GetByID :one
 SELECT
-  labels_data.id, labels_data.customer, labels_data.family, labels_data.model, labels_data.part_number, labels_data.order_number, labels_data.line, labels_data.station, labels_data.label, labels_data.author, labels_data.created_at
+  labels_data.id, labels_data.customer, labels_data.family, labels_data.model, labels_data.part_number, labels_data.order_number, labels_data.line, labels_data.station, labels_data.dpi, labels_data.label, labels_data.author, labels_data.created_at
 FROM
   labels_data
   LEFT JOIN labels_deletes ON labels_data.id = labels_deletes.id
@@ -51,6 +51,7 @@ func (q *Queries) GetByID(ctx context.Context, id int32) (LabelsDatum, error) {
 		&i.OrderNumber,
 		&i.Line,
 		&i.Station,
+		&i.Dpi,
 		&i.Label,
 		&i.Author,
 		&i.CreatedAt,
@@ -60,7 +61,7 @@ func (q *Queries) GetByID(ctx context.Context, id int32) (LabelsDatum, error) {
 
 const listPaginate = `-- name: ListPaginate :many
 SELECT
-  labels_data.id, labels_data.customer, labels_data.family, labels_data.model, labels_data.part_number, labels_data.order_number, labels_data.line, labels_data.station, labels_data.label, labels_data.author, labels_data.created_at
+  labels_data.id, labels_data.customer, labels_data.family, labels_data.model, labels_data.part_number, labels_data.order_number, labels_data.line, labels_data.station, labels_data.dpi, labels_data.label, labels_data.author, labels_data.created_at
 FROM
   labels_data
   LEFT JOIN labels_deletes ON labels_data.id = labels_deletes.id
@@ -97,6 +98,7 @@ func (q *Queries) ListPaginate(ctx context.Context, arg ListPaginateParams) ([]L
 			&i.OrderNumber,
 			&i.Line,
 			&i.Station,
+			&i.Dpi,
 			&i.Label,
 			&i.Author,
 			&i.CreatedAt,
@@ -115,8 +117,8 @@ func (q *Queries) ListPaginate(ctx context.Context, arg ListPaginateParams) ([]L
 }
 
 const update = `-- name: Update :execresult
-INSERT INTO labels_data (id, customer, family, model, part_number, order_number, line, station, label, author)
-  VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+INSERT INTO labels_data (id, customer, family, model, part_number, order_number, line, station, dpi, label, author)
+  VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 `
 
 type UpdateParams struct {
@@ -128,6 +130,7 @@ type UpdateParams struct {
 	OrderNumber string
 	Line        string
 	Station     string
+	Dpi         int32
 	Label       string
 	Author      string
 }
@@ -142,6 +145,7 @@ func (q *Queries) Update(ctx context.Context, arg UpdateParams) (sql.Result, err
 		arg.OrderNumber,
 		arg.Line,
 		arg.Station,
+		arg.Dpi,
 		arg.Label,
 		arg.Author,
 	)
