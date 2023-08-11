@@ -25,7 +25,7 @@ CREATE TABLE `labels_data` (
   `model` varchar(16) NOT NULL,
   `part_number` varchar(16) NOT NULL,
   `order_number` varchar(9) NOT NULL,
-  `line` varchar(8) NOT NULL,
+  `line` varchar(9) NOT NULL,
   `station` varchar(32) NOT NULL,
   `label` text NOT NULL,
   `author` varchar(8) NOT NULL,

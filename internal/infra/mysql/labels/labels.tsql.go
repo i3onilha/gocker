@@ -10,13 +10,15 @@ const (
 )
 
 type CreateParams struct {
-	Customer   string
-	Family     string
-	Model      string
-	PartNumber string
-	Station    string
-	Label      string
-	Author     string
+	Customer    string
+	Family      string
+	Model       string
+	PartNumber  string
+	OrderNumber string
+	Line        string
+	Station     string
+	Label       string
+	Author      string
 }
 
 func (q *Queries) CreateAndUpdate(ctx context.Context, dataSourceName string, data CreateParams) (int, error) {
@@ -46,14 +48,16 @@ func (q *Queries) CreateAndUpdate(ctx context.Context, dataSourceName string, da
 		return 0, err
 	}
 	params := UpdateParams{
-		ID:         int32(id),
-		Customer:   data.Customer,
-		Family:     data.Family,
-		Model:      data.Model,
-		PartNumber: data.PartNumber,
-		Station:    data.Station,
-		Label:      data.Label,
-		Author:     data.Author,
+		ID:          int32(id),
+		Customer:    data.Customer,
+		Family:      data.Family,
+		Model:       data.Model,
+		PartNumber:  data.PartNumber,
+		OrderNumber: data.OrderNumber,
+		Line:        data.Line,
+		Station:     data.Station,
+		Label:       data.Label,
+		Author:      data.Author,
 	}
 	result, err = queries.Update(ctx, params)
 	if err != nil {

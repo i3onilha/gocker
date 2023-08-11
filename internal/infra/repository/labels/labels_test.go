@@ -28,26 +28,30 @@ func TestCRUD(t *testing.T) {
 	lb := labels.New(queries)
 	assert.NotNil(t, lb)
 	createDTO := &entity.CreateDTO{
-		Customer:   "repo cre",
-		Family:     "repo cre",
-		Model:      "repo cre",
-		PartNumber: "repo cre",
-		Station:    "repo cre",
-		Label:      "repo cre",
-		Author:     "bc0g8984",
+		Customer:    "repo cre",
+		Family:      "repo cre",
+		Model:       "repo cre",
+		PartNumber:  "repo cre",
+		OrderNumber: "repo cre",
+		Line:        "03A",
+		Station:     "repo cre",
+		Label:       "repo cre",
+		Author:      "bc0g8984",
 	}
 	created, err := lb.Create(createDTO)
 	assert.Nil(t, err)
 	assert.NotNil(t, created)
 	updateDTO := &entity.UpdateDTO{
-		ID:         created.ID,
-		Customer:   "repo upt",
-		Family:     "repo upt",
-		Model:      "repo upt",
-		PartNumber: "repo upt",
-		Station:    "repo upt",
-		Label:      "repo upt",
-		Author:     "bc0g8984",
+		ID:          created.ID,
+		Customer:    "repo upt",
+		Family:      "repo upt",
+		Model:       "repo upt",
+		PartNumber:  "repo upt",
+		OrderNumber: "repo cre",
+		Line:        "03A",
+		Station:     "repo upt",
+		Label:       "repo upt",
+		Author:      "bc0g8984",
 	}
 	updated, err := lb.Update(updateDTO)
 	assert.Nil(t, err)

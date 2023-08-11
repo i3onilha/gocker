@@ -23,13 +23,15 @@ func New(queries *mysql.MySQL) *Labels {
 func (l *Labels) Create(dto *entity.CreateDTO) (*entity.CreateDTO, error) {
 	ctx := context.Background()
 	data := labels.CreateParams{
-		Customer:   dto.Customer,
-		Family:     dto.Family,
-		Model:      dto.Model,
-		PartNumber: dto.PartNumber,
-		Station:    dto.Station,
-		Label:      dto.Label,
-		Author:     dto.Author,
+		Customer:    dto.Customer,
+		Family:      dto.Family,
+		Model:       dto.Model,
+		PartNumber:  dto.PartNumber,
+		OrderNumber: dto.OrderNumber,
+		Line:        dto.Line,
+		Station:     dto.Station,
+		Label:       dto.Label,
+		Author:      dto.Author,
 	}
 	id, err := l.queries.CreateAndUpdate(ctx, l.dataSourceName, data)
 	if err != nil {
@@ -40,15 +42,17 @@ func (l *Labels) Create(dto *entity.CreateDTO) (*entity.CreateDTO, error) {
 		return &entity.CreateDTO{}, err
 	}
 	result := entity.CreateDTO{
-		ID:         label.ID,
-		Customer:   label.Customer,
-		Family:     label.Family,
-		Model:      label.Model,
-		PartNumber: label.PartNumber,
-		Station:    label.Station,
-		Label:      label.Label,
-		Author:     label.Author,
-		CreatedAt:  label.CreatedAt,
+		ID:          label.ID,
+		Customer:    label.Customer,
+		Family:      label.Family,
+		Model:       label.Model,
+		PartNumber:  label.PartNumber,
+		OrderNumber: label.OrderNumber,
+		Line:        label.Line,
+		Station:     label.Station,
+		Label:       label.Label,
+		Author:      label.Author,
+		CreatedAt:   label.CreatedAt,
 	}
 	return &result, nil
 }
@@ -63,15 +67,17 @@ func (l *Labels) GetByID(id int) (*entity.CreateDTO, error) {
 		return nil, err
 	}
 	result := &entity.CreateDTO{
-		ID:         label.ID,
-		Customer:   label.Customer,
-		Family:     label.Family,
-		Model:      label.Model,
-		PartNumber: label.PartNumber,
-		Station:    label.Station,
-		Label:      label.Label,
-		Author:     label.Author,
-		CreatedAt:  label.CreatedAt,
+		ID:          label.ID,
+		Customer:    label.Customer,
+		Family:      label.Family,
+		Model:       label.Model,
+		PartNumber:  label.PartNumber,
+		OrderNumber: label.OrderNumber,
+		Line:        label.Line,
+		Station:     label.Station,
+		Label:       label.Label,
+		Author:      label.Author,
+		CreatedAt:   label.CreatedAt,
 	}
 	return result, nil
 }
@@ -105,14 +111,16 @@ func (l *Labels) ListPaginate(limit, offset int) ([]*entity.CreateDTO, error) {
 func (l *Labels) Update(dto *entity.UpdateDTO) (*entity.CreateDTO, error) {
 	ctx := context.Background()
 	arg := labels.UpdateParams{
-		ID:         dto.ID,
-		Customer:   dto.Customer,
-		Family:     dto.Family,
-		Model:      dto.Model,
-		PartNumber: dto.PartNumber,
-		Station:    dto.Station,
-		Label:      dto.Label,
-		Author:     dto.Author,
+		ID:          dto.ID,
+		Customer:    dto.Customer,
+		Family:      dto.Family,
+		Model:       dto.Model,
+		PartNumber:  dto.PartNumber,
+		OrderNumber: dto.OrderNumber,
+		Line:        dto.Line,
+		Station:     dto.Station,
+		Label:       dto.Label,
+		Author:      dto.Author,
 	}
 	_, err := l.queries.Update(ctx, arg)
 	if err != nil {
@@ -123,15 +131,17 @@ func (l *Labels) Update(dto *entity.UpdateDTO) (*entity.CreateDTO, error) {
 		return &entity.CreateDTO{}, err
 	}
 	resultDTO := entity.CreateDTO{
-		ID:         label.ID,
-		Customer:   label.Customer,
-		Family:     label.Family,
-		Model:      label.Model,
-		PartNumber: label.PartNumber,
-		Station:    label.Station,
-		Label:      label.Label,
-		Author:     label.Author,
-		CreatedAt:  label.CreatedAt,
+		ID:          label.ID,
+		Customer:    label.Customer,
+		Family:      label.Family,
+		Model:       label.Model,
+		PartNumber:  label.PartNumber,
+		OrderNumber: label.OrderNumber,
+		Line:        label.Line,
+		Station:     label.Station,
+		Label:       label.Label,
+		Author:      label.Author,
+		CreatedAt:   label.CreatedAt,
 	}
 	return &resultDTO, nil
 }

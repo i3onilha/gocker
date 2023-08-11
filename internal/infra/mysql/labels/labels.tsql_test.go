@@ -21,13 +21,15 @@ func TestCreateAndUpdate(t *testing.T) {
 	defer conn.Close()
 	lb := labels.New(conn)
 	params := labels.CreateParams{
-		Customer:   "customer created",
-		Family:     "family",
-		Model:      "model created",
-		PartNumber: "partnumber 2",
-		Station:    "station created",
-		Label:      "label created",
-		Author:     "bc0g8101",
+		Customer:    "customer created",
+		Family:      "family",
+		Model:       "model created",
+		PartNumber:  "partnumber 2",
+		OrderNumber: "38D45675",
+		Line:        "03",
+		Station:     "station created",
+		Label:       "label created",
+		Author:      "bc0g8101",
 	}
 	id, err := lb.CreateAndUpdate(ctx, db.GetDataSourceName(), params)
 	assert.Nil(t, err)

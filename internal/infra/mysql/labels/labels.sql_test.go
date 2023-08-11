@@ -31,14 +31,16 @@ func TestLabelCRUD(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotEqual(t, int64(0), id)
 	updateParams := labels.UpdateParams{
-		ID:         int32(id),
-		Customer:   "Customer",
-		Family:     "Family",
-		Model:      "Model",
-		PartNumber: "PartNumber",
-		Station:    "Station",
-		Label:      "Label",
-		Author:     "bc0g8100",
+		ID:          int32(id),
+		Customer:    "Customer",
+		Family:      "Family",
+		Model:       "Model",
+		PartNumber:  "PartNumber",
+		OrderNumber: "45D91234",
+		Line:        "01B",
+		Station:     "Station",
+		Label:       "Label",
+		Author:      "bc0g8100",
 	}
 	result, err = lb.Update(ctx, updateParams)
 	assert.Nil(t, err)
@@ -56,6 +58,8 @@ func TestLabelCRUD(t *testing.T) {
 	assert.Equal(t, updateParams.Family, updatedLabel.Family)
 	assert.Equal(t, updateParams.Model, updatedLabel.Model)
 	assert.Equal(t, updateParams.PartNumber, updatedLabel.PartNumber)
+	assert.Equal(t, updateParams.OrderNumber, updatedLabel.OrderNumber)
+	assert.Equal(t, updateParams.Line, updatedLabel.Line)
 	assert.Equal(t, updateParams.Station, updatedLabel.Station)
 	assert.Equal(t, updateParams.Label, updatedLabel.Label)
 	err = lb.DeleteByID(ctx, int32(id))
