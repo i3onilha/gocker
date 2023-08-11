@@ -14,15 +14,17 @@ type Label struct {
 }
 
 type LabelsDatum struct {
-	ID         int32
-	Customer   string
-	Family     string
-	Model      string
-	PartNumber string
-	Station    string
-	Label      string
-	Author     string
-	CreatedAt  time.Time
+	ID          int32
+	Customer    string
+	Family      string
+	Model       string
+	PartNumber  string
+	OrderNumber string
+	Line        string
+	Station     string
+	Label       string
+	Author      string
+	CreatedAt   time.Time
 }
 
 type LabelsDelete struct {

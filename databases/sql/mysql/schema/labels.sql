@@ -24,6 +24,8 @@ CREATE TABLE `labels_data` (
   `family` varchar(8) NOT NULL,
   `model` varchar(16) NOT NULL,
   `part_number` varchar(16) NOT NULL,
+  `order_number` varchar(9) NOT NULL,
+  `line` varchar(8) NOT NULL,
   `station` varchar(32) NOT NULL,
   `label` text NOT NULL,
   `author` varchar(8) NOT NULL,
@@ -33,7 +35,7 @@ CREATE TABLE `labels_data` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 LOCK TABLES `labels_data` WRITE;
-INSERT INTO `labels_data` VALUES (1,'Customer','Family','Model','PartNumber','Station','Label', 'bc0g7190','2023-08-04 23:57:16'),(2,'Customer','Family','Model','PartNumber','Station','Label', 'bc0g7191','2023-08-04 23:57:58'),(3,'Customer','Family','Model','PartNumber','Station','Label', 'bc0g7192','2023-08-04 23:57:59'),(4,'Customer','Family','Model','PartNumber','Station','Label', 'bc0g7193','2023-08-04 23:59:49'),(3,'Modified','Family','Model','PartNumber','Station','Label', 'bc0g7194','2023-08-06 23:59:49'),(1,'Modified','Family','Model','PartNumber','Station','Label', 'bc0g7195','2023-09-06 23:59:49'),(4,'Modified 2','Family','Model','PartNumber','Station','Label', 'bc0g7196','2023-09-06 23:59:49');
+INSERT INTO `labels_data` VALUES (1,'Customer','Family','Model','PartNumber', '17B006501', '01' , 'Station','Label', 'bc0g7190','2023-08-04 23:57:16'),(2,'Customer','Family','Model','PartNumber', '17B006501', '01', 'Station','Label', 'bc0g7191','2023-08-04 23:57:58'),(3,'Customer','Family','Model','PartNumber', '17B006501', '01', 'Station','Label', 'bc0g7192','2023-08-04 23:57:59'),(4,'Customer','Family','Model','PartNumber', '17B006501', '01', 'Station','Label', 'bc0g7193','2023-08-04 23:59:49'),(3,'Modified','Family','Model','PartNumber', '17B006501', '01', 'Station','Label', 'bc0g7194','2023-08-06 23:59:49'),(1,'Modified','Family','Model','PartNumber', '17B006501', '01', 'Station','Label', 'bc0g7195','2023-09-06 23:59:49'),(4,'Modified 2','Family','Model','PartNumber', '17B006501', '01', 'Station','Label', 'bc0g7196','2023-09-06 23:59:49');
 UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `labels_deletes`;
