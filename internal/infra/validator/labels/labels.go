@@ -9,6 +9,10 @@ import (
 
 type Labels struct{}
 
+func New() *Labels {
+	return &Labels{}
+}
+
 func (l *Labels) ValidateDataCreate(dto *entity.CreateDTO) error {
 	return validator.New().Struct(dto)
 }
