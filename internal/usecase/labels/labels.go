@@ -11,8 +11,8 @@ type Repository interface {
 }
 
 type Validator interface {
-	ValidateDTO(dto *entity.CreateDTO) error
-	ValidateUpdateDTO(dto *entity.UpdateDTO) error
+	ValidateDataCreate(dto *entity.CreateDTO) error
+	ValidateDataUpdate(dto *entity.UpdateDTO) error
 	ValidateID(id int) error
 }
 
@@ -29,7 +29,7 @@ func New(r Repository, v Validator) *labels {
 }
 
 func (l *labels) Create(dto *entity.CreateDTO) (*entity.CreateDTO, error) {
-	err := l.validator.ValidateDTO(dto)
+	err := l.validator.ValidateDataCreate(dto)
 	if err != nil {
 		return &entity.CreateDTO{}, err
 	}
@@ -57,7 +57,7 @@ func (l *labels) List(limit int, offset int) ([]*entity.CreateDTO, error) {
 }
 
 func (l *labels) Update(dto *entity.UpdateDTO) (*entity.CreateDTO, error) {
-	err := l.validator.ValidateUpdateDTO(dto)
+	err := l.validator.ValidateDataUpdate(dto)
 	if err != nil {
 		return &entity.CreateDTO{}, err
 	}
