@@ -28,7 +28,7 @@ func TestCRUD(t *testing.T) {
 	lb := labels.New(queries)
 	assert.NotNil(t, lb)
 	createDTO := &entity.CreateDTO{
-		Customer:    "repo cre",
+		Customer:    "TPLINK CRUD C",
 		Family:      "repo cre",
 		Model:       "repo cre",
 		PartNumber:  "repo cre",
@@ -44,7 +44,7 @@ func TestCRUD(t *testing.T) {
 	assert.NotNil(t, created)
 	updateDTO := &entity.UpdateDTO{
 		ID:          created.ID,
-		Customer:    "repo upt",
+		Customer:    "TPLINK CRUD U",
 		Family:      "repo upt",
 		Model:       "repo upt",
 		PartNumber:  "repo upt",

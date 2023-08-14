@@ -20,7 +20,7 @@ func TestNew(t *testing.T) {
 	assert.NotNil(t, db)
 	ctx := context.Background()
 	params := labels.CreateParams{
-		Customer:    "customer mysql",
+		Customer:    "TPLINK MYSQL",
 		Family:      "family",
 		Model:       "model created",
 		PartNumber:  "partnumber 2",

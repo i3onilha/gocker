@@ -21,7 +21,7 @@ func TestCreateAndUpdate(t *testing.T) {
 	defer conn.Close()
 	lb := labels.New(conn)
 	params := labels.CreateParams{
-		Customer:    "customer created",
+		Customer:    "TPLINK CREA",
 		Family:      "family",
 		Model:       "model created",
 		PartNumber:  "partnumber 2",
