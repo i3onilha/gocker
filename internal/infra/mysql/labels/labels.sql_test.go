@@ -31,17 +31,15 @@ func TestLabelCRUD(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotEqual(t, int64(0), id)
 	updateParams := labels.UpdateParams{
-		ID:          int32(id),
-		Customer:    "Customer",
-		Family:      "Family",
-		Model:       "Model",
-		PartNumber:  "PartNumber",
-		OrderNumber: "45D91234",
-		Line:        "01B",
-		Station:     "Station",
-		Dpi:         300,
-		Label:       "Label",
-		Author:      "bc0g8100",
+		ID:         int32(id),
+		Customer:   "Customer",
+		Model:      "Model",
+		PartNumber: "PartNumber",
+		Station:    "Station",
+		Dpi:        300,
+		Label:      "Label",
+		SqlQueries: `{"{{ carton }}":"1698","{{ serials }}":"1695","{{ model }}":"1695"}`,
+		Author:     "bc0g8100",
 	}
 	result, err = lb.Update(ctx, updateParams)
 	assert.Nil(t, err)
@@ -56,14 +54,12 @@ func TestLabelCRUD(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, updatedLabel)
 	assert.Equal(t, updateParams.Customer, updatedLabel.Customer)
-	assert.Equal(t, updateParams.Family, updatedLabel.Family)
 	assert.Equal(t, updateParams.Model, updatedLabel.Model)
 	assert.Equal(t, updateParams.PartNumber, updatedLabel.PartNumber)
-	assert.Equal(t, updateParams.OrderNumber, updatedLabel.OrderNumber)
-	assert.Equal(t, updateParams.Line, updatedLabel.Line)
 	assert.Equal(t, updateParams.Station, updatedLabel.Station)
 	assert.Equal(t, updateParams.Dpi, updatedLabel.Dpi)
 	assert.Equal(t, updateParams.Label, updatedLabel.Label)
+	assert.Equal(t, updateParams.SqlQueries, updatedLabel.SqlQueries)
 	err = lb.DeleteByID(ctx, int32(id))
 	assert.Nil(t, err)
 	deletedLabel, err := lb.GetByID(ctx, int32(id))

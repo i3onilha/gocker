@@ -22,7 +22,7 @@ func TestCreateAndUpdate(t *testing.T) {
 	lb := labels.New(conn)
 	params := labels.CreateParams{
 		Customer:    "TPLINK CREA",
-		Family:      "family",
+		SqlQueries:  `{"{{ carton }}":"1695","{{ serials }}":"1695","{{ model }}":"1695"}`,
 		Model:       "model created",
 		PartNumber:  "partnumber 2",
 		OrderNumber: "38D45675",

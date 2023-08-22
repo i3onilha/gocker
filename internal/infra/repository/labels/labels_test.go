@@ -28,32 +28,28 @@ func TestCRUD(t *testing.T) {
 	lb := labels.New(queries)
 	assert.NotNil(t, lb)
 	createDTO := &entity.CreateDTO{
-		Customer:    "TPLINK CRUD C",
-		Family:      "repo cre",
-		Model:       "repo cre",
-		PartNumber:  "repo cre",
-		OrderNumber: "repo cre",
-		Line:        "03A",
-		Station:     "repo cre",
-		Dpi:         300,
-		Label:       "repo cre",
-		Author:      "bc0g8984",
+		Customer:   "TPLINK CRUD C",
+		Model:      "repo cre",
+		PartNumber: "repo cre",
+		Station:    "repo cre",
+		Dpi:        300,
+		Label:      "repo cre",
+		SqlQueries: `{"{{ carton }}":"1695","{{ serials }}":"1695","{{ model }}":"1695"}`,
+		Author:     "bc0g8984",
 	}
 	created, err := lb.Create(createDTO)
 	assert.Nil(t, err)
 	assert.NotNil(t, created)
 	updateDTO := &entity.UpdateDTO{
-		ID:          created.ID,
-		Customer:    "TPLINK CRUD U",
-		Family:      "repo upt",
-		Model:       "repo upt",
-		PartNumber:  "repo upt",
-		OrderNumber: "repo cre",
-		Line:        "03A",
-		Station:     "repo upt",
-		Dpi:         300,
-		Label:       "repo upt",
-		Author:      "bc0g8984",
+		ID:         created.ID,
+		Customer:   "TPLINK CRUD U",
+		Model:      "repo upt",
+		PartNumber: "repo upt",
+		Station:    "repo upt",
+		Dpi:        300,
+		Label:      "repo upt",
+		SqlQueries: `{"{{ carton }}":"1695","{{ serials }}":"1695","{{ model }}":"1695"}`,
+		Author:     "bc0g8984",
 	}
 	updated, err := lb.Update(updateDTO)
 	assert.Nil(t, err)

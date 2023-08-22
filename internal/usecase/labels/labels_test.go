@@ -23,32 +23,28 @@ func TestCRUD(t *testing.T) {
 	u := usecase.New(r, v)
 	assert.NotNil(t, u)
 	dto := &entity.CreateDTO{
-		Customer:    "TPLINK",
-		Family:      "WRC914",
-		Model:       "WRC914AC",
-		PartNumber:  "ADP-12LW943",
-		OrderNumber: "37D800001",
-		Line:        "03D",
-		Station:     "MAC/SN",
-		Dpi:         152,
-		Label:       "Label 1",
-		Author:      "BC0F4533",
+		Customer:   "TPLINK",
+		Model:      "WRC914AC",
+		PartNumber: "ADP-12LW943",
+		Station:    "MAC/SN",
+		Dpi:        152,
+		Label:      "Label 1",
+		SqlQueries: `{"{{ carton }}":"1695","{{ serials }}":"1695","{{ model }}":"1695"}`,
+		Author:     "BC0F4533",
 	}
 	create, err := u.Create(dto)
 	assert.Nil(t, err)
 	assert.NotNil(t, create)
 	dto2 := &entity.UpdateDTO{
-		ID:          create.ID,
-		Customer:    "TPLINK",
-		Family:      "WRC914",
-		Model:       "WRC914AC",
-		PartNumber:  "ADP-12LW943",
-		OrderNumber: "37D800001",
-		Line:        "03D",
-		Station:     "MAC/SN",
-		Dpi:         152,
-		Label:       "Label 3",
-		Author:      "AC0F4533",
+		ID:         create.ID,
+		Customer:   "TPLINK",
+		Model:      "WRC914AC",
+		PartNumber: "ADP-12LW943",
+		Station:    "MAC/SN",
+		Dpi:        152,
+		Label:      "Label 3",
+		SqlQueries: `{"{{ carton }}":"1695","{{ serials }}":"1695","{{ model }}":"1695"}`,
+		Author:     "AC0F4533",
 	}
 	update, err := u.Update(dto2)
 	assert.Nil(t, err)

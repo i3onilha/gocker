@@ -29,7 +29,7 @@ func (q *Queries) DeleteByID(ctx context.Context, id int32) error {
 
 const getByID = `-- name: GetByID :one
 SELECT
-  labels_data.id, labels_data.customer, labels_data.family, labels_data.model, labels_data.part_number, labels_data.order_number, labels_data.line, labels_data.station, labels_data.dpi, labels_data.label, labels_data.author, labels_data.created_at
+  labels_data.id, labels_data.customer, labels_data.model, labels_data.part_number, labels_data.station, labels_data.dpi, labels_data.label, labels_data.sql_queries, labels_data.author, labels_data.created_at
 FROM
   labels_data
   LEFT JOIN labels_deletes ON labels_data.id = labels_deletes.id
@@ -45,14 +45,12 @@ func (q *Queries) GetByID(ctx context.Context, id int32) (LabelsDatum, error) {
 	err := row.Scan(
 		&i.ID,
 		&i.Customer,
-		&i.Family,
 		&i.Model,
 		&i.PartNumber,
-		&i.OrderNumber,
-		&i.Line,
 		&i.Station,
 		&i.Dpi,
 		&i.Label,
+		&i.SqlQueries,
 		&i.Author,
 		&i.CreatedAt,
 	)
@@ -61,7 +59,7 @@ func (q *Queries) GetByID(ctx context.Context, id int32) (LabelsDatum, error) {
 
 const listPaginate = `-- name: ListPaginate :many
 SELECT
-  labels_data.id, labels_data.customer, labels_data.family, labels_data.model, labels_data.part_number, labels_data.order_number, labels_data.line, labels_data.station, labels_data.dpi, labels_data.label, labels_data.author, labels_data.created_at
+  labels_data.id, labels_data.customer, labels_data.model, labels_data.part_number, labels_data.station, labels_data.dpi, labels_data.label, labels_data.sql_queries, labels_data.author, labels_data.created_at
 FROM
   labels_data
   LEFT JOIN labels_deletes ON labels_data.id = labels_deletes.id
@@ -92,14 +90,12 @@ func (q *Queries) ListPaginate(ctx context.Context, arg ListPaginateParams) ([]L
 		if err := rows.Scan(
 			&i.ID,
 			&i.Customer,
-			&i.Family,
 			&i.Model,
 			&i.PartNumber,
-			&i.OrderNumber,
-			&i.Line,
 			&i.Station,
 			&i.Dpi,
 			&i.Label,
+			&i.SqlQueries,
 			&i.Author,
 			&i.CreatedAt,
 		); err != nil {
@@ -117,36 +113,32 @@ func (q *Queries) ListPaginate(ctx context.Context, arg ListPaginateParams) ([]L
 }
 
 const update = `-- name: Update :execresult
-INSERT INTO labels_data (id, customer, family, model, part_number, order_number, line, station, dpi, label, author)
-  VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+INSERT INTO labels_data (id, customer, model, part_number, station, dpi, label, sql_queries, author)
+  VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)
 `
 
 type UpdateParams struct {
-	ID          int32
-	Customer    string
-	Family      string
-	Model       string
-	PartNumber  string
-	OrderNumber string
-	Line        string
-	Station     string
-	Dpi         int32
-	Label       string
-	Author      string
+	ID         int32
+	Customer   string
+	Model      string
+	PartNumber string
+	Station    string
+	Dpi        int32
+	Label      string
+	SqlQueries string
+	Author     string
 }
 
 func (q *Queries) Update(ctx context.Context, arg UpdateParams) (sql.Result, error) {
 	return q.db.ExecContext(ctx, update,
 		arg.ID,
 		arg.Customer,
-		arg.Family,
 		arg.Model,
 		arg.PartNumber,
-		arg.OrderNumber,
-		arg.Line,
 		arg.Station,
 		arg.Dpi,
 		arg.Label,
+		arg.SqlQueries,
 		arg.Author,
 	)
 }

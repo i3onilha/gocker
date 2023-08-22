@@ -20,16 +20,14 @@ func TestNew(t *testing.T) {
 	assert.NotNil(t, db)
 	ctx := context.Background()
 	params := labels.CreateParams{
-		Customer:    "TPLINK MYSQL",
-		Family:      "family",
-		Model:       "model created",
-		PartNumber:  "partnumber 2",
-		OrderNumber: "38D45675",
-		Line:        "03",
-		Station:     "station created",
-		Dpi:         300,
-		Label:       "label created",
-		Author:      "bc0g8101",
+		Customer:   "TPLINK MYSQL",
+		Model:      "model created",
+		PartNumber: "partnumber 2",
+		Station:    "station created",
+		Dpi:        300,
+		Label:      "label created",
+		SqlQueries: `{"{{ carton }}":"1695","{{ serials }}":"1695","{{ model }}":"1695"}`,
+		Author:     "bc0g8101",
 	}
 	id, err := db.Labels.CreateAndUpdate(ctx, dataSourceName, params)
 	assert.Nil(t, err)
