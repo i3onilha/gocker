@@ -38,6 +38,7 @@ func TestLabelCRUD(t *testing.T) {
 		Station:    "Station",
 		Dpi:        300,
 		Label:      "Label",
+		Setup:      `[{"variable":"{{ model }}","reportID":"1708","reportName":"WRC130BZ01E_F5_HEAD","start":"","x":""},{"variable":"{{ carton }}","reportID":"1708","reportName":"WRC130BZ01E_F5_HEAD","start":"","x":""},{"variable":"{{ serials1 }}","reportID":"1706","reportName":"WRC130BZ01E_F5_SER1","start":"1060","x":"-200"},{"variable":"{{ serials2 }}","reportID":"1707","reportName":"WRC130BZ01E_F5_SER2","start":"1060","x":"-220"}]`,
 		SqlQueries: `{"{{ carton }}":"1698","{{ serials }}":"1695","{{ model }}":"1695"}`,
 		Author:     "bc0g8100",
 	}
@@ -59,6 +60,7 @@ func TestLabelCRUD(t *testing.T) {
 	assert.Equal(t, updateParams.Station, updatedLabel.Station)
 	assert.Equal(t, updateParams.Dpi, updatedLabel.Dpi)
 	assert.Equal(t, updateParams.Label, updatedLabel.Label)
+	assert.Equal(t, updateParams.Setup, updatedLabel.Setup)
 	assert.Equal(t, updateParams.SqlQueries, updatedLabel.SqlQueries)
 	err = lb.DeleteByID(ctx, int32(id))
 	assert.Nil(t, err)

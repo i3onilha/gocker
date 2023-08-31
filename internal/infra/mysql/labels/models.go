@@ -21,6 +21,7 @@ type LabelsDatum struct {
 	Station    string
 	Dpi        int32
 	Label      string
+	Setup      string
 	SqlQueries string
 	Author     string
 	CreatedAt  time.Time

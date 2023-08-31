@@ -18,6 +18,7 @@ type CreateParams struct {
 	Station     string
 	Dpi         int32
 	Label       string
+	Setup       string
 	SqlQueries  string
 	Author      string
 }
@@ -56,6 +57,7 @@ func (q *Queries) CreateAndUpdate(ctx context.Context, dataSourceName string, da
 		Station:    data.Station,
 		Dpi:        data.Dpi,
 		Label:      data.Label,
+		Setup:      data.Setup,
 		SqlQueries: data.SqlQueries,
 		Author:     data.Author,
 	}

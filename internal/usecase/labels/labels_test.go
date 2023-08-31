@@ -29,6 +29,7 @@ func TestCRUD(t *testing.T) {
 		Station:    "MAC/SN",
 		Dpi:        152,
 		Label:      "Label 1",
+		Setup:      `[{"variable":"{{ model }}","reportID":"1708","reportName":"WRC130BZ01E_F5_HEAD","start":"","x":""},{"variable":"{{ carton }}","reportID":"1708","reportName":"WRC130BZ01E_F5_HEAD","start":"","x":""},{"variable":"{{ serials1 }}","reportID":"1706","reportName":"WRC130BZ01E_F5_SER1","start":"1060","x":"-200"},{"variable":"{{ serials2 }}","reportID":"1707","reportName":"WRC130BZ01E_F5_SER2","start":"1060","x":"-220"}]`,
 		SqlQueries: `{"{{ carton }}":"1695","{{ serials }}":"1695","{{ model }}":"1695"}`,
 		Author:     "BC0F4533",
 	}
@@ -43,6 +44,7 @@ func TestCRUD(t *testing.T) {
 		Station:    "MAC/SN",
 		Dpi:        152,
 		Label:      "Label 3",
+		Setup:      `[{"variable":"{{ model }}","reportID":"1708","reportName":"WRC130BZ01E_F5_HEAD","start":"","x":""},{"variable":"{{ carton }}","reportID":"1708","reportName":"WRC130BZ01E_F5_HEAD","start":"","x":""},{"variable":"{{ serials1 }}","reportID":"1706","reportName":"WRC130BZ01E_F5_SER1","start":"1060","x":"-200"},{"variable":"{{ serials2 }}","reportID":"1707","reportName":"WRC130BZ01E_F5_SER2","start":"1060","x":"-220"}]`,
 		SqlQueries: `{"{{ carton }}":"1695","{{ serials }}":"1695","{{ model }}":"1695"}`,
 		Author:     "AC0F4533",
 	}
