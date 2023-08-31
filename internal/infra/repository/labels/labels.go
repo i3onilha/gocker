@@ -2,6 +2,7 @@ package labels
 
 import (
 	"context"
+	"encoding/json"
 
 	entity "github.com/i3onilha/MESEnterpriseSmart/internal/entity/labels"
 	"github.com/i3onilha/MESEnterpriseSmart/internal/infra/mysql"
@@ -22,6 +23,10 @@ func New(queries *mysql.MySQL) *Labels {
 
 func (l *Labels) Create(dto *entity.CreateDTO) (*entity.CreateDTO, error) {
 	ctx := context.Background()
+	setupInput, err := json.Marshal(dto.Setup)
+	if err != nil {
+		return &entity.CreateDTO{}, err
+	}
 	data := labels.CreateParams{
 		Customer:   dto.Customer,
 		Model:      dto.Model,
@@ -29,7 +34,7 @@ func (l *Labels) Create(dto *entity.CreateDTO) (*entity.CreateDTO, error) {
 		Station:    dto.Station,
 		Dpi:        dto.Dpi,
 		Label:      dto.Label,
-		Setup:      dto.Setup,
+		Setup:      string(setupInput),
 		SqlQueries: dto.SqlQueries,
 		Author:     dto.Author,
 	}
@@ -41,6 +46,11 @@ func (l *Labels) Create(dto *entity.CreateDTO) (*entity.CreateDTO, error) {
 	if err != nil {
 		return &entity.CreateDTO{}, err
 	}
+	var setupOutput []entity.Setup
+	err = json.Unmarshal([]byte(label.Setup), &setupOutput)
+	if err != nil {
+		return &entity.CreateDTO{}, err
+	}
 	result := entity.CreateDTO{
 		ID:         label.ID,
 		Customer:   label.Customer,
@@ -49,7 +59,7 @@ func (l *Labels) Create(dto *entity.CreateDTO) (*entity.CreateDTO, error) {
 		Station:    label.Station,
 		Dpi:        label.Dpi,
 		Label:      label.Label,
-		Setup:      label.Setup,
+		Setup:      setupOutput,
 		SqlQueries: label.SqlQueries,
 		Author:     label.Author,
 		CreatedAt:  label.CreatedAt,
@@ -66,6 +76,11 @@ func (l *Labels) GetByID(id int) (*entity.CreateDTO, error) {
 	if err != nil {
 		return nil, err
 	}
+	var setupOutput []entity.Setup
+	err = json.Unmarshal([]byte(label.Setup), &setupOutput)
+	if err != nil {
+		return &entity.CreateDTO{}, err
+	}
 	result := &entity.CreateDTO{
 		ID:         label.ID,
 		Customer:   label.Customer,
@@ -74,7 +89,7 @@ func (l *Labels) GetByID(id int) (*entity.CreateDTO, error) {
 		Station:    label.Station,
 		Dpi:        label.Dpi,
 		Label:      label.Label,
-		Setup:      label.Setup,
+		Setup:      setupOutput,
 		SqlQueries: label.SqlQueries,
 		Author:     label.Author,
 		CreatedAt:  label.CreatedAt,
@@ -93,6 +108,8 @@ func (l *Labels) ListPaginate(limit, offset int) ([]*entity.CreateDTO, error) {
 	}
 	result := make([]*entity.CreateDTO, len(list))
 	for i, label := range list {
+		var setupOutput []entity.Setup
+		json.Unmarshal([]byte(label.Setup), &setupOutput)
 		result[i] = &entity.CreateDTO{
 			ID:         label.ID,
 			Customer:   label.Customer,
@@ -101,7 +118,7 @@ func (l *Labels) ListPaginate(limit, offset int) ([]*entity.CreateDTO, error) {
 			Station:    label.Station,
 			Dpi:        label.Dpi,
 			Label:      label.Label,
-			Setup:      label.Setup,
+			Setup:      setupOutput,
 			SqlQueries: label.SqlQueries,
 			Author:     label.Author,
 			CreatedAt:  label.CreatedAt,
@@ -112,6 +129,10 @@ func (l *Labels) ListPaginate(limit, offset int) ([]*entity.CreateDTO, error) {
 
 func (l *Labels) Update(dto *entity.UpdateDTO) (*entity.CreateDTO, error) {
 	ctx := context.Background()
+	setupInput, err := json.Marshal(dto.Setup)
+	if err != nil {
+		return &entity.CreateDTO{}, err
+	}
 	arg := labels.UpdateParams{
 		ID:         dto.ID,
 		Customer:   dto.Customer,
@@ -120,15 +141,20 @@ func (l *Labels) Update(dto *entity.UpdateDTO) (*entity.CreateDTO, error) {
 		Station:    dto.Station,
 		Dpi:        dto.Dpi,
 		Label:      dto.Label,
-		Setup:      dto.Setup,
+		Setup:      string(setupInput),
 		SqlQueries: dto.SqlQueries,
 		Author:     dto.Author,
 	}
-	_, err := l.queries.Update(ctx, arg)
+	_, err = l.queries.Update(ctx, arg)
 	if err != nil {
 		return &entity.CreateDTO{}, err
 	}
 	label, err := l.queries.GetByID(ctx, dto.ID)
+	if err != nil {
+		return &entity.CreateDTO{}, err
+	}
+	var setupOutput []entity.Setup
+	err = json.Unmarshal([]byte(label.Setup), &setupOutput)
 	if err != nil {
 		return &entity.CreateDTO{}, err
 	}
@@ -140,7 +166,7 @@ func (l *Labels) Update(dto *entity.UpdateDTO) (*entity.CreateDTO, error) {
 		Station:    label.Station,
 		Dpi:        label.Dpi,
 		Label:      label.Label,
-		Setup:      label.Setup,
+		Setup:      setupOutput,
 		SqlQueries: label.SqlQueries,
 		Author:     label.Author,
 		CreatedAt:  label.CreatedAt,
