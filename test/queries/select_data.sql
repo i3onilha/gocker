@@ -1,10 +1,10 @@
 SELECT
+  labels_data.id,
   labels_data.customer,
   labels_data.model,
   labels_data.part_number,
   labels_data.station,
   labels_data.dpi,
-  labels_data.label,
   labels_data.sql_queries
 FROM
   labels_data
