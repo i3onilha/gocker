@@ -30,8 +30,8 @@ type CreateDTO struct {
 	Dpi        int32  `validate:"required,gte=0,lte=600"`
 	Label      string `validate:"required,min=6,max=65535"`
 	Setup      []Setup
-	SqlQueries string `validate:"required,min=6,max=65535"`
 	Author     string `validate:"required"`
+	SqlQueries string `validate:"required,min=6,max=65535"`
 	CreatedAt  time.Time
 }
 
@@ -44,6 +44,6 @@ type UpdateDTO struct {
 	Dpi        int32  `validate:"required,gte=0,lte=600"`
 	Label      string `validate:"required,min=6,max=65535"`
 	Setup      []Setup
-	SqlQueries string `validate:"required,min=6,max=65535"`
 	Author     string `validate:"required"`
+	SqlQueries string `validate:"required,min=6,max=65535"`
 }
