@@ -2,6 +2,17 @@ package labels
 
 import "time"
 
+type CreateLabelDTO struct {
+	Customer   string  `json:"customer"`
+	Model      string  `json:"model"`
+	PartNumber string  `json:"part_number"`
+	Station    string  `json:"station"`
+	Dpi        string  `json:"dpi"`
+	Label      string  `json:"label"`
+	Setup      []Setup `json:"setup"`
+	Author     string  `json:"author"`
+}
+
 type Setup struct {
 	Variable   string `json:"variable"`
 	ReportID   string `json:"reportID"`
