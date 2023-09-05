@@ -301,6 +301,48 @@ func main() {
 				}
 				w.Write(buf)
 			})
+			r.Delete("/delete/{id}", func(w http.ResponseWriter, r *http.Request) {
+				id := chi.URLParam(r, "id")
+				log.Println("id: ", id)
+				c, err := config.New()
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusBadRequest)
+					return
+				}
+				queries, err := mysql.New(c.GetDB().GetDataSourceName())
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusBadRequest)
+					return
+				}
+				repo := repository.New(queries)
+				vali := validator.New()
+				usec := usecase.New(repo, vali)
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusBadRequest)
+					return
+				}
+				idNum, err := strconv.Atoi(id)
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusBadRequest)
+					return
+				}
+				err = usec.DeleteByID(idNum)
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusBadRequest)
+					return
+				}
+				resp := map[string]string{
+					"status":  "OK",
+					"message": "Label deleted successfully",
+					"id":      id,
+				}
+				buf, err := json.Marshal(resp)
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusBadRequest)
+					return
+				}
+				w.Write(buf)
+			})
 		})
 	})
 	err := http.ListenAndServe(":7192", r)
