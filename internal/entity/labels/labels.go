@@ -14,7 +14,7 @@ type CreateLabelDTO struct {
 }
 
 type UpdateLabelDTO struct {
-	ID         int32   `json:"id"`
+	ID         string  `json:"id"`
 	Customer   string  `json:"customer"`
 	Model      string  `json:"model"`
 	PartNumber string  `json:"part_number"`

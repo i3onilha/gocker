@@ -169,6 +169,11 @@ func main() {
 					http.Error(w, err.Error(), http.StatusBadRequest)
 					return
 				}
+				id, err := strconv.Atoi(updateLabelDTO.ID)
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusBadRequest)
+					return
+				}
 				SQLs := make(map[string]string)
 				for _, setup := range updateLabelDTO.Setup {
 					reportID := setup.ReportID
@@ -212,6 +217,7 @@ func main() {
 					return
 				}
 				updateDto := &labels.UpdateDTO{
+					ID:         int32(id),
 					Customer:   updateLabelDTO.Customer,
 					Model:      updateLabelDTO.Model,
 					PartNumber: updateLabelDTO.PartNumber,
@@ -239,17 +245,16 @@ func main() {
 					http.Error(w, err.Error(), http.StatusBadRequest)
 					return
 				}
-				updated, err := usec.Update(updateDto)
+				_, err = usec.Update(updateDto)
 				if err != nil {
 					http.Error(w, err.Error(), http.StatusBadRequest)
 					return
 				}
 				// extract this to a function and
-				id := strconv.Itoa(int(updated.ID))
 				resp := map[string]string{
 					"status":  "OK",
 					"message": "Label updated successfully",
-					"id":      id,
+					"id":      updateLabelDTO.ID,
 				}
 				buf, err := json.Marshal(resp)
 				if err != nil {
