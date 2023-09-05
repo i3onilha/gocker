@@ -58,6 +58,57 @@ func (q *Queries) GetByID(ctx context.Context, id int32) (LabelsDatum, error) {
 	return i, err
 }
 
+const listByParts = `-- name: ListByParts :many
+SELECT
+  labels_data.id, labels_data.customer, labels_data.model, labels_data.part_number, labels_data.station, labels_data.dpi, labels_data.label, labels_data.setup, labels_data.sql_queries, labels_data.author, labels_data.created_at
+FROM
+  labels_data
+  LEFT JOIN labels_deletes ON labels_data.id = labels_deletes.id
+WHERE labels_deletes.id IS NULL
+  AND labels_data.part_number = ?
+  AND labels_data.created_at IN(
+    SELECT MAX(labels_data.created_at)
+    FROM labels_data
+    GROUP BY labels_data.id
+  )
+ORDER BY labels_data.created_at DESC
+`
+
+func (q *Queries) ListByParts(ctx context.Context, partNumber string) ([]LabelsDatum, error) {
+	rows, err := q.db.QueryContext(ctx, listByParts, partNumber)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []LabelsDatum
+	for rows.Next() {
+		var i LabelsDatum
+		if err := rows.Scan(
+			&i.ID,
+			&i.Customer,
+			&i.Model,
+			&i.PartNumber,
+			&i.Station,
+			&i.Dpi,
+			&i.Label,
+			&i.Setup,
+			&i.SqlQueries,
+			&i.Author,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const listByPartsAndStationAndDpi = `-- name: ListByPartsAndStationAndDpi :many
 SELECT
   labels_data.id, labels_data.customer, labels_data.model, labels_data.part_number, labels_data.station, labels_data.dpi, labels_data.label, labels_data.setup, labels_data.sql_queries, labels_data.author, labels_data.created_at

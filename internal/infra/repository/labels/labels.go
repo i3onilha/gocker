@@ -127,6 +127,31 @@ func (l *Labels) ListPaginate(limit, offset int) ([]*entity.CreateDTO, error) {
 	return result, nil
 }
 
+func (l *Labels) ListByParts(partNumber string) ([]*entity.CreateDTO, error) {
+	list, err := l.queries.ListByParts(context.Background(), partNumber)
+	if err != nil {
+		return nil, err
+	}
+	result := make([]*entity.CreateDTO, len(list))
+	for i, label := range list {
+		var setupOutput []entity.Setup
+		json.Unmarshal([]byte(label.Setup), &setupOutput)
+		result[i] = &entity.CreateDTO{
+			ID:         label.ID,
+			Customer:   label.Customer,
+			Model:      label.Model,
+			PartNumber: label.PartNumber,
+			Station:    label.Station,
+			Dpi:        label.Dpi,
+			Label:      label.Label,
+			Setup:      setupOutput,
+			Author:     label.Author,
+			SqlQueries: label.SqlQueries,
+		}
+	}
+	return result, nil
+}
+
 func (l *Labels) ListByPartsAndStationAndDpi(partNumber, station string, dpi int) ([]*entity.CreateDTO, error) {
 	arg := labels.ListByPartsAndStationAndDpiParams{
 		PartNumber: partNumber,

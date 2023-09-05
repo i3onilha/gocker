@@ -155,6 +155,37 @@ func main() {
 				}
 				w.Write(buf)
 			})
+			r.Get("/list/{part_number}", func(w http.ResponseWriter, r *http.Request) {
+				partNumber := chi.URLParam(r, "part_number")
+				c, err := config.New()
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusBadRequest)
+					return
+				}
+				queries, err := mysql.New(c.GetDB().GetDataSourceName())
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusBadRequest)
+					return
+				}
+				repo := repository.New(queries)
+				vali := validator.New()
+				usec := usecase.New(repo, vali)
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusBadRequest)
+					return
+				}
+				list, err := usec.ListByParts(partNumber)
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusBadRequest)
+					return
+				}
+				buf, err := json.Marshal(list)
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusBadRequest)
+					return
+				}
+				w.Write(buf)
+			})
 			r.Get("/list/{part_number}/{station}/{dpi}", func(w http.ResponseWriter, r *http.Request) {
 				partNumber := chi.URLParam(r, "part_number")
 				station := chi.URLParam(r, "station")

@@ -8,6 +8,7 @@ type Repository interface {
 	GetByID(id int) (*entity.CreateDTO, error)
 	ListPaginate(limit, offset int) ([]*entity.CreateDTO, error)
 	ListByPartsAndStationAndDpi(partNumber, station string, dpi int) ([]*entity.CreateDTO, error)
+	ListByParts(partNumber string) ([]*entity.CreateDTO, error)
 	Update(dto *entity.UpdateDTO) (*entity.CreateDTO, error)
 }
 
@@ -55,6 +56,10 @@ func (l *labels) GetByID(id int) (*entity.CreateDTO, error) {
 
 func (l *labels) List(limit int, offset int) ([]*entity.CreateDTO, error) {
 	return l.repository.ListPaginate(limit, offset)
+}
+
+func (l *labels) ListByParts(partNumber string) ([]*entity.CreateDTO, error) {
+	return l.repository.ListByParts(partNumber)
 }
 
 func (l *labels) ListByPartsAndStationAndDpi(partNumber, station string, dpi int) ([]*entity.CreateDTO, error) {
