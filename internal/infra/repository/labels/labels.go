@@ -150,6 +150,7 @@ func (l *Labels) ListByPartsAndStationAndDpi(partNumber, station string, dpi int
 			Dpi:        label.Dpi,
 			Label:      label.Label,
 			Setup:      setupOutput,
+			Author:     label.Author,
 			SqlQueries: label.SqlQueries,
 		}
 	}
