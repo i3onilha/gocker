@@ -155,7 +155,7 @@ func main() {
 				}
 				w.Write(buf)
 			})
-			r.Post("/update/{session}", func(w http.ResponseWriter, r *http.Request) {
+			r.Put("/update/{session}", func(w http.ResponseWriter, r *http.Request) {
 				var updateLabelDTO labels.UpdateLabelDTO
 				session := chi.URLParam(r, "session")
 				err := json.NewDecoder(r.Body).Decode(&updateLabelDTO)
