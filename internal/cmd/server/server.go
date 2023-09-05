@@ -155,6 +155,109 @@ func main() {
 				}
 				w.Write(buf)
 			})
+			r.Post("/update/{session}", func(w http.ResponseWriter, r *http.Request) {
+				var updateLabelDTO labels.UpdateLabelDTO
+				session := chi.URLParam(r, "session")
+				err := json.NewDecoder(r.Body).Decode(&updateLabelDTO)
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusBadRequest)
+					return
+				}
+				// extract this to a function start
+				dpi, err := strconv.Atoi(updateLabelDTO.Dpi)
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusBadRequest)
+					return
+				}
+				SQLs := make(map[string]string)
+				for _, setup := range updateLabelDTO.Setup {
+					reportID := setup.ReportID
+					data := url.Values{
+						"funcao":       {"CDQCREPORTSQLT::getSQLReport"},
+						"conn":         {"padb"},
+						"dados[d][id]": {reportID},
+					}
+					url := "http://10.58.64.198:8081/workshop/webservice.php?session=" + session //#TODO: change to config
+					resp, err := http.PostForm(url, data)
+					if err != nil {
+						http.Error(w, err.Error(), http.StatusBadRequest)
+						return
+					}
+					defer resp.Body.Close()
+					body, err := ioutil.ReadAll(resp.Body)
+					if err != nil {
+						http.Error(w, err.Error(), http.StatusBadRequest)
+						return
+					}
+					var repSQL RepSQL
+					err = json.Unmarshal(body, &repSQL)
+					if err != nil {
+						msg := "please check if report id " + reportID + " exists: "
+						http.Error(w, msg+err.Error(), http.StatusBadRequest)
+						return
+					}
+					key := setup.ReportID + "_" + setup.ReportName
+					value := repSQL.REP_QUERY
+					if setup.Start != "" {
+						value = strings.Replace(value, "':START'", setup.Start, -1)
+					}
+					if setup.X != "" {
+						value = strings.Replace(value, "':X'", setup.X, -1)
+					}
+					SQLs[key] = value
+				}
+				sqlQueries, err := json.Marshal(SQLs)
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusBadRequest)
+					return
+				}
+				updateDto := &labels.UpdateDTO{
+					Customer:   updateLabelDTO.Customer,
+					Model:      updateLabelDTO.Model,
+					PartNumber: updateLabelDTO.PartNumber,
+					Station:    updateLabelDTO.Station,
+					Dpi:        int32(dpi),
+					Label:      updateLabelDTO.Label,
+					Setup:      updateLabelDTO.Setup,
+					Author:     updateLabelDTO.Author,
+					SqlQueries: string(sqlQueries),
+				}
+				c, err := config.New()
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusBadRequest)
+					return
+				}
+				queries, err := mysql.New(c.GetDB().GetDataSourceName())
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusBadRequest)
+					return
+				}
+				repo := repository.New(queries)
+				vali := validator.New()
+				usec := usecase.New(repo, vali)
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusBadRequest)
+					return
+				}
+				updated, err := usec.Update(updateDto)
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusBadRequest)
+					return
+				}
+				// extract this to a function and
+				id := strconv.Itoa(int(updated.ID))
+				resp := map[string]string{
+					"status":  "OK",
+					"message": "Label updated successfully",
+					"id":      id,
+				}
+				buf, err := json.Marshal(resp)
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusBadRequest)
+					return
+				}
+				w.Write(buf)
+			})
 		})
 	})
 	err := http.ListenAndServe(":7192", r)
