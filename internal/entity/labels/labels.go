@@ -13,6 +13,18 @@ type CreateLabelDTO struct {
 	Author     string  `json:"author"`
 }
 
+type UpdateLabelDTO struct {
+	ID         int32   `json:"id"`
+	Customer   string  `json:"customer"`
+	Model      string  `json:"model"`
+	PartNumber string  `json:"part_number"`
+	Station    string  `json:"station"`
+	Dpi        string  `json:"dpi"`
+	Label      string  `json:"label"`
+	Setup      []Setup `json:"setup"`
+	Author     string  `json:"author"`
+}
+
 type Setup struct {
 	Variable   string `json:"variable"`
 	ReportID   string `json:"reportID"`

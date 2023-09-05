@@ -4,8 +4,7 @@ SELECT
   labels_data.model,
   labels_data.part_number,
   labels_data.station,
-  labels_data.dpi,
-  labels_data.sql_queries
+  labels_data.dpi
 FROM
   labels_data
   LEFT JOIN labels_deletes ON labels_data.id = labels_deletes.id
