@@ -61,11 +61,6 @@ func main() {
 					return
 				}
 				// extract this to a function start
-				dpi, err := strconv.Atoi(createLabelDTO.Dpi)
-				if err != nil {
-					http.Error(w, err.Error(), http.StatusBadRequest)
-					return
-				}
 				SQLs := make(map[string]string)
 				for _, setup := range createLabelDTO.Setup {
 					reportID := setup.ReportID
@@ -113,7 +108,7 @@ func main() {
 					Model:      createLabelDTO.Model,
 					PartNumber: createLabelDTO.PartNumber,
 					Station:    createLabelDTO.Station,
-					Dpi:        int32(dpi),
+					Dpi:        createLabelDTO.Dpi,
 					Label:      createLabelDTO.Label,
 					Setup:      createLabelDTO.Setup,
 					Author:     createLabelDTO.Author,
