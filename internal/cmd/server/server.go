@@ -228,11 +228,6 @@ func main() {
 					return
 				}
 				// extract this to a function start
-				dpi, err := strconv.Atoi(updateLabelDTO.Dpi)
-				if err != nil {
-					http.Error(w, err.Error(), http.StatusBadRequest)
-					return
-				}
 				id, err := strconv.Atoi(updateLabelDTO.ID)
 				if err != nil {
 					http.Error(w, err.Error(), http.StatusBadRequest)
@@ -286,7 +281,7 @@ func main() {
 					Model:      updateLabelDTO.Model,
 					PartNumber: updateLabelDTO.PartNumber,
 					Station:    updateLabelDTO.Station,
-					Dpi:        int32(dpi),
+					Dpi:        updateLabelDTO.Dpi,
 					Label:      updateLabelDTO.Label,
 					Setup:      updateLabelDTO.Setup,
 					Author:     updateLabelDTO.Author,
