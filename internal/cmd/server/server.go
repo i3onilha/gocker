@@ -52,7 +52,7 @@ func main() {
 			w.Write([]byte("v0.0.1"))
 		})
 		r.Route("/labels", func(r chi.Router) {
-			r.Post("/create/{session}", func(w http.ResponseWriter, r *http.Request) {
+			r.Post("/{session}", func(w http.ResponseWriter, r *http.Request) {
 				var createLabelDTO labels.CreateLabelDTO
 				session := chi.URLParam(r, "session")
 				err := json.NewDecoder(r.Body).Decode(&createLabelDTO)
@@ -150,7 +150,7 @@ func main() {
 				}
 				w.Write(buf)
 			})
-			r.Get("/list/{part_number}", func(w http.ResponseWriter, r *http.Request) {
+			r.Get("/{part_number}", func(w http.ResponseWriter, r *http.Request) {
 				partNumber := chi.URLParam(r, "part_number")
 				c, err := config.New()
 				if err != nil {
@@ -181,7 +181,7 @@ func main() {
 				}
 				w.Write(buf)
 			})
-			r.Get("/list/{part_number}/{station}/{dpi}", func(w http.ResponseWriter, r *http.Request) {
+			r.Get("/{part_number}/{station}/{dpi}", func(w http.ResponseWriter, r *http.Request) {
 				partNumber := chi.URLParam(r, "part_number")
 				station := chi.URLParam(r, "station")
 				dpi := chi.URLParam(r, "dpi")
@@ -219,7 +219,7 @@ func main() {
 				}
 				w.Write(buf)
 			})
-			r.Put("/update/{session}", func(w http.ResponseWriter, r *http.Request) {
+			r.Put("/{session}", func(w http.ResponseWriter, r *http.Request) {
 				var updateLabelDTO labels.UpdateLabelDTO
 				session := chi.URLParam(r, "session")
 				err := json.NewDecoder(r.Body).Decode(&updateLabelDTO)
@@ -322,7 +322,7 @@ func main() {
 				}
 				w.Write(buf)
 			})
-			r.Delete("/delete/{id}", func(w http.ResponseWriter, r *http.Request) {
+			r.Delete("/{id}", func(w http.ResponseWriter, r *http.Request) {
 				id := chi.URLParam(r, "id")
 				log.Println("id: ", id)
 				c, err := config.New()
