@@ -32,6 +32,11 @@ type Setup struct {
 	Start      string `json:"start"`
 	X          string `json:"x"`
 }
+type ZplDTO struct {
+	Label      string  `validate:"required,min=6,max=65535" json:"label"`
+	SqlQueries string  `validate:"required,min=6,max=65535" json:"sql_queries"`
+	Setup      []Setup `json:"setup"`
+}
 
 type CreateDTO struct {
 	ID         int32     `validate:"gte=0" json:"id"`
