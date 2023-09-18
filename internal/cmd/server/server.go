@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -24,6 +25,11 @@ import (
 
 type RepSQL struct {
 	REP_QUERY string `json:"REP_QUERY"`
+}
+
+type RepLabel struct {
+	Label   string   `json:"label"`
+	Queries []string `json:"queries"`
 }
 
 func main() {
@@ -362,6 +368,59 @@ func main() {
 					return
 				}
 				w.Write(buf)
+			})
+		})
+		r.Route("/zpl", func(r chi.Router) {
+			r.Get("/{part_number}/{station}/{dpi}/{serial}/{key}", func(w http.ResponseWriter, r *http.Request) {
+				partNumber := chi.URLParam(r, "part_number")
+				station := chi.URLParam(r, "station")
+				dpi := chi.URLParam(r, "dpi")
+				keyReplace := chi.URLParam(r, "key")
+				dpiNumber, err := strconv.Atoi(dpi)
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusBadRequest)
+					return
+				}
+				c, err := config.New()
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusBadRequest)
+					return
+				}
+				queries, err := mysql.New(c.GetDB().GetDataSourceName())
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusBadRequest)
+					return
+				}
+				repo := repository.New(queries)
+				vali := validator.New()
+				usec := usecase.New(repo, vali)
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusBadRequest)
+					return
+				}
+				list, err := usec.ListZPLByPartsAndStationAndDpi(partNumber, station, dpiNumber)
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusBadRequest)
+					return
+				}
+				repLabels := []RepLabel{}
+				for _, label := range list {
+					repLabel := RepLabel{
+						Label: label.Label,
+					}
+					sqlQueries := make(map[string]string)
+					err := json.Unmarshal([]byte(label.SqlQueries), &sqlQueries)
+					if err != nil {
+						http.Error(w, err.Error(), http.StatusBadRequest)
+						return
+					}
+					for _, value := range sqlQueries {
+						value = strings.ReplaceAll(value, fmt.Sprintf(":%s", keyReplace), chi.URLParam(r, "serial"))
+						repLabel.Queries = append(repLabel.Queries, value)
+					}
+					repLabels = append(repLabels, repLabel)
+				}
+				json.NewEncoder(w).Encode(repLabels)
 			})
 		})
 	})
