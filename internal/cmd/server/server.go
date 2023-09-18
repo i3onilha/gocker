@@ -414,9 +414,9 @@ func main() {
 						http.Error(w, err.Error(), http.StatusBadRequest)
 						return
 					}
-					for _, value := range sqlQueries {
-						value = strings.ReplaceAll(value, fmt.Sprintf(":%s", keyReplace), chi.URLParam(r, "serial"))
-						repLabel.Queries = append(repLabel.Queries, value)
+					for _, sql := range sqlQueries {
+						sql = strings.ReplaceAll(sql, fmt.Sprintf(":%s", keyReplace), chi.URLParam(r, "serial"))
+						repLabel.Queries = append(repLabel.Queries, sql)
 					}
 					repLabels = append(repLabels, repLabel)
 				}
