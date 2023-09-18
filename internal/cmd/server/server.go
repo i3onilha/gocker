@@ -324,7 +324,6 @@ func main() {
 			})
 			r.Delete("/{id}", func(w http.ResponseWriter, r *http.Request) {
 				id := chi.URLParam(r, "id")
-				log.Println("id: ", id)
 				c, err := config.New()
 				if err != nil {
 					http.Error(w, err.Error(), http.StatusBadRequest)
