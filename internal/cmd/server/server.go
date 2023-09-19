@@ -28,8 +28,15 @@ type RepSQL struct {
 }
 
 type RepLabel struct {
-	Label   string   `json:"label"`
-	Queries []string `json:"queries"`
+	Label   string  `json:"label"`
+	Queries []Query `json:"queries"`
+}
+
+type Query struct {
+	RepID   string   `json:"rep_id"`
+	RepName string   `json:"rep_name"`
+	Columns []string `json:"columns"`
+	SQL     string   `json:"sql"`
 }
 
 func main() {
@@ -414,9 +421,24 @@ func main() {
 						http.Error(w, err.Error(), http.StatusBadRequest)
 						return
 					}
-					for _, sql := range sqlQueries {
+					for key, sql := range sqlQueries {
+						var repId, repName = "", ""
+						columns := []string{}
+						for _, set := range label.Setup {
+							if set.ReportID+"_"+set.ReportName == key {
+								columns = append(columns, set.Variable)
+								repId = set.ReportID
+								repName = set.ReportName
+							}
+						}
 						sql = strings.ReplaceAll(sql, fmt.Sprintf(":%s", keyReplace), chi.URLParam(r, "serial"))
-						repLabel.Queries = append(repLabel.Queries, sql)
+						query := Query{
+							RepID:   repId,
+							RepName: repName,
+							Columns: columns,
+							SQL:     sql,
+						}
+						repLabel.Queries = append(repLabel.Queries, query)
 					}
 					repLabels = append(repLabels, repLabel)
 				}
