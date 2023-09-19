@@ -35,6 +35,7 @@ type RepLabel struct {
 type Query struct {
 	RepID   string   `json:"rep_id"`
 	RepName string   `json:"rep_name"`
+	LoopVar bool     `json:"loop_var"`
 	Columns []string `json:"columns"`
 	SQL     string   `json:"sql"`
 }
@@ -423,18 +424,21 @@ func main() {
 					}
 					for key, sql := range sqlQueries {
 						var repId, repName = "", ""
+						var loopVar bool
 						columns := []string{}
 						for _, set := range label.Setup {
 							if set.ReportID+"_"+set.ReportName == key {
 								columns = append(columns, set.Variable)
 								repId = set.ReportID
 								repName = set.ReportName
+								loopVar = set.LoopVar
 							}
 						}
 						sql = strings.ReplaceAll(sql, fmt.Sprintf(":%s", keyReplace), chi.URLParam(r, "serial"))
 						query := Query{
 							RepID:   repId,
 							RepName: repName,
+							LoopVar: loopVar,
 							Columns: columns,
 							SQL:     sql,
 						}
