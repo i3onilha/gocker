@@ -18,7 +18,7 @@ ENV OCI_INCLUDE_DIR="${ORACLE_INSTANT_CLIENT_PATH}${ORACLE_INSTANT_CLIENT_VERSIO
 ENV OCI_LIB_DIR="${ORACLE_INSTANT_CLIENT_PATH}${ORACLE_INSTANT_CLIENT_VERSION}"
 ENV OCI_VERSION=${ORACLE_INSTANT_CLIENT_MAJOR}
 
-ENV NODE_VERSION v16.17.1
+ENV NODE_VERSION v18.17.0
 ENV NVM_DIR ${HOME_USER}/.nvm
 ENV NPM_FETCH_RETRIES 2
 ENV NPM_FETCH_RETRY_FACTOR 10
@@ -106,7 +106,6 @@ RUN mkdir -p NVM_DIR \
     && npm config set fetch-retry-factor ${NPM_FETCH_RETRY_FACTOR} \
     && npm config set fetch-retry-mintimeout ${NPM_FETCH_RETRY_MINTIMEOUT} \
     && npm config set fetch-retry-maxtimeout ${NPM_FETCH_RETRY_MAXTIMEOUT} \
-    && ln -s `npm bin --global` ${HOME_USER}/.node-bin \
     && npm install -g yarn \
     && npm install -g npm
 
