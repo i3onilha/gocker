@@ -35,9 +35,9 @@ type RepLabel struct {
 }
 
 type RepValue struct {
-	RepID   string `json:"rep_id"`
-	RepName string `json:"rep_name"`
-	Data    string `json:"data"`
+	RepID   string                 `json:"rep_id"`
+	RepName string                 `json:"rep_name"`
+	Data    map[string]interface{} `json:"data"`
 }
 
 func main() {
@@ -443,10 +443,16 @@ func main() {
 							column := strings.Join(columns, "")
 							d = fmt.Sprintf(`{"%s":%s}`, column, d)
 						}
+						var data map[string]interface{}
+						err = json.Unmarshal([]byte(d), &data)
+						if err != nil {
+							http.Error(w, err.Error(), http.StatusBadRequest)
+							return
+						}
 						repValue := RepValue{
 							RepID:   repId,
 							RepName: repName,
-							Data:    d,
+							Data:    data,
 						}
 						repLabel.Values = append(repLabel.Values, repValue)
 					}
