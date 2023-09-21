@@ -30,16 +30,14 @@ type RepSQL struct {
 }
 
 type RepLabel struct {
-	Label   string  `json:"label"`
-	Queries []Query `json:"queries"`
+	Label  string     `json:"label"`
+	Values []RepValue `json:"values"`
 }
 
-type Query struct {
-	RepID   string   `json:"rep_id"`
-	RepName string   `json:"rep_name"`
-	LoopVar bool     `json:"loop_var"`
-	Columns []string `json:"columns"`
-	Data    string   `json:"data"`
+type RepValue struct {
+	RepID   string `json:"rep_id"`
+	RepName string `json:"rep_name"`
+	Data    string `json:"data"`
 }
 
 func main() {
@@ -325,7 +323,7 @@ func main() {
 					http.Error(w, err.Error(), http.StatusBadRequest)
 					return
 				}
-				// extract this to a function and
+				// extract this to a function end
 				resp := map[string]string{
 					"status":  "OK",
 					"message": "Label updated successfully",
@@ -436,19 +434,21 @@ func main() {
 								loopVar = set.LoopVar
 							}
 						}
-						d, err := execQuery(sqlQuery, keyReplace, chi.URLParam(r, "serial"))
+						d, err := execQuery(sqlQuery, keyReplace, chi.URLParam(r, "serial"), loopVar)
 						if err != nil {
 							http.Error(w, err.Error(), http.StatusBadRequest)
 							return
 						}
-						query := Query{
+						if loopVar {
+							column := strings.Join(columns, "")
+							d = fmt.Sprintf(`{"%s":%s}`, column, d)
+						}
+						repValue := RepValue{
 							RepID:   repId,
 							RepName: repName,
-							LoopVar: loopVar,
-							Columns: columns,
 							Data:    d,
 						}
-						repLabel.Queries = append(repLabel.Queries, query)
+						repLabel.Values = append(repLabel.Values, repValue)
 					}
 					repLabels = append(repLabels, repLabel)
 				}
@@ -462,19 +462,31 @@ func main() {
 	}
 }
 
-func execQuery(sqlQuery, key, value string) (string, error) {
+func execQuery(sqlQuery, key, value string, loopVar bool) (string, error) {
 	sqlQuery = strings.ReplaceAll(sqlQuery, fmt.Sprintf(":%s", key), value)
+	// extract to config start
 	db, err := sql.Open("godror", `user="tmcp" password="padboratmcp" connectString="10.57.64.131:1521/PADB"`)
 	if err != nil {
 		return "", err
 	}
 	defer db.Close()
-	var result = make(map[string]interface{})
+	// extract to config end
 	rows, err := db.Query(sqlQuery)
 	defer rows.Close()
 	if err != nil {
 		return "", err
 	}
+	jsonStr, err := jsonSerialize(rows)
+	if err != nil {
+		return "", err
+	}
+	if loopVar {
+		jsonStr = fmt.Sprintf("[%s]", jsonStr)
+	}
+	return jsonStr, nil
+}
+
+func jsonSerialize(rows *sql.Rows) (string, error) {
 	colNames, err := rows.Columns()
 	if err != nil {
 		return "", err
@@ -484,8 +496,8 @@ func execQuery(sqlQuery, key, value string) (string, error) {
 	for i := 0; i < len(colNames); i++ {
 		colPtrs[i] = &cols[i]
 	}
+	var result = make(map[string]interface{})
 	var jsonStr string
-	jsonStr += "["
 	for rows.Next() {
 		err = rows.Scan(colPtrs...)
 		if err != nil {
@@ -502,6 +514,5 @@ func execQuery(sqlQuery, key, value string) (string, error) {
 		jsonStr += "},"
 	}
 	jsonStr = strings.TrimSuffix(jsonStr, ",")
-	jsonStr += "]"
 	return jsonStr, nil
 }
