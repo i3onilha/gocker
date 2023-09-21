@@ -441,6 +441,8 @@ func main() {
 						}
 						if loopVar {
 							column := strings.Join(columns, "")
+							column = strings.TrimPrefix(column, "{{ ")
+							column = strings.TrimSuffix(column, " }}")
 							d = fmt.Sprintf(`{"%s":%s}`, column, d)
 						}
 						var data map[string]interface{}
