@@ -30,14 +30,8 @@ type RepSQL struct {
 }
 
 type RepLabel struct {
-	Label  string     `json:"label"`
-	Values []RepValue `json:"values"`
-}
-
-type RepValue struct {
-	RepID   string                 `json:"rep_id"`
-	RepName string                 `json:"rep_name"`
-	Data    map[string]interface{} `json:"data"`
+	Label string                   `json:"label"`
+	Data  []map[string]interface{} `json:"data"`
 }
 
 func main() {
@@ -423,14 +417,11 @@ func main() {
 						return
 					}
 					for key, sqlQuery := range sqlQueries {
-						var repId, repName = "", ""
 						var loopVar bool
 						columns := []string{}
 						for _, set := range label.Setup {
 							if set.ReportID+"_"+set.ReportName == key {
 								columns = append(columns, set.Variable)
-								repId = set.ReportID
-								repName = set.ReportName
 								loopVar = set.LoopVar
 							}
 						}
@@ -451,12 +442,7 @@ func main() {
 							http.Error(w, err.Error(), http.StatusBadRequest)
 							return
 						}
-						repValue := RepValue{
-							RepID:   repId,
-							RepName: repName,
-							Data:    data,
-						}
-						repLabel.Values = append(repLabel.Values, repValue)
+						repLabel.Data = append(repLabel.Data, data)
 					}
 					repLabels = append(repLabels, repLabel)
 				}
