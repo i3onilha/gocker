@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -15,6 +16,7 @@ import (
 	"github.com/go-chi/cors"
 	"github.com/go-chi/render"
 	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/godror/godror" // v0.35.1
 	"github.com/i3onilha/MESEnterpriseSmart/config"
 	"github.com/i3onilha/MESEnterpriseSmart/internal/entity/labels"
 	"github.com/i3onilha/MESEnterpriseSmart/internal/infra/mysql"
@@ -37,7 +39,7 @@ type Query struct {
 	RepName string   `json:"rep_name"`
 	LoopVar bool     `json:"loop_var"`
 	Columns []string `json:"columns"`
-	SQL     string   `json:"sql"`
+	Data    string   `json:"data"`
 }
 
 func main() {
@@ -422,7 +424,7 @@ func main() {
 						http.Error(w, err.Error(), http.StatusBadRequest)
 						return
 					}
-					for key, sql := range sqlQueries {
+					for key, sqlQuery := range sqlQueries {
 						var repId, repName = "", ""
 						var loopVar bool
 						columns := []string{}
@@ -434,13 +436,17 @@ func main() {
 								loopVar = set.LoopVar
 							}
 						}
-						sql = strings.ReplaceAll(sql, fmt.Sprintf(":%s", keyReplace), chi.URLParam(r, "serial"))
+						d, err := execQuery(sqlQuery, keyReplace, chi.URLParam(r, "serial"))
+						if err != nil {
+							http.Error(w, err.Error(), http.StatusBadRequest)
+							return
+						}
 						query := Query{
 							RepID:   repId,
 							RepName: repName,
 							LoopVar: loopVar,
 							Columns: columns,
-							SQL:     sql,
+							Data:    d,
 						}
 						repLabel.Queries = append(repLabel.Queries, query)
 					}
@@ -454,4 +460,48 @@ func main() {
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
+}
+
+func execQuery(sqlQuery, key, value string) (string, error) {
+	sqlQuery = strings.ReplaceAll(sqlQuery, fmt.Sprintf(":%s", key), value)
+	db, err := sql.Open("godror", `user="tmcp" password="padboratmcp" connectString="10.57.64.131:1521/PADB"`)
+	if err != nil {
+		return "", err
+	}
+	defer db.Close()
+	var result = make(map[string]interface{})
+	rows, err := db.Query(sqlQuery)
+	defer rows.Close()
+	if err != nil {
+		return "", err
+	}
+	colNames, err := rows.Columns()
+	if err != nil {
+		return "", err
+	}
+	cols := make([]interface{}, len(colNames))
+	colPtrs := make([]interface{}, len(colNames))
+	for i := 0; i < len(colNames); i++ {
+		colPtrs[i] = &cols[i]
+	}
+	var jsonStr string
+	jsonStr += "["
+	for rows.Next() {
+		err = rows.Scan(colPtrs...)
+		if err != nil {
+			return "", err
+		}
+		for i, col := range cols {
+			result[colNames[i]] = col
+		}
+		jsonStr += "{"
+		for key, val := range result {
+			jsonStr += fmt.Sprintf(`"%s":"%s",`, key, val)
+		}
+		jsonStr = strings.TrimSuffix(jsonStr, ",")
+		jsonStr += "},"
+	}
+	jsonStr = strings.TrimSuffix(jsonStr, ",")
+	jsonStr += "]"
+	return jsonStr, nil
 }
