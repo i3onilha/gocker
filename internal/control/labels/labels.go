@@ -2,12 +2,6 @@ package labels
 
 import (
 	"encoding/json"
-	"io/ioutil"
-	"net/http"
-	"net/url"
-	"strconv"
-	"strings"
-
 	"github.com/go-chi/chi/v5"
 	"github.com/i3onilha/MESEnterpriseSmart/config"
 	"github.com/i3onilha/MESEnterpriseSmart/internal/entity/labels"
@@ -15,7 +9,34 @@ import (
 	repository "github.com/i3onilha/MESEnterpriseSmart/internal/infra/repository/labels"
 	validator "github.com/i3onilha/MESEnterpriseSmart/internal/infra/validator/labels"
 	usecase "github.com/i3onilha/MESEnterpriseSmart/internal/usecase/labels"
+	"io/ioutil"
+	"net/http"
+	"net/url"
+	"strconv"
+	"strings"
 )
+
+type Usecase interface {
+	Create(dto *labels.CreateDTO) (*labels.CreateDTO, error)
+	DeleteByID(id int) error
+	ListByParts(partNumber string) ([]*labels.CreateDTO, error)
+	ListByPartsAndStationAndDpi(partNumber, station string, dpi int) ([]*labels.CreateDTO, error)
+	Update(dto *labels.UpdateDTO) (*labels.CreateDTO, error)
+}
+
+func getUsercase() (Usecase, error) {
+	c, err := config.New()
+	if err != nil {
+		return nil, err
+	}
+	queries, err := mysql.New(c.GetDB().GetDataSourceName())
+	if err != nil {
+		return nil, err
+	}
+	repo := repository.New(queries)
+	vali := validator.New()
+	return usecase.New(repo, vali), nil
+}
 
 type RepSQL struct {
 	REP_QUERY string `json:"REP_QUERY"`
@@ -83,19 +104,7 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		Author:     createLabelDTO.Author,
 		SqlQueries: string(sqlQueries),
 	}
-	c, err := config.New()
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-	queries, err := mysql.New(c.GetDB().GetDataSourceName())
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-	repo := repository.New(queries)
-	vali := validator.New()
-	usec := usecase.New(repo, vali)
+	usec, err := getUsercase()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -122,19 +131,7 @@ func Create(w http.ResponseWriter, r *http.Request) {
 
 func ListByParts(w http.ResponseWriter, r *http.Request) {
 	partNumber := chi.URLParam(r, "part_number")
-	c, err := config.New()
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-	queries, err := mysql.New(c.GetDB().GetDataSourceName())
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-	repo := repository.New(queries)
-	vali := validator.New()
-	usec := usecase.New(repo, vali)
+	usec, err := getUsercase()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -161,19 +158,7 @@ func ListByPartsAndStationAndDpi(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	c, err := config.New()
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-	queries, err := mysql.New(c.GetDB().GetDataSourceName())
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-	repo := repository.New(queries)
-	vali := validator.New()
-	usec := usecase.New(repo, vali)
+	usec, err := getUsercase()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -259,19 +244,7 @@ func Update(w http.ResponseWriter, r *http.Request) {
 		Author:     updateLabelDTO.Author,
 		SqlQueries: string(sqlQueries),
 	}
-	c, err := config.New()
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-	queries, err := mysql.New(c.GetDB().GetDataSourceName())
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-	repo := repository.New(queries)
-	vali := validator.New()
-	usec := usecase.New(repo, vali)
+	usec, err := getUsercase()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -297,19 +270,7 @@ func Update(w http.ResponseWriter, r *http.Request) {
 
 func Delete(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
-	c, err := config.New()
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-	queries, err := mysql.New(c.GetDB().GetDataSourceName())
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-	repo := repository.New(queries)
-	vali := validator.New()
-	usec := usecase.New(repo, vali)
+	usec, err := getUsercase()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
