@@ -177,9 +177,9 @@ func (l *Labels) ListByParts(partNumber string) ([]*entity.CreateDTO, error) {
 	return result, nil
 }
 
-func (l *Labels) ListZPLByPartsAndStationAndDpi(partNumber, station string, dpi int) ([]*entity.ZplDTO, error) {
+func (l *Labels) ListZPLByPartsAndStationAndDpi(model, station string, dpi int) ([]*entity.ZplDTO, error) {
 	arg := labels.ListByPartsAndStationAndDpiParams{
-		PartNumber: partNumber,
+		PartNumber: model,
 		Station:    station,
 		Dpi:        int32(dpi),
 	}
