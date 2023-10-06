@@ -43,7 +43,7 @@ type CreateDTO struct {
 	ID         int32     `validate:"gte=0" json:"id"`
 	Customer   string    `validate:"required,max=32" json:"customer"`
 	Model      string    `validate:"required,max=16" json:"model"`
-	PartNumber string    `validate:"required,max=16" json:"part_number"`
+	PartNumber string    `validate:"max=16" json:"part_number"`
 	Station    string    `validate:"required,max=32" json:"station"`
 	Dpi        int32     `validate:"required,gte=0,lte=600" json:"dpi"`
 	Label      string    `validate:"required,min=6,max=65535" json:"label"`
