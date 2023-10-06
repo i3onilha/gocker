@@ -9,6 +9,7 @@ type Repository interface {
 	ListPaginate(limit, offset int) ([]*entity.CreateDTO, error)
 	ListByModelAndStationAndDpi(model, station string, dpi int) ([]*entity.CreateDTO, error)
 	ListByPartsAndStationAndDpi(partNumber, station string, dpi int) ([]*entity.CreateDTO, error)
+	ListZPLByModelAndStationAndDpi(partNumber, station string, dpi int) ([]*entity.ZplDTO, error)
 	ListZPLByPartsAndStationAndDpi(partNumber, station string, dpi int) ([]*entity.ZplDTO, error)
 	ListByModel(partNumber string) ([]*entity.CreateDTO, error)
 	ListByParts(partNumber string) ([]*entity.CreateDTO, error)
@@ -75,6 +76,10 @@ func (l *labels) ListByModelAndStationAndDpi(model, station string, dpi int) ([]
 
 func (l *labels) ListByPartsAndStationAndDpi(partNumber, station string, dpi int) ([]*entity.CreateDTO, error) {
 	return l.repository.ListByPartsAndStationAndDpi(partNumber, station, dpi)
+}
+
+func (l *labels) ListZPLByModelAndStationAndDpi(model, station string, dpi int) ([]*entity.ZplDTO, error) {
+	return l.repository.ListZPLByModelAndStationAndDpi(model, station, dpi)
 }
 
 func (l *labels) ListZPLByPartsAndStationAndDpi(partNumber, station string, dpi int) ([]*entity.ZplDTO, error) {

@@ -56,7 +56,8 @@ func main() {
 			r.Delete("/{id}", labels.Delete)
 		})
 		r.Route("/zpl", func(r chi.Router) {
-			r.Get("/{part_number}/{station}/{dpi}/{serial}/{key}", zpl.GetZPLCode)
+			r.Get("/partnumber/{part_number}/{station}/{dpi}/{serial}/{key}", zpl.GetZPLCodeByPartnumber)
+			r.Get("/model/{model}/{station}/{dpi}/{serial}/{key}", zpl.GetZPLCodeByModel)
 		})
 	})
 	err := http.ListenAndServe(":7192", r)

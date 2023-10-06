@@ -23,7 +23,85 @@ type RepLabel struct {
 	Data  []map[string]interface{} `json:"data"`
 }
 
-func GetZPLCode(w http.ResponseWriter, r *http.Request) {
+func GetZPLCodeByModel(w http.ResponseWriter, r *http.Request) {
+	model := chi.URLParam(r, "model")
+	station := chi.URLParam(r, "station")
+	dpi := chi.URLParam(r, "dpi")
+	keyReplace := chi.URLParam(r, "key")
+	dpiNumber, err := strconv.Atoi(dpi)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	c, err := config.New()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	queries, err := mysql.New(c.GetDB().GetDataSourceName())
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	repo := repository.New(queries)
+	vali := validator.New()
+	usec := usecase.New(repo, vali)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	list, err := usec.ListZPLByModelAndStationAndDpi(model, station, dpiNumber)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	repLabels := []RepLabel{}
+	for _, label := range list {
+		repLabel := RepLabel{
+			Label: label.Label,
+		}
+		sqlQueries := make(map[string]string)
+		err := json.Unmarshal([]byte(label.SqlQueries), &sqlQueries)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		for key, sqlQuery := range sqlQueries {
+			var loopVar bool
+			columns := []string{}
+			for _, set := range label.Setup {
+				if set.ReportID+"_"+set.ReportName == key {
+					columns = append(columns, set.Variable)
+					loopVar = set.LoopVar
+				}
+			}
+			d, err := execQuery(sqlQuery, keyReplace, chi.URLParam(r, "serial"), loopVar)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+			if loopVar {
+				column := strings.Join(columns, "")
+				column = strings.TrimPrefix(column, "{{ ")
+				column = strings.TrimSuffix(column, " }}")
+				column = strings.TrimPrefix(column, "{{")
+				column = strings.TrimSuffix(column, "}}")
+				d = fmt.Sprintf(`{"%s":%s}`, column, d)
+			}
+			var data map[string]interface{}
+			err = json.Unmarshal([]byte(d), &data)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+			repLabel.Data = append(repLabel.Data, data)
+		}
+		repLabels = append(repLabels, repLabel)
+	}
+	json.NewEncoder(w).Encode(repLabels)
+}
+
+func GetZPLCodeByPartnumber(w http.ResponseWriter, r *http.Request) {
 	partNumber := chi.URLParam(r, "part_number")
 	station := chi.URLParam(r, "station")
 	dpi := chi.URLParam(r, "dpi")

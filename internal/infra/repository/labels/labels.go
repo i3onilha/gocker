@@ -177,6 +177,29 @@ func (l *Labels) ListByParts(partNumber string) ([]*entity.CreateDTO, error) {
 	return result, nil
 }
 
+func (l *Labels) ListZPLByModelAndStationAndDpi(model, station string, dpi int) ([]*entity.ZplDTO, error) {
+	arg := labels.ListByModelAndStationAndDpiParams{
+		Model:   model,
+		Station: station,
+		Dpi:     int32(dpi),
+	}
+	list, err := l.queries.ListByModelAndStationAndDpi(context.Background(), arg)
+	if err != nil {
+		return nil, err
+	}
+	result := make([]*entity.ZplDTO, len(list))
+	for i, label := range list {
+		var setupOutput []entity.Setup
+		json.Unmarshal([]byte(label.Setup), &setupOutput)
+		result[i] = &entity.ZplDTO{
+			Label:      label.Label,
+			SqlQueries: label.SqlQueries,
+			Setup:      setupOutput,
+		}
+	}
+	return result, nil
+}
+
 func (l *Labels) ListZPLByPartsAndStationAndDpi(partNumber, station string, dpi int) ([]*entity.ZplDTO, error) {
 	arg := labels.ListByPartsAndStationAndDpiParams{
 		PartNumber: partNumber,
