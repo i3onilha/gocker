@@ -49,6 +49,7 @@ func main() {
 		r.Route("/labels", func(r chi.Router) {
 			r.Post("/{session}", controlLabels.Create)
 			r.Get("/{part_number}/partnumber", controlLabels.ListByParts)
+			r.Get("/{part_number}/model", controlLabels.ListByModel)
 			r.Get("/{part_number}/{station}/{dpi}", controlLabels.ListByPartsAndStationAndDpi)
 			r.Put("/{session}", controlLabels.Update)
 			r.Delete("/{id}", controlLabels.Delete)
