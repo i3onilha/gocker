@@ -14,5 +14,4 @@ WHERE labels_deletes.id IS NULL
     FROM labels_data
     GROUP BY labels_data.id
   )
-ORDER BY labels_data.created_at DESC
-LIMIT 10 OFFSET 0;
+ORDER BY labels_data.created_at DESC;
