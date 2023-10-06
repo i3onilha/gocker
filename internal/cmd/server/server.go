@@ -8,7 +8,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/go-chi/render"
-	controlLabels "github.com/i3onilha/MESEnterpriseSmart/internal/control/labels"
+	"github.com/i3onilha/MESEnterpriseSmart/internal/control/labels"
 	"github.com/i3onilha/MESEnterpriseSmart/internal/control/zpl"
 )
 
@@ -47,12 +47,13 @@ func main() {
 			w.Write([]byte("v0.0.1"))
 		})
 		r.Route("/labels", func(r chi.Router) {
-			r.Post("/{session}", controlLabels.Create)
-			r.Get("/{part_number}/partnumber", controlLabels.ListByParts)
-			r.Get("/{model}/model", controlLabels.ListByModel)
-			r.Get("/{part_number}/{station}/{dpi}", controlLabels.ListByPartsAndStationAndDpi)
-			r.Put("/{session}", controlLabels.Update)
-			r.Delete("/{id}", controlLabels.Delete)
+			r.Post("/{session}", labels.Create)
+			r.Get("/{part_number}/partnumber", labels.ListByParts)
+			r.Get("/{model}/model", labels.ListByModel)
+			r.Get("/{model}/{station}/{dpi}", labels.ListByModelAndStationAndDpi)
+			r.Get("/{part_number}/{station}/{dpi}", labels.ListByPartsAndStationAndDpi)
+			r.Put("/{session}", labels.Update)
+			r.Delete("/{id}", labels.Delete)
 		})
 		r.Route("/zpl", func(r chi.Router) {
 			r.Get("/{part_number}/{station}/{dpi}/{serial}/{key}", zpl.GetZPLCode)

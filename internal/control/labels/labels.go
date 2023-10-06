@@ -21,6 +21,7 @@ type Usecase interface {
 	DeleteByID(id int) error
 	ListByModel(model string) ([]*labels.CreateDTO, error)
 	ListByParts(partNumber string) ([]*labels.CreateDTO, error)
+	ListByModelAndStationAndDpi(partNumber, station string, dpi int) ([]*labels.CreateDTO, error)
 	ListByPartsAndStationAndDpi(partNumber, station string, dpi int) ([]*labels.CreateDTO, error)
 	Update(dto *labels.UpdateDTO) (*labels.CreateDTO, error)
 }
@@ -158,6 +159,33 @@ func ListByParts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	list, err := usec.ListByParts(partNumber)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	buf, err := json.Marshal(list)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	w.Write(buf)
+}
+
+func ListByModelAndStationAndDpi(w http.ResponseWriter, r *http.Request) {
+	model := chi.URLParam(r, "model")
+	station := chi.URLParam(r, "station")
+	dpi := chi.URLParam(r, "dpi")
+	dpiNumber, err := strconv.Atoi(dpi)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	usec, err := getUsercase()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	list, err := usec.ListByModelAndStationAndDpi(model, station, dpiNumber)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
