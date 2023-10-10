@@ -8,6 +8,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/go-chi/render"
+	"github.com/i3onilha/MESEnterpriseSmart/internal/control/copylabel"
 	"github.com/i3onilha/MESEnterpriseSmart/internal/control/labels"
 	"github.com/i3onilha/MESEnterpriseSmart/internal/control/zpl"
 )
@@ -58,6 +59,9 @@ func main() {
 		r.Route("/zpl", func(r chi.Router) {
 			r.Get("/partnumber/{part_number}/{station}/{dpi}/{serial}/{key}", zpl.GetZPLCodeByPartnumber)
 			r.Get("/model/{model}/{station}/{dpi}/{serial}/{key}", zpl.GetZPLCodeByModel)
+		})
+		r.Route("/copy", func(r chi.Router) {
+			r.Get("/model/{customer}/{model_from}/{model_to}", copylabel.CopyModel)
 		})
 	})
 	err := http.ListenAndServe(":7192", r)
