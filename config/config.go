@@ -7,10 +7,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-var (
-	envFolder string
-)
-
 type db struct {
 	driver   string
 	host     string
@@ -33,12 +29,7 @@ type config struct {
 }
 
 func New() (*config, error) {
-	if os.Getenv("GOENV") == "development" {
-		envFolder = ".."
-	} else {
-		envFolder = "."
-	}
-	path := fmt.Sprintf("%s/.env", envFolder)
+	path := fmt.Sprintf("%s/.env", os.Getenv("SOURCE_CODE"))
 	viper.SetConfigFile(path)
 	err := viper.ReadInConfig()
 	if err != nil {
