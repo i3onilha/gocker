@@ -25,6 +25,8 @@ ENV NPM_FETCH_RETRY_FACTOR 10
 ENV NPM_FETCH_RETRY_MINTIMEOUT 10000
 ENV NPM_FETCH_RETRY_MAXTIMEOUT 60000
 
+ENV SOURCE_CODE ${HOME_USER}/sourcecode
+
 RUN apt-key adv --keyserver pgp.mit.edu --recv-keys 3A79BD29
 
 RUN go install golang.org/x/tools/gopls@v0.11.0
@@ -129,6 +131,6 @@ RUN git clone --bare -b godevenv https://github.com/i3onilha/.dotfiles.git $HOME
 RUN export PATH="$HOME/.nvm/versions/node/$NODE_VERSION/bin:$PATH" && \
     yarn install --cwd ~/.vim/bundle/coc.nvim
 
-WORKDIR $HOME_USER/sourcecode
+WORKDIR $SOURCE_CODE
 
 COPY . .
