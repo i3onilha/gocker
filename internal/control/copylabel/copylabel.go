@@ -58,6 +58,5 @@ func CopyModel(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(`{"message": "success"}`))
+	w.Write([]byte(`{"message": "ALL LABELS COPIED SUCCESSFULLY"}`))
 }
