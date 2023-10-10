@@ -41,10 +41,6 @@ func (q *Queries) CreateAndUpdate(ctx context.Context, dataSourceName string, da
 	if err != nil {
 		return 0, err
 	}
-	result, err = queries.Create(ctx)
-	if err != nil {
-		return 0, err
-	}
 	id, err := result.LastInsertId()
 	if err != nil {
 		return 0, err
