@@ -19,7 +19,7 @@ import (
 type Usecase interface {
 	Create(dto *labels.CreateDTO) (*labels.CreateDTO, error)
 	DeleteByID(id int) error
-	ListByModel(model string) ([]*labels.CreateDTO, error)
+	ListByModel(customer, model string) ([]*labels.CreateDTO, error)
 	ListByParts(partNumber string) ([]*labels.CreateDTO, error)
 	ListByModelAndStationAndDpi(partNumber, station string, dpi int) ([]*labels.CreateDTO, error)
 	ListByPartsAndStationAndDpi(partNumber, station string, dpi int) ([]*labels.CreateDTO, error)
@@ -132,13 +132,14 @@ func Create(w http.ResponseWriter, r *http.Request) {
 }
 
 func ListByModel(w http.ResponseWriter, r *http.Request) {
+	customer := chi.URLParam(r, "customer")
 	model := chi.URLParam(r, "model")
 	usec, err := getUsercase()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	list, err := usec.ListByModel(model)
+	list, err := usec.ListByModel(customer, model)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return

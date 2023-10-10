@@ -23,6 +23,12 @@ type CreateParams struct {
 	Author      string
 }
 
+type CopyParams struct {
+	Customer  string
+	ModelFrom string
+	ModelTo   string
+}
+
 func (q *Queries) CreateAndUpdate(ctx context.Context, dataSourceName string, data CreateParams) (int, error) {
 	conn, err := sql.Open(Driver, dataSourceName)
 	if err != nil {

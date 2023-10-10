@@ -127,8 +127,12 @@ func (l *Labels) ListPaginate(limit, offset int) ([]*entity.CreateDTO, error) {
 	return result, nil
 }
 
-func (l *Labels) ListByModel(model string) ([]*entity.CreateDTO, error) {
-	list, err := l.queries.ListByModel(context.Background(), model)
+func (l *Labels) ListByModel(customer, model string) ([]*entity.CreateDTO, error) {
+	arg := labels.ListByModelParams{
+		Customer: customer,
+		Model:    model,
+	}
+	list, err := l.queries.ListByModel(context.Background(), arg)
 	if err != nil {
 		return nil, err
 	}

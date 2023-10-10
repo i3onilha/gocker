@@ -65,6 +65,7 @@ FROM
   labels_data
   LEFT JOIN labels_deletes ON labels_data.id = labels_deletes.id
 WHERE labels_deletes.id IS NULL
+  AND labels_data.customer = ?
   AND labels_data.model = ?
   AND labels_data.part_number = ''
   AND labels_data.created_at IN(
@@ -75,8 +76,13 @@ WHERE labels_deletes.id IS NULL
 ORDER BY labels_data.created_at DESC
 `
 
-func (q *Queries) ListByModel(ctx context.Context, model string) ([]LabelsDatum, error) {
-	rows, err := q.db.QueryContext(ctx, listByModel, model)
+type ListByModelParams struct {
+	Customer string
+	Model    string
+}
+
+func (q *Queries) ListByModel(ctx context.Context, arg ListByModelParams) ([]LabelsDatum, error) {
+	rows, err := q.db.QueryContext(ctx, listByModel, arg.Customer, arg.Model)
 	if err != nil {
 		return nil, err
 	}
