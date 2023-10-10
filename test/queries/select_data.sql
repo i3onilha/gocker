@@ -14,4 +14,4 @@ WHERE labels_deletes.id IS NULL
     FROM labels_data
     GROUP BY labels_data.id
   )
-ORDER BY labels_data.created_at DESC;
+ORDER BY labels_data.model;
