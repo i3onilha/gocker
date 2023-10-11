@@ -12,10 +12,6 @@ CREATE TABLE `labels` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
-LOCK TABLES `labels` WRITE;
-INSERT INTO `labels` (id) VALUES (1),(2),(3),(4);
-UNLOCK TABLES;
-
 DROP TABLE IF EXISTS `labels_data`;
 
 CREATE TABLE `labels_data` (
@@ -35,10 +31,6 @@ CREATE TABLE `labels_data` (
   CONSTRAINT `labels_data_ibfk_1` FOREIGN KEY (`id`) REFERENCES `labels` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-LOCK TABLES `labels_data` WRITE;
-INSERT INTO `labels_data` VALUES (1,'TPLINK', 'Model','PartNumber', 'Station', '300', 'Label', '{"{{ carton }}":"1695","{{ serials }}":"1695","{{ model }}":"1695"}', '{"{{ carton }}":"1695","{{ serials }}":"1695","{{ model }}":"1695"}', 'bc0g7190','2023-08-04 23:57:16'), (2,'TPLINK', 'Model','PartNumber', 'Station', '600', 'Label', '{"{{ carton }}":"1695","{{ serials }}":"1695","{{ model }}":"1695"}', '{"{{ carton }}":"1695","{{ serials }}":"1695","{{ model }}":"1695"}', 'bc0g7191','2023-08-04 23:57:58'), (3,'TPLINK', 'Model','PartNumber', 'Station', '152', 'Label', '{"{{ carton }}":"1695","{{ serials }}":"1695","{{ model }}":"1695"}', '{"{{ carton }}":"1695","{{ serials }}":"1695","{{ model }}":"1695"}', 'bc0g7192','2023-08-04 23:57:59'), (4,'TPLINK', 'Model','PartNumber', 'Station', '203', 'Label', '{"{{ carton }}":"1695","{{ serials }}":"1695","{{ model }}":"1695"}', '{"{{ carton }}":"1695","{{ serials }}":"1695","{{ model }}":"1695"}', 'bc0g7193','2023-08-04 23:59:49'), (3,'TPLINK 1', 'Model','PartNumber', 'Station', '152', 'Label', '{"{{ carton }}":"1695","{{ serials }}":"1695","{{ model }}":"1695"}', '{"{{ carton }}":"1695","{{ serials }}":"1695","{{ model }}":"1695"}', 'bc0g7194','2023-08-06 23:59:49'), (1,'TPLINK 1', 'Model','PartNumber', 'Station', '203', 'Label', '{"{{ carton }}":"1695","{{ serials }}":"1695","{{ model }}":"1695"}', '{"{{ carton }}":"1695","{{ serials }}":"1695","{{ model }}":"1695"}', 'bc0g7195','2023-09-06 23:59:49'), (4,'TPLINK 2', 'Model','PartNumber', 'Station', '300', 'Label', '{"{{ carton }}":"1695","{{ serials }}":"1695","{{ model }}":"1695"}', '{"{{ carton }}":"1695","{{ serials }}":"1695","{{ model }}":"1695"}', 'bc0g7196','2023-09-06 23:59:49');
-UNLOCK TABLES;
-
 DROP TABLE IF EXISTS `labels_deletes`;
 
 CREATE TABLE `labels_deletes` (
@@ -47,7 +39,3 @@ CREATE TABLE `labels_deletes` (
   KEY `id` (`id`),
   CONSTRAINT `labels_deletes_ibfk_1` FOREIGN KEY (`id`) REFERENCES `labels_data` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-LOCK TABLES `labels_deletes` WRITE;
-INSERT INTO `labels_deletes` VALUES (1,'2023-08-04 23:57:16'),(2,'2023-08-04 23:57:58');
-UNLOCK TABLES;
