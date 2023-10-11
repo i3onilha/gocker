@@ -2,6 +2,7 @@ package copylabel
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/go-chi/chi/v5"
 	_ "github.com/go-sql-driver/mysql"
@@ -18,6 +19,13 @@ func CopyModel(w http.ResponseWriter, r *http.Request) {
 	customer := chi.URLParam(r, "customer")
 	model_from := chi.URLParam(r, "model_from")
 	model_to := chi.URLParam(r, "model_to")
+	station_to := chi.URLParam(r, "station_to")
+	dpi := chi.URLParam(r, "dpi_to")
+	dpi_to, err := strconv.Atoi(dpi)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 	c, err := config.New()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -46,8 +54,8 @@ func CopyModel(w http.ResponseWriter, r *http.Request) {
 			Customer:   v.Customer,
 			Model:      model_to,
 			PartNumber: v.PartNumber,
-			Station:    v.Station,
-			Dpi:        v.Dpi,
+			Station:    station_to,
+			Dpi:        int32(dpi_to),
 			Label:      v.Label,
 			Setup:      v.Setup,
 			Author:     v.Author,

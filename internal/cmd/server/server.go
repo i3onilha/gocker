@@ -61,7 +61,7 @@ func main() {
 			r.Get("/model/{model}/{station}/{dpi}/{serial}/{key}", zpl.GetZPLCodeByModel)
 		})
 		r.Route("/copy", func(r chi.Router) {
-			r.Get("/model/{customer}/{model_from}/{model_to}", copylabel.CopyModel)
+			r.Get("/model/{customer}/{model_from}/{model_to}/{station_to}/{dpi_to}", copylabel.CopyModel)
 		})
 	})
 	err := http.ListenAndServe(":7192", r)
