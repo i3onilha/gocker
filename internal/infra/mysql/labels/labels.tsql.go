@@ -10,6 +10,7 @@ const (
 )
 
 type CreateParams struct {
+	Name        string
 	Customer    string
 	Model       string
 	PartNumber  string
@@ -53,6 +54,7 @@ func (q *Queries) CreateAndUpdate(ctx context.Context, dataSourceName string, da
 	}
 	params := UpdateParams{
 		ID:         int32(id),
+		Name:       data.Name,
 		Customer:   data.Customer,
 		Model:      data.Model,
 		PartNumber: data.PartNumber,

@@ -3,6 +3,7 @@ package labels
 import "time"
 
 type CreateLabelDTO struct {
+	Name       string  `json:"name"`
 	Customer   string  `json:"customer"`
 	Model      string  `json:"model"`
 	PartNumber string  `json:"part_number"`
@@ -15,6 +16,7 @@ type CreateLabelDTO struct {
 
 type UpdateLabelDTO struct {
 	ID         string  `json:"id"`
+	Name       string  `json:"name"`
 	Customer   string  `json:"customer"`
 	Model      string  `json:"model"`
 	PartNumber string  `json:"part_number"`
@@ -41,6 +43,7 @@ type ZplDTO struct {
 
 type CreateDTO struct {
 	ID         int32     `validate:"gte=0" json:"id"`
+	Name       string    `validate:"required,max=32" json:"name"`
 	Customer   string    `validate:"required,max=32" json:"customer"`
 	Model      string    `validate:"required,max=16" json:"model"`
 	PartNumber string    `validate:"max=16" json:"part_number"`
@@ -55,6 +58,7 @@ type CreateDTO struct {
 
 type UpdateDTO struct {
 	ID         int32  `validate:"gte=0"`
+	Name       string `validate:"required,max=32"`
 	Customer   string `validate:"required,max=32"`
 	Model      string `validate:"required,max=16"`
 	PartNumber string `validate:"max=16"`

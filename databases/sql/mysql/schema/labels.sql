@@ -20,6 +20,7 @@ DROP TABLE IF EXISTS `labels_data`;
 
 CREATE TABLE `labels_data` (
   `id` int(11) NOT NULL,
+  `name` varchar(32) NOT NULL,
   `customer` varchar(32) NOT NULL,
   `model` varchar(16) NOT NULL,
   `part_number` varchar(16) NOT NULL,

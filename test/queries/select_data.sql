@@ -1,5 +1,6 @@
 SELECT
   labels_data.id,
+  labels_data.name,
   labels_data.customer,
   labels_data.model,
   labels_data.part_number,

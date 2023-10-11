@@ -28,6 +28,7 @@ func (l *Labels) Create(dto *entity.CreateDTO) (*entity.CreateDTO, error) {
 		return &entity.CreateDTO{}, err
 	}
 	data := labels.CreateParams{
+		Name:       dto.Name,
 		Customer:   dto.Customer,
 		Model:      dto.Model,
 		PartNumber: dto.PartNumber,
@@ -53,6 +54,7 @@ func (l *Labels) Create(dto *entity.CreateDTO) (*entity.CreateDTO, error) {
 	}
 	result := entity.CreateDTO{
 		ID:         label.ID,
+		Name:       label.Name,
 		Customer:   label.Customer,
 		Model:      label.Model,
 		PartNumber: label.PartNumber,
@@ -142,6 +144,7 @@ func (l *Labels) ListByModel(customer, model string) ([]*entity.CreateDTO, error
 		json.Unmarshal([]byte(label.Setup), &setupOutput)
 		result[i] = &entity.CreateDTO{
 			ID:         label.ID,
+			Name:       label.Name,
 			Customer:   label.Customer,
 			Model:      label.Model,
 			PartNumber: label.PartNumber,
@@ -295,6 +298,7 @@ func (l *Labels) Update(dto *entity.UpdateDTO) (*entity.CreateDTO, error) {
 	}
 	arg := labels.UpdateParams{
 		ID:         dto.ID,
+		Name:       dto.Name,
 		Customer:   dto.Customer,
 		Model:      dto.Model,
 		PartNumber: dto.PartNumber,
@@ -320,6 +324,7 @@ func (l *Labels) Update(dto *entity.UpdateDTO) (*entity.CreateDTO, error) {
 	}
 	resultDTO := entity.CreateDTO{
 		ID:         label.ID,
+		Name:       label.Name,
 		Customer:   label.Customer,
 		Model:      label.Model,
 		PartNumber: label.PartNumber,

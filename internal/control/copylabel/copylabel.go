@@ -42,6 +42,7 @@ func CopyModel(w http.ResponseWriter, r *http.Request) {
 	}
 	for _, v := range list {
 		createDto := &entity.CreateDTO{
+			Name:       v.Name,
 			Customer:   v.Customer,
 			Model:      model_to,
 			PartNumber: v.PartNumber,

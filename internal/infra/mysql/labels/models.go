@@ -15,6 +15,7 @@ type Label struct {
 
 type LabelsDatum struct {
 	ID         int32
+	Name       string
 	Customer   string
 	Model      string
 	PartNumber string

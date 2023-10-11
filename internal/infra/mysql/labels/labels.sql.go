@@ -29,7 +29,7 @@ func (q *Queries) DeleteByID(ctx context.Context, id int32) error {
 
 const getByID = `-- name: GetByID :one
 SELECT
-  labels_data.id, labels_data.customer, labels_data.model, labels_data.part_number, labels_data.station, labels_data.dpi, labels_data.label, labels_data.setup, labels_data.sql_queries, labels_data.author, labels_data.created_at
+  labels_data.id, labels_data.name, labels_data.customer, labels_data.model, labels_data.part_number, labels_data.station, labels_data.dpi, labels_data.label, labels_data.setup, labels_data.sql_queries, labels_data.author, labels_data.created_at
 FROM
   labels_data
   LEFT JOIN labels_deletes ON labels_data.id = labels_deletes.id
@@ -44,6 +44,7 @@ func (q *Queries) GetByID(ctx context.Context, id int32) (LabelsDatum, error) {
 	var i LabelsDatum
 	err := row.Scan(
 		&i.ID,
+		&i.Name,
 		&i.Customer,
 		&i.Model,
 		&i.PartNumber,
@@ -60,7 +61,7 @@ func (q *Queries) GetByID(ctx context.Context, id int32) (LabelsDatum, error) {
 
 const listByModel = `-- name: ListByModel :many
 SELECT
-  labels_data.id, labels_data.customer, labels_data.model, labels_data.part_number, labels_data.station, labels_data.dpi, labels_data.label, labels_data.setup, labels_data.sql_queries, labels_data.author, labels_data.created_at
+  labels_data.id, labels_data.name, labels_data.customer, labels_data.model, labels_data.part_number, labels_data.station, labels_data.dpi, labels_data.label, labels_data.setup, labels_data.sql_queries, labels_data.author, labels_data.created_at
 FROM
   labels_data
   LEFT JOIN labels_deletes ON labels_data.id = labels_deletes.id
@@ -92,6 +93,7 @@ func (q *Queries) ListByModel(ctx context.Context, arg ListByModelParams) ([]Lab
 		var i LabelsDatum
 		if err := rows.Scan(
 			&i.ID,
+			&i.Name,
 			&i.Customer,
 			&i.Model,
 			&i.PartNumber,
@@ -118,7 +120,7 @@ func (q *Queries) ListByModel(ctx context.Context, arg ListByModelParams) ([]Lab
 
 const listByModelAndStationAndDpi = `-- name: ListByModelAndStationAndDpi :many
 SELECT
-  labels_data.id, labels_data.customer, labels_data.model, labels_data.part_number, labels_data.station, labels_data.dpi, labels_data.label, labels_data.setup, labels_data.sql_queries, labels_data.author, labels_data.created_at
+  labels_data.id, labels_data.name, labels_data.customer, labels_data.model, labels_data.part_number, labels_data.station, labels_data.dpi, labels_data.label, labels_data.setup, labels_data.sql_queries, labels_data.author, labels_data.created_at
 FROM
   labels_data
   LEFT JOIN labels_deletes ON labels_data.id = labels_deletes.id
@@ -152,6 +154,7 @@ func (q *Queries) ListByModelAndStationAndDpi(ctx context.Context, arg ListByMod
 		var i LabelsDatum
 		if err := rows.Scan(
 			&i.ID,
+			&i.Name,
 			&i.Customer,
 			&i.Model,
 			&i.PartNumber,
@@ -178,7 +181,7 @@ func (q *Queries) ListByModelAndStationAndDpi(ctx context.Context, arg ListByMod
 
 const listByParts = `-- name: ListByParts :many
 SELECT
-  labels_data.id, labels_data.customer, labels_data.model, labels_data.part_number, labels_data.station, labels_data.dpi, labels_data.label, labels_data.setup, labels_data.sql_queries, labels_data.author, labels_data.created_at
+  labels_data.id, labels_data.name, labels_data.customer, labels_data.model, labels_data.part_number, labels_data.station, labels_data.dpi, labels_data.label, labels_data.setup, labels_data.sql_queries, labels_data.author, labels_data.created_at
 FROM
   labels_data
   LEFT JOIN labels_deletes ON labels_data.id = labels_deletes.id
@@ -203,6 +206,7 @@ func (q *Queries) ListByParts(ctx context.Context, partNumber string) ([]LabelsD
 		var i LabelsDatum
 		if err := rows.Scan(
 			&i.ID,
+			&i.Name,
 			&i.Customer,
 			&i.Model,
 			&i.PartNumber,
@@ -229,7 +233,7 @@ func (q *Queries) ListByParts(ctx context.Context, partNumber string) ([]LabelsD
 
 const listByPartsAndStationAndDpi = `-- name: ListByPartsAndStationAndDpi :many
 SELECT
-  labels_data.id, labels_data.customer, labels_data.model, labels_data.part_number, labels_data.station, labels_data.dpi, labels_data.label, labels_data.setup, labels_data.sql_queries, labels_data.author, labels_data.created_at
+  labels_data.id, labels_data.name, labels_data.customer, labels_data.model, labels_data.part_number, labels_data.station, labels_data.dpi, labels_data.label, labels_data.setup, labels_data.sql_queries, labels_data.author, labels_data.created_at
 FROM
   labels_data
   LEFT JOIN labels_deletes ON labels_data.id = labels_deletes.id
@@ -262,6 +266,7 @@ func (q *Queries) ListByPartsAndStationAndDpi(ctx context.Context, arg ListByPar
 		var i LabelsDatum
 		if err := rows.Scan(
 			&i.ID,
+			&i.Name,
 			&i.Customer,
 			&i.Model,
 			&i.PartNumber,
@@ -288,7 +293,7 @@ func (q *Queries) ListByPartsAndStationAndDpi(ctx context.Context, arg ListByPar
 
 const listPaginate = `-- name: ListPaginate :many
 SELECT
-  labels_data.id, labels_data.customer, labels_data.model, labels_data.part_number, labels_data.station, labels_data.dpi, labels_data.label, labels_data.setup, labels_data.sql_queries, labels_data.author, labels_data.created_at
+  labels_data.id, labels_data.name, labels_data.customer, labels_data.model, labels_data.part_number, labels_data.station, labels_data.dpi, labels_data.label, labels_data.setup, labels_data.sql_queries, labels_data.author, labels_data.created_at
 FROM
   labels_data
   LEFT JOIN labels_deletes ON labels_data.id = labels_deletes.id
@@ -318,6 +323,7 @@ func (q *Queries) ListPaginate(ctx context.Context, arg ListPaginateParams) ([]L
 		var i LabelsDatum
 		if err := rows.Scan(
 			&i.ID,
+			&i.Name,
 			&i.Customer,
 			&i.Model,
 			&i.PartNumber,
@@ -343,12 +349,13 @@ func (q *Queries) ListPaginate(ctx context.Context, arg ListPaginateParams) ([]L
 }
 
 const update = `-- name: Update :execresult
-INSERT INTO labels_data (id, customer, model, part_number, station, dpi, label, setup, sql_queries, author)
-  VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+INSERT INTO labels_data (id, name, customer, model, part_number, station, dpi, label, setup, sql_queries, author)
+  VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 `
 
 type UpdateParams struct {
 	ID         int32
+	Name       string
 	Customer   string
 	Model      string
 	PartNumber string
@@ -363,6 +370,7 @@ type UpdateParams struct {
 func (q *Queries) Update(ctx context.Context, arg UpdateParams) (sql.Result, error) {
 	return q.db.ExecContext(ctx, update,
 		arg.ID,
+		arg.Name,
 		arg.Customer,
 		arg.Model,
 		arg.PartNumber,

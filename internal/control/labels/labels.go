@@ -96,6 +96,7 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	createDto := &labels.CreateDTO{
+		Name:       createLabelDTO.Name,
 		Customer:   createLabelDTO.Customer,
 		Model:      createLabelDTO.Model,
 		PartNumber: createLabelDTO.PartNumber,
@@ -284,6 +285,7 @@ func Update(w http.ResponseWriter, r *http.Request) {
 	}
 	updateDto := &labels.UpdateDTO{
 		ID:         int32(id),
+		Name:       updateLabelDTO.Name,
 		Customer:   updateLabelDTO.Customer,
 		Model:      updateLabelDTO.Model,
 		PartNumber: updateLabelDTO.PartNumber,
