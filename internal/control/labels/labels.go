@@ -2,6 +2,13 @@ package labels
 
 import (
 	"encoding/json"
+	"errors"
+	"io/ioutil"
+	"net/http"
+	"net/url"
+	"strconv"
+	"strings"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/i3onilha/MESEnterpriseSmart/config"
 	"github.com/i3onilha/MESEnterpriseSmart/internal/entity/labels"
@@ -9,11 +16,6 @@ import (
 	repository "github.com/i3onilha/MESEnterpriseSmart/internal/infra/repository/labels"
 	validator "github.com/i3onilha/MESEnterpriseSmart/internal/infra/validator/labels"
 	usecase "github.com/i3onilha/MESEnterpriseSmart/internal/usecase/labels"
-	"io/ioutil"
-	"net/http"
-	"net/url"
-	"strconv"
-	"strings"
 )
 
 type Usecase interface {
@@ -24,6 +26,44 @@ type Usecase interface {
 	ListByModelAndStationAndDpi(partNumber, station string, dpi int) ([]*labels.CreateDTO, error)
 	ListByPartsAndStationAndDpi(partNumber, station string, dpi int) ([]*labels.CreateDTO, error)
 	Update(dto *labels.UpdateDTO) (*labels.CreateDTO, error)
+}
+
+func getSQLQueriesFromSetup(session string, setup []labels.Setup) ([]byte, error) {
+	SQLs := make(map[string]string)
+	for _, setup := range setup {
+		reportID := setup.ReportID
+		data := url.Values{
+			"funcao":       {"CDQCREPORTSQLT::getSQLReport"},
+			"conn":         {"padb"}, // padb is the name of the connection in the report server
+			"dados[d][id]": {reportID},
+		}
+		url := "http://10.58.64.198:8081/workshop/webservice.php?session=" + session //#TODO: change to config
+		resp, err := http.PostForm(url, data)
+		if err != nil {
+			return nil, err
+		}
+		defer resp.Body.Close()
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return nil, err
+		}
+		var repSQL RepSQL
+		err = json.Unmarshal(body, &repSQL)
+		if err != nil {
+			msg := "please check if report id " + reportID + " exists: "
+			return nil, errors.New(msg + err.Error())
+		}
+		key := setup.ReportID + "_" + setup.ReportName
+		value := repSQL.REP_QUERY
+		if setup.Start != "" {
+			value = strings.Replace(value, "':START'", setup.Start, -1)
+		}
+		if setup.X != "" {
+			value = strings.Replace(value, "':X'", setup.X, -1)
+		}
+		SQLs[key] = value
+	}
+	return json.Marshal(SQLs)
 }
 
 func getUsercase() (Usecase, error) {
@@ -52,45 +92,7 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	// extract this to a function start
-	SQLs := make(map[string]string)
-	for _, setup := range createLabelDTO.Setup {
-		reportID := setup.ReportID
-		data := url.Values{
-			"funcao":       {"CDQCREPORTSQLT::getSQLReport"},
-			"conn":         {"padb"},
-			"dados[d][id]": {reportID},
-		}
-		url := "http://10.58.64.198:8081/workshop/webservice.php?session=" + session //#TODO: change to config
-		resp, err := http.PostForm(url, data)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-		defer resp.Body.Close()
-		body, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-		var repSQL RepSQL
-		err = json.Unmarshal(body, &repSQL)
-		if err != nil {
-			msg := "please check if report id " + reportID + " exists: "
-			http.Error(w, msg+err.Error(), http.StatusBadRequest)
-			return
-		}
-		key := setup.ReportID + "_" + setup.ReportName
-		value := repSQL.REP_QUERY
-		if setup.Start != "" {
-			value = strings.Replace(value, "':START'", setup.Start, -1)
-		}
-		if setup.X != "" {
-			value = strings.Replace(value, "':X'", setup.X, -1)
-		}
-		SQLs[key] = value
-	}
-	sqlQueries, err := json.Marshal(SQLs)
+	sqlQueries, err := getSQLQueriesFromSetup(session, createLabelDTO.Setup)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -117,7 +119,6 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	// extract this to a function and
 	id := strconv.Itoa(int(created.ID))
 	resp := map[string]string{
 		"status":  "OK",
@@ -235,50 +236,12 @@ func Update(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	// extract this to a function start
 	id, err := strconv.Atoi(updateLabelDTO.ID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	SQLs := make(map[string]string)
-	for _, setup := range updateLabelDTO.Setup {
-		reportID := setup.ReportID
-		data := url.Values{
-			"funcao":       {"CDQCREPORTSQLT::getSQLReport"},
-			"conn":         {"padb"},
-			"dados[d][id]": {reportID},
-		}
-		url := "http://10.58.64.198:8081/workshop/webservice.php?session=" + session //#TODO: change to config
-		resp, err := http.PostForm(url, data)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-		defer resp.Body.Close()
-		body, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-		var repSQL RepSQL
-		err = json.Unmarshal(body, &repSQL)
-		if err != nil {
-			msg := "please check if report id " + reportID + " exists: "
-			http.Error(w, msg+err.Error(), http.StatusBadRequest)
-			return
-		}
-		key := setup.ReportID + "_" + setup.ReportName
-		value := repSQL.REP_QUERY
-		if setup.Start != "" {
-			value = strings.Replace(value, "':START'", setup.Start, -1)
-		}
-		if setup.X != "" {
-			value = strings.Replace(value, "':X'", setup.X, -1)
-		}
-		SQLs[key] = value
-	}
-	sqlQueries, err := json.Marshal(SQLs)
+	sqlQueries, err := getSQLQueriesFromSetup(session, updateLabelDTO.Setup)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -306,7 +269,6 @@ func Update(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	// extract this to a function end
 	resp := map[string]string{
 		"status":  "OK",
 		"message": "Label updated successfully",
