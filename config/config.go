@@ -25,7 +25,8 @@ func (d *db) GetDataSourceName() string {
 }
 
 type config struct {
-	db *db
+	db   *db
+	port string
 }
 
 func New() (*config, error) {
@@ -44,9 +45,14 @@ func New() (*config, error) {
 			username: viper.GetString("DB_USERNAME"),
 			password: viper.GetString("DB_PASSWORD"),
 		},
+		port: viper.GetString("PORT"),
 	}, nil
 }
 
 func (c *config) GetDB() *db {
 	return c.db
+}
+
+func (c *config) GetPort() string {
+	return c.port
 }

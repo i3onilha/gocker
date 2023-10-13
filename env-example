@@ -1,3 +1,5 @@
+PORT=7192
+
 DB_DRIVER=mysql
 DB_HOST=mysql-dev
 DB_PORT=3306

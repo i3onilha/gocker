@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -8,6 +9,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/go-chi/render"
+	"github.com/i3onilha/MESEnterpriseSmart/config"
 	"github.com/i3onilha/MESEnterpriseSmart/internal/control/copylabel"
 	"github.com/i3onilha/MESEnterpriseSmart/internal/control/labels"
 	"github.com/i3onilha/MESEnterpriseSmart/internal/control/zpl"
@@ -23,7 +25,6 @@ type RepLabel struct {
 }
 
 func main() {
-	log.Println("Starting server on port 7192")
 	r := chi.NewRouter()
 	r.Use(cors.Handler(cors.Options{
 		// AllowedOrigins:   []string{"https://foo.com"}, // Use this to allow specific origin hosts
@@ -64,7 +65,14 @@ func main() {
 			r.Get("/model/{customer}/{model_from}/{model_to}/{station_to}/{dpi_to}", copylabel.CopyModel)
 		})
 	})
-	err := http.ListenAndServe(":7192", r)
+	var err error
+	c, err := config.New()
+	if err != nil {
+		log.Fatal("Error loading config: ", err)
+	}
+	port := fmt.Sprintf(":%s", c.GetPort())
+	log.Println(fmt.Sprintf("Starting server on port %s", port))
+	err = http.ListenAndServe(port, r)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
