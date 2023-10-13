@@ -57,8 +57,8 @@ func main() {
 			r.Delete("/{id}", labels.Delete)
 		})
 		r.Route("/zpl", func(r chi.Router) {
-			r.Get("/partnumber/{part_number}/{station}/{dpi}/{serial}/{key}", zpl.GetZPLCodeByPartnumber)
-			r.Get("/model/{model}/{station}/{dpi}/{serial}/{key}", zpl.GetZPLCodeByModel)
+			r.Get("/model/{customer}/{model}/{station}/{dpi}/{serial}/{key}", zpl.GetZPLCodeByModel)
+			r.Get("/partnumber/{customer}/{part_number}/{station}/{dpi}/{serial}/{key}", zpl.GetZPLCodeByPartnumber)
 		})
 		r.Route("/copy", func(r chi.Router) {
 			r.Get("/model/{customer}/{model_from}/{model_to}/{station_to}/{dpi_to}", copylabel.CopyModel)

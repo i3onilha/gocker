@@ -3,6 +3,7 @@ package labels
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 
 	entity "github.com/i3onilha/MESEnterpriseSmart/internal/entity/labels"
 	"github.com/i3onilha/MESEnterpriseSmart/internal/infra/mysql"
@@ -19,6 +20,15 @@ func New(queries *mysql.MySQL) *Labels {
 		queries:        queries.Labels,
 		dataSourceName: queries.GetDataSourceName(),
 	}
+}
+
+func (l *Labels) GetOracleDataSource(customer string) (string, error) {
+	ctx := context.Background()
+	ds, err := l.queries.GetOracleDataSource(ctx, customer)
+	if err != nil {
+		return "", err
+	}
+	return fmt.Sprintf(`user="%s" password="%s" connectString="%s:%d/%s")`, ds.Username, ds.Password, ds.Host, ds.Port, ds.Dbname), nil
 }
 
 func (l *Labels) Create(dto *entity.CreateDTO) (*entity.CreateDTO, error) {

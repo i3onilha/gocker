@@ -59,6 +59,28 @@ func (q *Queries) GetByID(ctx context.Context, id int32) (LabelsDatum, error) {
 	return i, err
 }
 
+const getOracleDataSource = `-- name: GetOracleDataSource :one
+SELECT
+  src.dbname, src.host, src.port, src.username, src.password
+FROM
+  oracle_customers cust
+  INNER JOIN oracle_datasources src ON cust.dbname = src.dbname
+WHERE cust.customer = ?
+`
+
+func (q *Queries) GetOracleDataSource(ctx context.Context, customer string) (OracleDatasource, error) {
+	row := q.db.QueryRowContext(ctx, getOracleDataSource, customer)
+	var i OracleDatasource
+	err := row.Scan(
+		&i.Dbname,
+		&i.Host,
+		&i.Port,
+		&i.Username,
+		&i.Password,
+	)
+	return i, err
+}
+
 const listByModel = `-- name: ListByModel :many
 SELECT
   labels_data.id, labels_data.name, labels_data.customer, labels_data.model, labels_data.part_number, labels_data.station, labels_data.dpi, labels_data.label, labels_data.setup, labels_data.sql_queries, labels_data.author, labels_data.created_at

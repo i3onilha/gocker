@@ -32,3 +32,16 @@ type LabelsDelete struct {
 	ID        int32
 	CreatedAt time.Time
 }
+
+type OracleCustomer struct {
+	Customer string
+	Dbname   string
+}
+
+type OracleDatasource struct {
+	Dbname   string
+	Host     string
+	Port     int32
+	Username string
+	Password string
+}

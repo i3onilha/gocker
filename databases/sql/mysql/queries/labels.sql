@@ -1,3 +1,11 @@
+-- name: GetOracleDataSource :one
+SELECT
+  src.*
+FROM
+  oracle_customers cust
+  INNER JOIN oracle_datasources src ON cust.dbname = src.dbname
+WHERE cust.customer = ?;
+
 -- name: Create :execresult
 INSERT IGNORE INTO labels () VALUES ();
 

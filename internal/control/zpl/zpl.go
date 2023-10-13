@@ -24,6 +24,7 @@ type RepLabel struct {
 }
 
 func GetZPLCodeByModel(w http.ResponseWriter, r *http.Request) {
+	customer := chi.URLParam(r, "customer")
 	model := chi.URLParam(r, "model")
 	station := chi.URLParam(r, "station")
 	dpi := chi.URLParam(r, "dpi")
@@ -44,6 +45,11 @@ func GetZPLCodeByModel(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	repo := repository.New(queries)
+	oracleDataSource, err := repo.GetOracleDataSource(customer)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 	vali := validator.New()
 	usec := usecase.New(repo, vali)
 	if err != nil {
@@ -75,7 +81,7 @@ func GetZPLCodeByModel(w http.ResponseWriter, r *http.Request) {
 					loopVar = set.LoopVar
 				}
 			}
-			d, err := execQuery(sqlQuery, keyReplace, chi.URLParam(r, "serial"), loopVar)
+			d, err := execQuery(oracleDataSource, sqlQuery, keyReplace, chi.URLParam(r, "serial"), loopVar)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusBadRequest)
 				return
@@ -102,6 +108,7 @@ func GetZPLCodeByModel(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetZPLCodeByPartnumber(w http.ResponseWriter, r *http.Request) {
+	customer := chi.URLParam(r, "customer")
 	partNumber := chi.URLParam(r, "part_number")
 	station := chi.URLParam(r, "station")
 	dpi := chi.URLParam(r, "dpi")
@@ -122,6 +129,11 @@ func GetZPLCodeByPartnumber(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	repo := repository.New(queries)
+	oracleDataSource, err := repo.GetOracleDataSource(customer)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 	vali := validator.New()
 	usec := usecase.New(repo, vali)
 	if err != nil {
@@ -153,7 +165,7 @@ func GetZPLCodeByPartnumber(w http.ResponseWriter, r *http.Request) {
 					loopVar = set.LoopVar
 				}
 			}
-			d, err := execQuery(sqlQuery, keyReplace, chi.URLParam(r, "serial"), loopVar)
+			d, err := execQuery(oracleDataSource, sqlQuery, keyReplace, chi.URLParam(r, "serial"), loopVar)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusBadRequest)
 				return
@@ -179,15 +191,13 @@ func GetZPLCodeByPartnumber(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(repLabels)
 }
 
-func execQuery(sqlQuery, key, value string, loopVar bool) (string, error) {
+func execQuery(oracleDataSource, sqlQuery, key, value string, loopVar bool) (string, error) {
 	sqlQuery = strings.ReplaceAll(sqlQuery, fmt.Sprintf(":%s", key), value)
-	// extract to config start
-	db, err := sql.Open("godror", `user="tmcp" password="padboratmcp" connectString="10.57.64.131:1521/PADB"`)
+	db, err := sql.Open("godror", oracleDataSource)
 	if err != nil {
 		return "", err
 	}
 	defer db.Close()
-	// extract to config end
 	rows, err := db.Query(sqlQuery)
 	defer rows.Close()
 	if err != nil {

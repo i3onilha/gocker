@@ -39,3 +39,22 @@ CREATE TABLE `labels_deletes` (
   KEY `id` (`id`),
   CONSTRAINT `labels_deletes_ibfk_1` FOREIGN KEY (`id`) REFERENCES `labels_data` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+DROP TABLE IF EXISTS `oracle_customers`;
+
+CREATE TABLE `oracle_customers` (
+  `customer` varchar(12) NOT NULL,
+  `dbname` varchar(15) NOT NULL,
+  PRIMARY KEY (`customer`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+DROP TABLE IF EXISTS `oracle_datasources`;
+
+CREATE TABLE `oracle_datasources` (
+  `dbname` varchar(12) NOT NULL,
+  `host` varchar(15) NOT NULL,
+  `port` int(4) NOT NULL,
+  `username` varchar(32) NOT NULL,
+  `password` varchar(64) NOT NULL,
+  PRIMARY KEY (`dbname`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
