@@ -41,3 +41,6 @@ dbup:
 
 dbdown:
 	@mysql -h mysql-dev -u default -p < databases/sql/mysql/down.sql
+
+dbdump:
+	@mysqldump -h mysql-dev -u root -p dbdev > databases/sql/mysql/backup/$$(date +"%Y-%m-%-d").sql
