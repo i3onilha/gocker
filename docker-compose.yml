@@ -30,6 +30,8 @@ services:
     image: mysql:5.7
     container_name: mysql-dev
     restart: always
+    volumes:
+      - /mysql-labels:/var/lib/mysql
     ports:
       - 3306:3306
     networks:
