@@ -66,7 +66,7 @@ func getSQLQueriesFromSetup(session string, setup []labels.Setup) ([]byte, error
 	return json.Marshal(SQLs)
 }
 
-func getUsercase() (Usecase, error) {
+func getUsecase() (Usecase, error) {
 	c, err := config.New()
 	if err != nil {
 		return nil, err
@@ -109,7 +109,7 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		Author:     createLabelDTO.Author,
 		SqlQueries: string(sqlQueries),
 	}
-	usec, err := getUsercase()
+	usec, err := getUsecase()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -136,7 +136,7 @@ func Create(w http.ResponseWriter, r *http.Request) {
 func ListByModel(w http.ResponseWriter, r *http.Request) {
 	customer := chi.URLParam(r, "customer")
 	model := chi.URLParam(r, "model")
-	usec, err := getUsercase()
+	usec, err := getUsecase()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -156,7 +156,7 @@ func ListByModel(w http.ResponseWriter, r *http.Request) {
 
 func ListByParts(w http.ResponseWriter, r *http.Request) {
 	partNumber := chi.URLParam(r, "part_number")
-	usec, err := getUsercase()
+	usec, err := getUsecase()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -183,7 +183,7 @@ func ListByModelAndStationAndDpi(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	usec, err := getUsercase()
+	usec, err := getUsecase()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -210,7 +210,7 @@ func ListByPartsAndStationAndDpi(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	usec, err := getUsercase()
+	usec, err := getUsecase()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -259,7 +259,7 @@ func Update(w http.ResponseWriter, r *http.Request) {
 		Author:     updateLabelDTO.Author,
 		SqlQueries: string(sqlQueries),
 	}
-	usec, err := getUsercase()
+	usec, err := getUsecase()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -284,7 +284,7 @@ func Update(w http.ResponseWriter, r *http.Request) {
 
 func Delete(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
-	usec, err := getUsercase()
+	usec, err := getUsecase()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
