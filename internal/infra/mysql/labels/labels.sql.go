@@ -147,6 +147,7 @@ FROM
   labels_data
   LEFT JOIN labels_deletes ON labels_data.id = labels_deletes.id
 WHERE labels_deletes.id IS NULL
+  AND labels_data.customer = ?
   AND labels_data.model = ?
   AND labels_data.station = ?
   AND labels_data.dpi = ?
@@ -160,13 +161,19 @@ ORDER BY labels_data.created_at DESC
 `
 
 type ListByModelAndStationAndDpiParams struct {
-	Model   string
-	Station string
-	Dpi     int32
+	Customer string
+	Model    string
+	Station  string
+	Dpi      int32
 }
 
 func (q *Queries) ListByModelAndStationAndDpi(ctx context.Context, arg ListByModelAndStationAndDpiParams) ([]LabelsDatum, error) {
-	rows, err := q.db.QueryContext(ctx, listByModelAndStationAndDpi, arg.Model, arg.Station, arg.Dpi)
+	rows, err := q.db.QueryContext(ctx, listByModelAndStationAndDpi,
+		arg.Customer,
+		arg.Model,
+		arg.Station,
+		arg.Dpi,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -260,6 +267,7 @@ FROM
   labels_data
   LEFT JOIN labels_deletes ON labels_data.id = labels_deletes.id
 WHERE labels_deletes.id IS NULL
+  AND labels_data.customer = ?
   AND labels_data.part_number = ?
   AND labels_data.station = ?
   AND labels_data.dpi = ?
@@ -272,13 +280,19 @@ ORDER BY labels_data.created_at DESC
 `
 
 type ListByPartsAndStationAndDpiParams struct {
+	Customer   string
 	PartNumber string
 	Station    string
 	Dpi        int32
 }
 
 func (q *Queries) ListByPartsAndStationAndDpi(ctx context.Context, arg ListByPartsAndStationAndDpiParams) ([]LabelsDatum, error) {
-	rows, err := q.db.QueryContext(ctx, listByPartsAndStationAndDpi, arg.PartNumber, arg.Station, arg.Dpi)
+	rows, err := q.db.QueryContext(ctx, listByPartsAndStationAndDpi,
+		arg.Customer,
+		arg.PartNumber,
+		arg.Station,
+		arg.Dpi,
+	)
 	if err != nil {
 		return nil, err
 	}

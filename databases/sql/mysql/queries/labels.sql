@@ -59,6 +59,7 @@ FROM
   labels_data
   LEFT JOIN labels_deletes ON labels_data.id = labels_deletes.id
 WHERE labels_deletes.id IS NULL
+  AND labels_data.customer = ?
   AND labels_data.model = ?
   AND labels_data.station = ?
   AND labels_data.dpi = ?
@@ -77,6 +78,7 @@ FROM
   labels_data
   LEFT JOIN labels_deletes ON labels_data.id = labels_deletes.id
 WHERE labels_deletes.id IS NULL
+  AND labels_data.customer = ?
   AND labels_data.part_number = ?
   AND labels_data.station = ?
   AND labels_data.dpi = ?

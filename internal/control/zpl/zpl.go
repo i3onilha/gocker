@@ -56,7 +56,7 @@ func GetZPLCodeByModel(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	list, err := usec.ListZPLByModelAndStationAndDpi(model, station, dpiNumber)
+	list, err := usec.ListZPLByModelAndStationAndDpi(customer, model, station, dpiNumber)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -140,7 +140,7 @@ func GetZPLCodeByPartnumber(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	list, err := usec.ListZPLByPartsAndStationAndDpi(partNumber, station, dpiNumber)
+	list, err := usec.ListZPLByPartsAndStationAndDpi(customer, partNumber, station, dpiNumber)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
