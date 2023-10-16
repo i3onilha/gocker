@@ -215,6 +215,7 @@ FROM
   labels_data
   LEFT JOIN labels_deletes ON labels_data.id = labels_deletes.id
 WHERE labels_deletes.id IS NULL
+  AND labels_data.customer = ?
   AND labels_data.part_number = ?
   AND labels_data.created_at IN(
     SELECT MAX(labels_data.created_at)
@@ -224,8 +225,13 @@ WHERE labels_deletes.id IS NULL
 ORDER BY labels_data.created_at DESC
 `
 
-func (q *Queries) ListByParts(ctx context.Context, partNumber string) ([]LabelsDatum, error) {
-	rows, err := q.db.QueryContext(ctx, listByParts, partNumber)
+type ListByPartsParams struct {
+	Customer   string
+	PartNumber string
+}
+
+func (q *Queries) ListByParts(ctx context.Context, arg ListByPartsParams) ([]LabelsDatum, error) {
+	rows, err := q.db.QueryContext(ctx, listByParts, arg.Customer, arg.PartNumber)
 	if err != nil {
 		return nil, err
 	}

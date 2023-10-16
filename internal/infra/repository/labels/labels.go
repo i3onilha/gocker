@@ -169,8 +169,12 @@ func (l *Labels) ListByModel(customer, model string) ([]*entity.CreateDTO, error
 	return result, nil
 }
 
-func (l *Labels) ListByParts(partNumber string) ([]*entity.CreateDTO, error) {
-	list, err := l.queries.ListByParts(context.Background(), partNumber)
+func (l *Labels) ListByParts(customer, partNumber string) ([]*entity.CreateDTO, error) {
+	arg := labels.ListByPartsParams{
+		Customer:   customer,
+		PartNumber: partNumber,
+	}
+	list, err := l.queries.ListByParts(context.Background(), arg)
 	if err != nil {
 		return nil, err
 	}

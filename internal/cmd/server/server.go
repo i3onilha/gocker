@@ -50,7 +50,7 @@ func main() {
 		})
 		r.Route("/labels", func(r chi.Router) {
 			r.Post("/{session}", labels.Create)
-			r.Get("/{part_number}/partnumber", labels.ListByParts)
+			r.Get("/{customer}/{part_number}/partnumber", labels.ListByParts)
 			r.Get("/{customer}/{model}/model", labels.ListByModel)
 			r.Get("/{model}/{station}/{dpi}", labels.ListByModelAndStationAndDpi)
 			r.Get("/{part_number}/{station}/{dpi}", labels.ListByPartsAndStationAndDpi)
