@@ -44,3 +44,6 @@ dbdown:
 
 dbdump:
 	@mysqldump -h mysql-dev -u root -p dbdev > databases/sql/mysql/backup/$$(date +"%Y-%m-%-d").sql
+
+server:
+	@go build -o test/ internal/cmd/server/server.go && ./test/server
