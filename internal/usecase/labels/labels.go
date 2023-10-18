@@ -1,10 +1,13 @@
 package usecase
 
-import entity "github.com/i3onilha/MESEnterpriseSmart/internal/entity/labels"
+import (
+	entity "github.com/i3onilha/MESEnterpriseSmart/internal/entity/labels"
+)
 
 type Repository interface {
 	Create(dto *entity.CreateDTO) (*entity.CreateDTO, error)
 	DeleteByID(id int) error
+	GetOracleDataSource(customer string) (string, error)
 	GetByID(id int) (*entity.CreateDTO, error)
 	ListPaginate(limit, offset int) ([]*entity.CreateDTO, error)
 	ListByModelAndStationAndDpi(model, station string, dpi int) ([]*entity.CreateDTO, error)
@@ -32,6 +35,10 @@ func New(r Repository, v Validator) *labels {
 		repository: r,
 		validator:  v,
 	}
+}
+
+func (l *labels) GetOracleDataSource(customer string) (string, error) {
+	return l.repository.GetOracleDataSource(customer)
 }
 
 func (l *labels) Create(dto *entity.CreateDTO) (*entity.CreateDTO, error) {

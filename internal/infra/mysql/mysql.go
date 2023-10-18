@@ -12,6 +12,7 @@ const (
 
 type MySQL struct {
 	Labels         *labels.Queries
+	db             *sql.DB
 	driver         string
 	dataSourceName string
 }
@@ -24,9 +25,14 @@ func New(dataSourceName string) (*MySQL, error) {
 	labels := labels.New(conn)
 	return &MySQL{
 		Labels:         labels,
+		db:             conn,
 		driver:         driver,
 		dataSourceName: dataSourceName,
 	}, nil
+}
+
+func (m *MySQL) Close() error {
+	return m.db.Close()
 }
 
 func (m *MySQL) GetDriver() string {

@@ -21,6 +21,7 @@ import (
 type Usecase interface {
 	Create(dto *labels.CreateDTO) (*labels.CreateDTO, error)
 	DeleteByID(id int) error
+	GetOracleDataSource(customer string) (string, error)
 	ListByModel(customer, model string) ([]*labels.CreateDTO, error)
 	ListByParts(customer, partNumber string) ([]*labels.CreateDTO, error)
 	ListByModelAndStationAndDpi(partNumber, station string, dpi int) ([]*labels.CreateDTO, error)
@@ -66,18 +67,18 @@ func getSQLQueriesFromSetup(session string, setup []labels.Setup) ([]byte, error
 	return json.Marshal(SQLs)
 }
 
-func getUsecase() (Usecase, error) {
+func getUsecase() (Usecase, func() error, error) {
 	c, err := config.New()
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	queries, err := mysql.New(c.GetDB().GetDataSourceName())
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	repo := repository.New(queries)
 	vali := validator.New()
-	return usecase.New(repo, vali), nil
+	return usecase.New(repo, vali), queries.Close, nil
 }
 
 type RepSQL struct {
@@ -109,11 +110,12 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		Author:     createLabelDTO.Author,
 		SqlQueries: string(sqlQueries),
 	}
-	usec, err := getUsecase()
+	usec, closer, err := getUsecase()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+	defer closer()
 	created, err := usec.Create(createDto)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -136,11 +138,12 @@ func Create(w http.ResponseWriter, r *http.Request) {
 func ListByModel(w http.ResponseWriter, r *http.Request) {
 	customer := chi.URLParam(r, "customer")
 	model := chi.URLParam(r, "model")
-	usec, err := getUsecase()
+	usec, closer, err := getUsecase()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+	defer closer()
 	list, err := usec.ListByModel(customer, model)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -157,11 +160,12 @@ func ListByModel(w http.ResponseWriter, r *http.Request) {
 func ListByParts(w http.ResponseWriter, r *http.Request) {
 	customer := chi.URLParam(r, "customer")
 	partNumber := chi.URLParam(r, "part_number")
-	usec, err := getUsecase()
+	usec, closer, err := getUsecase()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+	defer closer()
 	list, err := usec.ListByParts(customer, partNumber)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -184,11 +188,12 @@ func ListByModelAndStationAndDpi(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	usec, err := getUsecase()
+	usec, closer, err := getUsecase()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+	defer closer()
 	list, err := usec.ListByModelAndStationAndDpi(model, station, dpiNumber)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -211,11 +216,12 @@ func ListByPartsAndStationAndDpi(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	usec, err := getUsecase()
+	usec, closer, err := getUsecase()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+	defer closer()
 	list, err := usec.ListByPartsAndStationAndDpi(partNumber, station, dpiNumber)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -260,11 +266,12 @@ func Update(w http.ResponseWriter, r *http.Request) {
 		Author:     updateLabelDTO.Author,
 		SqlQueries: string(sqlQueries),
 	}
-	usec, err := getUsecase()
+	usec, closer, err := getUsecase()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+	defer closer()
 	_, err = usec.Update(updateDto)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -285,11 +292,12 @@ func Update(w http.ResponseWriter, r *http.Request) {
 
 func Delete(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
-	usec, err := getUsecase()
+	usec, closer, err := getUsecase()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+	defer closer()
 	idNum, err := strconv.Atoi(id)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)

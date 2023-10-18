@@ -36,6 +36,7 @@ func CopyModel(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+	defer queries.Close()
 	repo := repository.New(queries)
 	vali := validator.New()
 	usec := usecase.New(repo, vali)
