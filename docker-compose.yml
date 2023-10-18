@@ -1,4 +1,14 @@
 services:
+  app-prod:
+    build:
+      dockerfile: Dockerfile
+      context: .
+        # Only will build production stage from our dockerfile
+      target: production
+    ports:
+      - 1808:1808
+    networks:
+      - backend
   app-dev:
     build:
       dockerfile: Dockerfile
