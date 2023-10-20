@@ -1,0 +1,14 @@
+stages:
+  - deploy
+deploy:
+  stage: deploy
+  tags:
+    - bm2aps195
+  script:
+    - echo "Load before script"
+    - source ~/.bashrc
+    - echo "Script integration running"
+    - gobuild
+    - echo "Finish Update Process for Application on bm2aps195"
+  only:
+    - master
