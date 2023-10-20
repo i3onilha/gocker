@@ -5,6 +5,8 @@ services:
       context: .
         # Only will build production stage from our dockerfile
       target: production
+    depends_on:
+      - mysql-dev
     ports:
       - 1808:1808
     networks:
