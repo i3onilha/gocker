@@ -49,4 +49,4 @@ server:
 	@go build -o test/ internal/cmd/server/server.go && cp .env-example .env && ./test/server
 
 server-test:
-	@go build -o test/ internal/cmd/server/server.go && cp env-test .env && ./test/server
+	@go build -o test/ internal/cmd/server/server.go && cp .env-test .env && ./test/server
