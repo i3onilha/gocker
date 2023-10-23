@@ -1,16 +1,4 @@
 services:
-  app-prod:
-    build:
-      dockerfile: Dockerfile
-      context: .
-        # Only will build production stage from our dockerfile
-      target: production
-    depends_on:
-      - mysql-dev
-    ports:
-      - 1808:1808
-    networks:
-      - backend
   app-dev:
     build:
       dockerfile: Dockerfile
@@ -20,42 +8,7 @@ services:
     volumes:
       - .:/home/go/sourcecode
       - ~/.ssh:/home/go/.ssh:ro
-    depends_on:
-      - mysql-dev
-      - oracle-dev
-    networks:
-      - backend
     ports:
       - 6464:6464
-      - 6767:6767
-      - 7192:7192
-      - 5173:5173
-      - 34115:34115
+      - 2808:2808
     command: godoc -http=:6464
-  oracle-dev:
-    image: oracleinanutshell/oracle-xe-11g:1.0.0
-    container_name: oracle-dev
-    restart: always
-    ports:
-      - 1521:1521
-    networks:
-      - backend
-  mysql-dev:
-    image: mysql:5.7
-    container_name: mysql-dev
-    restart: always
-    volumes:
-      - /mysql-labels:/var/lib/mysql
-    ports:
-      - 3306:3306
-    networks:
-      - backend
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: dbdev
-      MYSQL_USER: default
-      MYSQL_PASSWORD: secret
-    platform: linux/amd64
-networks:
-  backend:
-    driver: bridge

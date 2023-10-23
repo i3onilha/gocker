@@ -1,8 +1,5 @@
 test/*.html
 test/*.out
-build/bin
 node_modules
-frontend/dist
 .env
-databases/sql/mysql/backup/*.sql
 test/server
