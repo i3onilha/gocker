@@ -15,6 +15,7 @@ type Repository interface {
 	ListZPLByModelAndStationAndDpi(customer, partNumber, station string, dpi int) ([]*entity.ZplDTO, error)
 	ListZPLByPartsAndStationAndDpi(customer, partNumber, station string, dpi int) ([]*entity.ZplDTO, error)
 	ListByModel(customer, partNumber string) ([]*entity.CreateDTO, error)
+	ListNamesByModel(customer, partNumber string) ([]string, error)
 	ListByParts(customer, partNumber string) ([]*entity.CreateDTO, error)
 	Update(dto *entity.UpdateDTO) (*entity.CreateDTO, error)
 }
@@ -71,6 +72,10 @@ func (l *labels) List(limit int, offset int) ([]*entity.CreateDTO, error) {
 
 func (l *labels) ListByModel(customer, model string) ([]*entity.CreateDTO, error) {
 	return l.repository.ListByModel(customer, model)
+}
+
+func (l *labels) ListNamesByModel(customer, model string) ([]string, error) {
+	return l.repository.ListNamesByModel(customer, model)
 }
 
 func (l *labels) ListByParts(customer, partNumber string) ([]*entity.CreateDTO, error) {

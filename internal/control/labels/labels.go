@@ -23,6 +23,7 @@ type Usecase interface {
 	DeleteByID(id int) error
 	GetOracleDataSource(customer string) (string, error)
 	ListByModel(customer, model string) ([]*labels.CreateDTO, error)
+	ListNamesByModel(customer, model string) ([]string, error)
 	ListByParts(customer, partNumber string) ([]*labels.CreateDTO, error)
 	ListByModelAndStationAndDpi(partNumber, station string, dpi int) ([]*labels.CreateDTO, error)
 	ListByPartsAndStationAndDpi(partNumber, station string, dpi int) ([]*labels.CreateDTO, error)
@@ -145,6 +146,23 @@ func ListByModel(w http.ResponseWriter, r *http.Request) {
 	}
 	defer closer()
 	list, err := usec.ListByModel(customer, model)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	json.NewEncoder(w).Encode(list)
+}
+
+func ListNamesByModel(w http.ResponseWriter, r *http.Request) {
+	customer := chi.URLParam(r, "customer")
+	model := chi.URLParam(r, "model")
+	usec, closer, err := getUsecase()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	defer closer()
+	list, err := usec.ListNamesByModel(customer, model)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return

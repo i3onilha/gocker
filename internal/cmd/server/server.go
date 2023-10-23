@@ -56,6 +56,7 @@ func main() {
 			r.Get("/{part_number}/{station}/{dpi}", labels.ListByPartsAndStationAndDpi)
 			r.Put("/{session}", labels.Update)
 			r.Delete("/{id}", labels.Delete)
+			r.Get("/names/{customer}/{model}", labels.ListNamesByModel)
 		})
 		r.Route("/zpl", func(r chi.Router) {
 			r.Get("/model/{customer}/{model}/{station}/{dpi}/{serial}/{key}", zpl.GetZPLCodeByModel)

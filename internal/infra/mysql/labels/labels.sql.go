@@ -333,6 +333,51 @@ func (q *Queries) ListByPartsAndStationAndDpi(ctx context.Context, arg ListByPar
 	return items, nil
 }
 
+const listNamesByModel = `-- name: ListNamesByModel :many
+SELECT DISTINCT
+  labels_data.name
+FROM
+  labels_data
+  LEFT JOIN labels_deletes ON labels_data.id = labels_deletes.id
+WHERE labels_deletes.id IS NULL
+  AND labels_data.customer = ?
+  AND labels_data.model = ?
+  AND labels_data.created_at IN(
+    SELECT MAX(labels_data.created_at)
+    FROM labels_data
+    GROUP BY labels_data.id
+  )
+ORDER BY labels_data.name
+`
+
+type ListNamesByModelParams struct {
+	Customer string
+	Model    string
+}
+
+func (q *Queries) ListNamesByModel(ctx context.Context, arg ListNamesByModelParams) ([]string, error) {
+	rows, err := q.db.QueryContext(ctx, listNamesByModel, arg.Customer, arg.Model)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []string
+	for rows.Next() {
+		var name string
+		if err := rows.Scan(&name); err != nil {
+			return nil, err
+		}
+		items = append(items, name)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const listPaginate = `-- name: ListPaginate :many
 SELECT
   labels_data.id, labels_data.name, labels_data.customer, labels_data.model, labels_data.part_number, labels_data.station, labels_data.dpi, labels_data.label, labels_data.setup, labels_data.sql_queries, labels_data.author, labels_data.created_at

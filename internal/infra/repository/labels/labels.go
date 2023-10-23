@@ -169,6 +169,14 @@ func (l *Labels) ListByModel(customer, model string) ([]*entity.CreateDTO, error
 	return result, nil
 }
 
+func (l *Labels) ListNamesByModel(customer, model string) ([]string, error) {
+	arg := labels.ListNamesByModelParams{
+		Customer: customer,
+		Model:    model,
+	}
+	return l.queries.ListNamesByModel(context.Background(), arg)
+}
+
 func (l *Labels) ListByParts(customer, partNumber string) ([]*entity.CreateDTO, error) {
 	arg := labels.ListByPartsParams{
 		Customer:   customer,
