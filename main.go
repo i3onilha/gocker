@@ -8,8 +8,11 @@ import (
 	"github.com/gen2brain/beeep"
 )
 
-var FolderListen = "C:\\SPI_LOG"
-var AlertTitle = "SPI LOG"
+const (
+	FolderListen = "C:\\SPI_LOG"
+	AlertTitle   = "SPI LOG"
+	expr         = "\\w{2}\\d{11}\\s+\\d{4}\\s+\\d{4}-\\d{2}-\\d{2}\\s+\\d{2}:\\d{2}:\\d{2}\\s+\\d{2}:\\d{2}:\\d{2}\\s+\\d\\s+\\w\\d{2}\\w\\d\\w{2}\\d\\w{2}\\d{2}\\s+\\w+\\s+\\w+\\s+\\w+\\s+\\w"
+)
 
 func main() {
 	watcher, err := fsnotify.NewWatcher()
