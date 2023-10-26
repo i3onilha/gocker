@@ -26,7 +26,7 @@ type RepLabel struct {
 func GetZPLCodeByModel(w http.ResponseWriter, r *http.Request) {
 	customer := chi.URLParam(r, "customer")
 	model := chi.URLParam(r, "model")
-	station := chi.URLParam(r, "station")
+	station := strings.ReplaceAll(chi.URLParam(r, "station"), "%2F", "/")
 	dpi := chi.URLParam(r, "dpi")
 	keyReplace := chi.URLParam(r, "key")
 	dpiNumber, err := strconv.Atoi(dpi)
@@ -118,7 +118,7 @@ func GetZPLCodeByModel(w http.ResponseWriter, r *http.Request) {
 func GetZPLCodeByPartnumber(w http.ResponseWriter, r *http.Request) {
 	customer := chi.URLParam(r, "customer")
 	partNumber := chi.URLParam(r, "part_number")
-	station := chi.URLParam(r, "station")
+	station := strings.ReplaceAll(chi.URLParam(r, "station"), "%2F", "/")
 	dpi := chi.URLParam(r, "dpi")
 	keyReplace := chi.URLParam(r, "key")
 	dpiNumber, err := strconv.Atoi(dpi)
