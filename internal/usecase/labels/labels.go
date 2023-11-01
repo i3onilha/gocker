@@ -10,7 +10,7 @@ type Repository interface {
 	GetOracleDataSource(customer string) (string, error)
 	GetByID(id int) (*entity.CreateDTO, error)
 	ListPaginate(limit, offset int) ([]*entity.CreateDTO, error)
-	ListByModelAndStationAndDpi(model, station string, dpi int) ([]*entity.CreateDTO, error)
+	ListByModelAndStationAndDpi(customer, model, station string, dpi int) ([]*entity.CreateDTO, error)
 	ListByPartsAndStationAndDpi(partNumber, station string, dpi int) ([]*entity.CreateDTO, error)
 	ListZPLByModelAndStationAndDpi(customer, partNumber, station string, dpi int) ([]*entity.ZplDTO, error)
 	ListZPLByPartsAndStationAndDpi(customer, partNumber, station string, dpi int) ([]*entity.ZplDTO, error)
@@ -77,8 +77,8 @@ func (l *labels) ListByParts(customer, partNumber string) ([]*entity.CreateDTO, 
 	return l.repository.ListByParts(customer, partNumber)
 }
 
-func (l *labels) ListByModelAndStationAndDpi(model, station string, dpi int) ([]*entity.CreateDTO, error) {
-	return l.repository.ListByModelAndStationAndDpi(model, station, dpi)
+func (l *labels) ListByModelAndStationAndDpi(customer, model, station string, dpi int) ([]*entity.CreateDTO, error) {
+	return l.repository.ListByModelAndStationAndDpi(customer, model, station, dpi)
 }
 
 func (l *labels) ListByPartsAndStationAndDpi(partNumber, station string, dpi int) ([]*entity.CreateDTO, error) {
