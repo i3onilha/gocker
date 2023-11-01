@@ -263,6 +263,7 @@ func (l *Labels) ListByModelAndStationAndDpi(customer, model, station string, dp
 		json.Unmarshal([]byte(label.Setup), &setupOutput)
 		result[i] = &entity.CreateDTO{
 			ID:         label.ID,
+			Name:       label.Name,
 			Customer:   label.Customer,
 			Model:      label.Model,
 			PartNumber: label.PartNumber,
@@ -293,6 +294,7 @@ func (l *Labels) ListByPartsAndStationAndDpi(partNumber, station string, dpi int
 		json.Unmarshal([]byte(label.Setup), &setupOutput)
 		result[i] = &entity.CreateDTO{
 			ID:         label.ID,
+			Name:       label.Name,
 			Customer:   label.Customer,
 			Model:      label.Model,
 			PartNumber: label.PartNumber,
