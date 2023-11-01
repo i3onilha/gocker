@@ -19,9 +19,16 @@ func CopyModel(w http.ResponseWriter, r *http.Request) {
 	customer := chi.URLParam(r, "customer")
 	model_from := chi.URLParam(r, "model_from")
 	model_to := chi.URLParam(r, "model_to")
+	station_from := chi.URLParam(r, "station_from")
 	station_to := chi.URLParam(r, "station_to")
-	dpi := chi.URLParam(r, "dpi_to")
-	dpi_to, err := strconv.Atoi(dpi)
+	dpi_from := chi.URLParam(r, "dpi_from")
+	dpi_to := chi.URLParam(r, "dpi_to")
+	dpiFrom, err := strconv.Atoi(dpi_from)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	dpiTo, err := strconv.Atoi(dpi_to)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -44,7 +51,7 @@ func CopyModel(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	list, err := usec.ListByModel(customer, model_from)
+	list, err := usec.ListByModelAndStationAndDpi(customer, model_from, station_from, dpiFrom)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -56,7 +63,7 @@ func CopyModel(w http.ResponseWriter, r *http.Request) {
 			Model:      model_to,
 			PartNumber: v.PartNumber,
 			Station:    station_to,
-			Dpi:        int32(dpi_to),
+			Dpi:        int32(dpiTo),
 			Label:      v.Label,
 			Setup:      v.Setup,
 			Author:     v.Author,
