@@ -24,7 +24,7 @@ type Usecase interface {
 	GetOracleDataSource(customer string) (string, error)
 	ListByModel(customer, model string) ([]*labels.CreateDTO, error)
 	ListByParts(customer, partNumber string) ([]*labels.CreateDTO, error)
-	ListByModelAndStationAndDpi(partNumber, station string, dpi int) ([]*labels.CreateDTO, error)
+	ListByModelAndStationAndDpi(customer, partNumber, station string, dpi int) ([]*labels.CreateDTO, error)
 	ListByPartsAndStationAndDpi(partNumber, station string, dpi int) ([]*labels.CreateDTO, error)
 	Update(dto *labels.UpdateDTO) (*labels.CreateDTO, error)
 }
@@ -180,6 +180,7 @@ func ListByParts(w http.ResponseWriter, r *http.Request) {
 }
 
 func ListByModelAndStationAndDpi(w http.ResponseWriter, r *http.Request) {
+	customer := chi.URLParam(r, "customer")
 	model := chi.URLParam(r, "model")
 	station := chi.URLParam(r, "station")
 	dpi := chi.URLParam(r, "dpi")
@@ -194,7 +195,7 @@ func ListByModelAndStationAndDpi(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer closer()
-	list, err := usec.ListByModelAndStationAndDpi(model, station, dpiNumber)
+	list, err := usec.ListByModelAndStationAndDpi(customer, model, station, dpiNumber)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return

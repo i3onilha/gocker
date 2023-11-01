@@ -246,11 +246,12 @@ func (l *Labels) ListZPLByPartsAndStationAndDpi(customer, partNumber, station st
 	return result, nil
 }
 
-func (l *Labels) ListByModelAndStationAndDpi(model, station string, dpi int) ([]*entity.CreateDTO, error) {
+func (l *Labels) ListByModelAndStationAndDpi(customer, model, station string, dpi int) ([]*entity.CreateDTO, error) {
 	arg := labels.ListByModelAndStationAndDpiParams{
-		Model:   model,
-		Station: station,
-		Dpi:     int32(dpi),
+		Customer: customer,
+		Model:    model,
+		Station:  station,
+		Dpi:      int32(dpi),
 	}
 	list, err := l.queries.ListByModelAndStationAndDpi(context.Background(), arg)
 	if err != nil {

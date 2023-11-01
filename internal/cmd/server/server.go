@@ -52,17 +52,19 @@ func main() {
 			r.Post("/{session}", labels.Create)
 			r.Get("/{customer}/{part_number}/partnumber", labels.ListByParts)
 			r.Get("/{customer}/{model}/model", labels.ListByModel)
-			r.Get("/{model}/{station}/{dpi}", labels.ListByModelAndStationAndDpi)
-			r.Get("/{part_number}/{station}/{dpi}", labels.ListByPartsAndStationAndDpi)
 			r.Put("/{session}", labels.Update)
 			r.Delete("/{id}", labels.Delete)
+			r.Route("/list", func(r chi.Router) {
+				r.Get("/model/{customer}/{model}/{station}/{dpi}", labels.ListByModelAndStationAndDpi)
+				r.Get("/partnumber/{customer}/{part_number}/{station}/{dpi}", labels.ListByPartsAndStationAndDpi)
+			})
 		})
 		r.Route("/zpl", func(r chi.Router) {
 			r.Get("/model/{customer}/{model}/{station}/{dpi}/{serial}/{key}", zpl.GetZPLCodeByModel)
 			r.Get("/partnumber/{customer}/{part_number}/{station}/{dpi}/{serial}/{key}", zpl.GetZPLCodeByPartnumber)
 		})
 		r.Route("/copy", func(r chi.Router) {
-			r.Get("/model/{customer}/{model_from}/{model_to}/{station_to}/{dpi_to}", copylabel.CopyModel)
+			r.Get("/{customer}/{model_from}/{model_to}/{station_from}/{station_to}/{dpi_from}/{dpi_to}", copylabel.CopyModel)
 		})
 	})
 	var err error
