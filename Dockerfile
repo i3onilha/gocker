@@ -145,7 +145,7 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o service ./internal/cmd/server/server.go
+RUN go build -o service ./main.go
 
 FROM oraclelinux:7-slim AS production
 
@@ -170,6 +170,6 @@ WORKDIR /app
 
 COPY --from=builder /home/go/sourcecode/service /app/service
 
-COPY --from=builder /home/go/sourcecode/.env-prod /app/.env
+COPY --from=builder /home/go/sourcecode/.env /app/.env
 
 CMD ["/app/service"]
