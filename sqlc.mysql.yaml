@@ -1,9 +1,0 @@
-version: 2
-sql:
-  - engine: "mysql"
-    schema: "databases/sql/mysql/schema"
-    queries: "databases/sql/mysql/queries"
-    gen:
-      go:
-        package: "labels"
-        out: "internal/infra/mysql/labels"
