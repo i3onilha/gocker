@@ -1,4 +1,4 @@
-module github.com/i3onilha/MESStationAssistant
+module github.com/i3onilha/FireLog
 
 go 1.18
 
