@@ -13,7 +13,7 @@ services:
       - backend
     ports:
       - 6464:6464
-      - 6767:3000
+      - 3000:3000
       - 5173:5173
       - 34115:34115
     command: godoc -http=:6464
