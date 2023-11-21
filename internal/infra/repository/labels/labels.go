@@ -184,6 +184,7 @@ func (l *Labels) ListByParts(customer, partNumber string) ([]*entity.CreateDTO, 
 		json.Unmarshal([]byte(label.Setup), &setupOutput)
 		result[i] = &entity.CreateDTO{
 			ID:         label.ID,
+			Name:       label.Name,
 			Customer:   label.Customer,
 			Model:      label.Model,
 			PartNumber: label.PartNumber,
