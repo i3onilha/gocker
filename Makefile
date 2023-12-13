@@ -1,7 +1,7 @@
 dev: up bash
 
 up:
-	@docker compose up -d
+	@docker compose up -d app-dev
 
 ps:
 	@docker compose ps

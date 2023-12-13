@@ -131,6 +131,42 @@ RUN git clone --bare -b godevenv https://github.com/i3onilha/.dotfiles.git $HOME
 RUN export PATH="$HOME/.nvm/versions/node/$NODE_VERSION/bin:$PATH" && \
     yarn install --cwd ~/.vim/bundle/coc.nvim
 
-WORKDIR $SOURCE_CODE
+WORKDIR $HOME_USER/sourcecode
 
 COPY . .
+
+FROM golang:1.20.5-bullseye AS builder
+
+WORKDIR /home/go/sourcecode
+
+COPY go.* .
+
+RUN go mod download
+
+COPY . .
+
+RUN go build -o main ./cmd/server/server.go
+
+FROM oraclelinux:7-slim AS production
+
+LABEL "provider"="Oracle"                                               \
+    "issues"="https://github.com/oracle/docker-images/issues"
+
+RUN rm -rf /etc/localtime && \
+        ln -s /usr/share/zoneinfo/America/Manaus /etc/localtime
+
+ARG release=19
+ARG update=8
+
+ENV PATH=$PATH:/usr/lib/oracle/${release}.${update}/client64/bin
+
+RUN  yum -y install oracle-release-el7 openssh git cronie && \
+        yum -y install oracle-instantclient${release}.${update}-basic oracle-instantclient${release}.${update}-devel oracle-instantclient${release}.${update}-sqlplus && \
+        rm -rf /var/cache/yum
+
+WORKDIR /app
+
+COPY --from=builder /home/go/sourcecode/main /app/main
+COPY --from=builder /home/go/sourcecode/.env-prod /app/.env
+
+CMD ["/app/main"]
