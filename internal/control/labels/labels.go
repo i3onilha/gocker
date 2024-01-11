@@ -25,7 +25,7 @@ type Usecase interface {
 	ListByModel(customer, model string) ([]*labels.CreateDTO, error)
 	ListByParts(customer, partNumber string) ([]*labels.CreateDTO, error)
 	ListByModelAndStationAndDpi(customer, partNumber, station string, dpi int) ([]*labels.CreateDTO, error)
-	ListByPartsAndStationAndDpi(partNumber, station string, dpi int) ([]*labels.CreateDTO, error)
+	ListByPartsAndStationAndDpi(customer, partNumber, station string, dpi int) ([]*labels.CreateDTO, error)
 	Update(dto *labels.UpdateDTO) (*labels.CreateDTO, error)
 }
 
@@ -209,6 +209,7 @@ func ListByModelAndStationAndDpi(w http.ResponseWriter, r *http.Request) {
 }
 
 func ListByPartsAndStationAndDpi(w http.ResponseWriter, r *http.Request) {
+	customer := chi.URLParam(r, "customer")
 	partNumber := chi.URLParam(r, "part_number")
 	station := chi.URLParam(r, "station")
 	dpi := chi.URLParam(r, "dpi")
@@ -223,7 +224,7 @@ func ListByPartsAndStationAndDpi(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer closer()
-	list, err := usec.ListByPartsAndStationAndDpi(partNumber, station, dpiNumber)
+	list, err := usec.ListByPartsAndStationAndDpi(customer, partNumber, station, dpiNumber)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return

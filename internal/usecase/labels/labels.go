@@ -11,7 +11,7 @@ type Repository interface {
 	GetByID(id int) (*entity.CreateDTO, error)
 	ListPaginate(limit, offset int) ([]*entity.CreateDTO, error)
 	ListByModelAndStationAndDpi(customer, model, station string, dpi int) ([]*entity.CreateDTO, error)
-	ListByPartsAndStationAndDpi(partNumber, station string, dpi int) ([]*entity.CreateDTO, error)
+	ListByPartsAndStationAndDpi(customer, partNumber, station string, dpi int) ([]*entity.CreateDTO, error)
 	ListZPLByModelAndStationAndDpi(customer, partNumber, station string, dpi int) ([]*entity.ZplDTO, error)
 	ListZPLByPartsAndStationAndDpi(customer, partNumber, station string, dpi int) ([]*entity.ZplDTO, error)
 	ListByModel(customer, partNumber string) ([]*entity.CreateDTO, error)
@@ -81,8 +81,8 @@ func (l *labels) ListByModelAndStationAndDpi(customer, model, station string, dp
 	return l.repository.ListByModelAndStationAndDpi(customer, model, station, dpi)
 }
 
-func (l *labels) ListByPartsAndStationAndDpi(partNumber, station string, dpi int) ([]*entity.CreateDTO, error) {
-	return l.repository.ListByPartsAndStationAndDpi(partNumber, station, dpi)
+func (l *labels) ListByPartsAndStationAndDpi(customer, partNumber, station string, dpi int) ([]*entity.CreateDTO, error) {
+	return l.repository.ListByPartsAndStationAndDpi(customer, partNumber, station, dpi)
 }
 
 func (l *labels) ListZPLByModelAndStationAndDpi(customer, model, station string, dpi int) ([]*entity.ZplDTO, error) {

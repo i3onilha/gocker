@@ -279,8 +279,9 @@ func (l *Labels) ListByModelAndStationAndDpi(customer, model, station string, dp
 	return result, nil
 }
 
-func (l *Labels) ListByPartsAndStationAndDpi(partNumber, station string, dpi int) ([]*entity.CreateDTO, error) {
+func (l *Labels) ListByPartsAndStationAndDpi(customer, partNumber, station string, dpi int) ([]*entity.CreateDTO, error) {
 	arg := labels.ListByPartsAndStationAndDpiParams{
+		Customer:   customer,
 		PartNumber: partNumber,
 		Station:    station,
 		Dpi:        int32(dpi),
