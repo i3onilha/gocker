@@ -64,7 +64,8 @@ func main() {
 			r.Get("/partnumber/{customer}/{part_number}/{station}/{dpi}/{serial}/{key}", zpl.GetZPLCodeByPartnumber)
 		})
 		r.Route("/copy", func(r chi.Router) {
-			r.Get("/{customer}/{model_from}/{model_to}/{station_from}/{station_to}/{dpi_from}/{dpi_to}", copylabel.CopyModel)
+			r.Get("/model/{customer}/{model_from}/{model_to}/{station_from}/{station_to}/{dpi_from}/{dpi_to}", copylabel.CopyModel)
+			r.Get("/partnumber/{customer}/{partnumber_from}/{partnumber_to}/{station_from}/{station_to}/{dpi_from}/{dpi_to}", copylabel.CopyPartnumber)
 		})
 	})
 	var err error

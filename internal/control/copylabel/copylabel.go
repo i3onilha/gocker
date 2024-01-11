@@ -80,8 +80,8 @@ func CopyModel(w http.ResponseWriter, r *http.Request) {
 
 func CopyPartnumber(w http.ResponseWriter, r *http.Request) {
 	customer := chi.URLParam(r, "customer")
-	model_from := chi.URLParam(r, "model_from")
-	model_to := chi.URLParam(r, "model_to")
+	partnumber_from := chi.URLParam(r, "partnumber_from")
+	partnumber_to := chi.URLParam(r, "partnumber_to")
 	station_from := chi.URLParam(r, "station_from")
 	station_to := chi.URLParam(r, "station_to")
 	dpi_from := chi.URLParam(r, "dpi_from")
@@ -114,7 +114,7 @@ func CopyPartnumber(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	list, err := usec.ListByPartsAndStationAndDpi(customer, model_from, station_from, dpiFrom)
+	list, err := usec.ListByPartsAndStationAndDpi(customer, partnumber_from, station_from, dpiFrom)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -123,8 +123,8 @@ func CopyPartnumber(w http.ResponseWriter, r *http.Request) {
 		createDto := &entity.CreateDTO{
 			Name:       v.Name,
 			Customer:   v.Customer,
-			Model:      model_to,
-			PartNumber: v.PartNumber,
+			Model:      v.Model,
+			PartNumber: partnumber_to,
 			Station:    station_to,
 			Dpi:        int32(dpiTo),
 			Label:      v.Label,
