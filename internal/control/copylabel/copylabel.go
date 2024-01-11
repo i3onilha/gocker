@@ -77,3 +77,66 @@ func CopyModel(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Write([]byte(`{"message": "ALL LABELS COPIED SUCCESSFULLY"}`))
 }
+
+func CopyPartnumber(w http.ResponseWriter, r *http.Request) {
+	customer := chi.URLParam(r, "customer")
+	model_from := chi.URLParam(r, "model_from")
+	model_to := chi.URLParam(r, "model_to")
+	station_from := chi.URLParam(r, "station_from")
+	station_to := chi.URLParam(r, "station_to")
+	dpi_from := chi.URLParam(r, "dpi_from")
+	dpi_to := chi.URLParam(r, "dpi_to")
+	dpiFrom, err := strconv.Atoi(dpi_from)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	dpiTo, err := strconv.Atoi(dpi_to)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	c, err := config.New()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	queries, err := mysql.New(c.GetDB().GetDataSourceName())
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	defer queries.Close()
+	repo := repository.New(queries)
+	vali := validator.New()
+	usec := usecase.New(repo, vali)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	list, err := usec.ListByPartsAndStationAndDpi(customer, model_from, station_from, dpiFrom)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	for _, v := range list {
+		createDto := &entity.CreateDTO{
+			Name:       v.Name,
+			Customer:   v.Customer,
+			Model:      model_to,
+			PartNumber: v.PartNumber,
+			Station:    station_to,
+			Dpi:        int32(dpiTo),
+			Label:      v.Label,
+			Setup:      v.Setup,
+			Author:     v.Author,
+			SqlQueries: v.SqlQueries,
+		}
+		_, err = usec.Create(createDto)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+	}
+	w.Write([]byte(`{"message": "ALL LABELS COPIED SUCCESSFULLY"}`))
+}
