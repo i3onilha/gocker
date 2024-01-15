@@ -6,3 +6,5 @@ frontend/dist
 .env
 databases/sql/mysql/backup/*.sql
 test/server
+tmp/main
+tmp/*.log
