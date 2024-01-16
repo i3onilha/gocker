@@ -60,6 +60,10 @@ func GetZPLCodeByModel(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+	if len(list) == 0 {
+		http.Error(w, "not found any label query", http.StatusNotFound)
+		return
+	}
 	oracleDataSource, err := usec.GetOracleDataSource(customer)
 	if err != nil {
 		fmt.Printf("error: oracleDataSource:	%v\n", err)
@@ -112,10 +116,6 @@ func GetZPLCodeByModel(w http.ResponseWriter, r *http.Request) {
 		}
 		repLabels = append(repLabels, repLabel)
 	}
-	if len(repLabels) == 0 {
-		http.Error(w, "not found any label query", http.StatusNotFound)
-		return
-	}
 	json.NewEncoder(w).Encode(repLabels)
 }
 
@@ -154,6 +154,10 @@ func GetZPLCodeByPartnumber(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Printf("error: list:	%v\n", err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	if len(list) == 0 {
+		http.Error(w, "not found any label query", http.StatusNotFound)
 		return
 	}
 	oracleDataSource, err := usec.GetOracleDataSource(customer)
@@ -205,10 +209,6 @@ func GetZPLCodeByPartnumber(w http.ResponseWriter, r *http.Request) {
 			repLabel.Data = append(repLabel.Data, data)
 		}
 		repLabels = append(repLabels, repLabel)
-	}
-	if len(repLabels) == 0 {
-		http.Error(w, "not found any label query", http.StatusNotFound)
-		return
 	}
 	json.NewEncoder(w).Encode(repLabels)
 }
