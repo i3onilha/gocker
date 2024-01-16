@@ -34,6 +34,7 @@ RUN go install golang.org/x/tools/cmd/godoc@v0.5.0
 RUN go install github.com/go-delve/delve/cmd/dlv@v1.20.1
 RUN go install github.com/kyleconroy/sqlc/cmd/sqlc@v1.18.0
 RUN go install github.com/wailsapp/wails/v2/cmd/wails@v2.5.1
+RUN go install github.com/cosmtrek/air@latest
 
 RUN sed -i 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/' /etc/apt/sources.list && \
     sed -i 's/security.debian.org/mirrors.tuna.tsinghua.edu.cn/' /etc/apt/sources.list && \
