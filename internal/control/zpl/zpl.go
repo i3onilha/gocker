@@ -112,6 +112,10 @@ func GetZPLCodeByModel(w http.ResponseWriter, r *http.Request) {
 		}
 		repLabels = append(repLabels, repLabel)
 	}
+	if len(repLabels) == 0 {
+		http.Error(w, "not found any label query", http.StatusNotFound)
+		return
+	}
 	json.NewEncoder(w).Encode(repLabels)
 }
 
@@ -201,6 +205,10 @@ func GetZPLCodeByPartnumber(w http.ResponseWriter, r *http.Request) {
 			repLabel.Data = append(repLabel.Data, data)
 		}
 		repLabels = append(repLabels, repLabel)
+	}
+	if len(repLabels) == 0 {
+		http.Error(w, "not found any label query", http.StatusNotFound)
+		return
 	}
 	json.NewEncoder(w).Encode(repLabels)
 }
