@@ -146,7 +146,7 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o service ./internal/cmd/server/server.go
+RUN go build -o service ./cmd/server/server.go
 
 FROM oraclelinux:7-slim AS production
 
