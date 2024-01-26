@@ -258,8 +258,6 @@ func jsonSerialize(rows *sql.Rows) (string, error) {
 	}
 	if count == 0 {
 		return "", fmt.Errorf("no data found")
-	} else if count > 1 {
-		return "", fmt.Errorf("more than one data found")
 	}
 	jsonStr = strings.TrimSuffix(jsonStr, ",")
 	return jsonStr, nil
