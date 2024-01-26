@@ -239,6 +239,7 @@ func jsonSerialize(rows *sql.Rows) (string, error) {
 	}
 	var result = make(map[string]interface{})
 	var jsonStr string
+	var count int
 	for rows.Next() {
 		err = rows.Scan(colPtrs...)
 		if err != nil {
@@ -253,6 +254,12 @@ func jsonSerialize(rows *sql.Rows) (string, error) {
 		}
 		jsonStr = strings.TrimSuffix(jsonStr, ",")
 		jsonStr += "},"
+		count++
+	}
+	if count == 0 {
+		return "", fmt.Errorf("no data found")
+	} else if count > 1 {
+		return "", fmt.Errorf("more than one data found")
 	}
 	jsonStr = strings.TrimSuffix(jsonStr, ",")
 	return jsonStr, nil
