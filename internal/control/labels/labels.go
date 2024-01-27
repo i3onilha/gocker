@@ -38,7 +38,7 @@ func getSQLQueriesFromSetup(session string, setup []labels.Setup) ([]byte, error
 			"conn":         {"padb"}, // padb is the name of the connection in the report server
 			"dados[d][id]": {reportID},
 		}
-		url := "http://10.58.64.185:8081/workshop/webservice.php?session=" + session //#TODO: change to config
+		url := "http://10.58.64.198:8081/workshop/webservice.php?session=" + session //#TODO: change to config
 		resp, err := http.PostForm(url, data)
 		if err != nil {
 			return nil, err
