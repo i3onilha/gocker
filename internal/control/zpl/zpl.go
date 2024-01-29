@@ -41,7 +41,6 @@ func GetZPLCodeByModel(w http.ResponseWriter, r *http.Request) {
 	}
 	queries, err := mysql.New(c.GetDB().GetDataSourceName())
 	if err != nil {
-		fmt.Printf("error: queries:	%v\n", err)
 		http.Error(w, fmt.Sprintf(`{"error": "%s"}`, err.Error()), http.StatusBadRequest)
 		return
 	}
@@ -50,19 +49,16 @@ func GetZPLCodeByModel(w http.ResponseWriter, r *http.Request) {
 	vali := validator.New()
 	usec := usecase.New(repo, vali)
 	if err != nil {
-		fmt.Printf("error: usec:	%v\n", err)
 		http.Error(w, fmt.Sprintf(`{"error": "%s"}`, err.Error()), http.StatusBadRequest)
 		return
 	}
 	list, err := usec.ListZPLByModelAndStationAndDpi(customer, model, station, dpiNumber)
 	if err != nil {
-		fmt.Printf("error: list:	%v\n", err)
 		http.Error(w, fmt.Sprintf(`{"error": "%s"}`, err.Error()), http.StatusBadRequest)
 		return
 	}
 	oracleDataSource, err := usec.GetOracleDataSource(customer)
 	if err != nil {
-		fmt.Printf("error: oracleDataSource:	%v\n", err)
 		http.Error(w, fmt.Sprintf(`{"error": "%s"}`, err.Error()), http.StatusBadRequest)
 		return
 	}
@@ -74,7 +70,6 @@ func GetZPLCodeByModel(w http.ResponseWriter, r *http.Request) {
 		sqlQueries := make(map[string]string)
 		err := json.Unmarshal([]byte(label.SqlQueries), &sqlQueries)
 		if err != nil {
-			fmt.Printf("error: Unmarshal sqlQueries:	%v\n", err)
 			http.Error(w, fmt.Sprintf(`{"error": "%s"}`, err.Error()), http.StatusBadRequest)
 			return
 		}
@@ -89,7 +84,6 @@ func GetZPLCodeByModel(w http.ResponseWriter, r *http.Request) {
 			}
 			d, err := execQuery(oracleDataSource, sqlQuery, keyReplace, chi.URLParam(r, "serial"), loopVar)
 			if err != nil {
-				fmt.Printf("error: execQuery:	%v\n", err)
 				http.Error(w, fmt.Sprintf(`{"error": "%s"}`, err.Error()), http.StatusBadRequest)
 				return
 			}
@@ -104,7 +98,6 @@ func GetZPLCodeByModel(w http.ResponseWriter, r *http.Request) {
 			var data map[string]interface{}
 			err = json.Unmarshal([]byte(d), &data)
 			if err != nil {
-				fmt.Printf("error: Unmarshal data:	%v\n", err)
 				http.Error(w, fmt.Sprintf(`{"error": "%s"}`, err.Error()), http.StatusBadRequest)
 				return
 			}
@@ -133,7 +126,6 @@ func GetZPLCodeByPartnumber(w http.ResponseWriter, r *http.Request) {
 	}
 	queries, err := mysql.New(c.GetDB().GetDataSourceName())
 	if err != nil {
-		fmt.Printf("error: queries:	%v\n", err)
 		http.Error(w, fmt.Sprintf(`{"error": "%s"}`, err.Error()), http.StatusBadRequest)
 		return
 	}
@@ -142,19 +134,16 @@ func GetZPLCodeByPartnumber(w http.ResponseWriter, r *http.Request) {
 	vali := validator.New()
 	usec := usecase.New(repo, vali)
 	if err != nil {
-		fmt.Printf("error: usec:	%v\n", err)
 		http.Error(w, fmt.Sprintf(`{"error": "%s"}`, err.Error()), http.StatusBadRequest)
 		return
 	}
 	list, err := usec.ListZPLByPartsAndStationAndDpi(customer, partNumber, station, dpiNumber)
 	if err != nil {
-		fmt.Printf("error: list:	%v\n", err)
 		http.Error(w, fmt.Sprintf(`{"error": "%s"}`, err.Error()), http.StatusBadRequest)
 		return
 	}
 	oracleDataSource, err := usec.GetOracleDataSource(customer)
 	if err != nil {
-		fmt.Printf("error: oracleDataSource:	%v\n", err)
 		http.Error(w, fmt.Sprintf(`{"error": "%s"}`, err.Error()), http.StatusBadRequest)
 		return
 	}
@@ -166,7 +155,6 @@ func GetZPLCodeByPartnumber(w http.ResponseWriter, r *http.Request) {
 		sqlQueries := make(map[string]string)
 		err := json.Unmarshal([]byte(label.SqlQueries), &sqlQueries)
 		if err != nil {
-			fmt.Printf("error: Unmarshal sqlQueries:	%v\n", err)
 			http.Error(w, fmt.Sprintf(`{"error": "%s"}`, err.Error()), http.StatusBadRequest)
 			return
 		}
@@ -257,7 +245,7 @@ func jsonSerialize(rows *sql.Rows) (string, error) {
 		count++
 	}
 	if count == 0 {
-		return "", fmt.Errorf("no data found")
+		return "", fmt.Errorf("No data found to \"%s\" columns", strings.Join(colNames, ", "))
 	}
 	jsonStr = strings.TrimSuffix(jsonStr, ",")
 	return jsonStr, nil
