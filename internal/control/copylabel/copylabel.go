@@ -3,6 +3,7 @@ package copylabel
 import (
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/go-chi/chi/v5"
 	_ "github.com/go-sql-driver/mysql"
@@ -51,6 +52,9 @@ func CopyModel(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+	customer = strings.ReplaceAll(customer, "%2F", "/")
+	station_from = strings.ReplaceAll(station_from, "%2F", "/")
+	station_to = strings.ReplaceAll(station_to, "%2F", "/")
 	list, err := usec.ListByModelAndStationAndDpi(customer, model_from, station_from, dpiFrom)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -114,6 +118,9 @@ func CopyPartnumber(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+	customer = strings.ReplaceAll(customer, "%2F", "/")
+	station_from = strings.ReplaceAll(station_from, "%2F", "/")
+	station_to = strings.ReplaceAll(station_to, "%2F", "/")
 	list, err := usec.ListByPartsAndStationAndDpi(customer, partnumber_from, station_from, dpiFrom)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
