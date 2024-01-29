@@ -245,7 +245,7 @@ func jsonSerialize(rows *sql.Rows) (string, error) {
 		count++
 	}
 	if count == 0 {
-		return "", fmt.Errorf("No data found to \"%s\" columns", strings.Join(colNames, ", "))
+		return "", fmt.Errorf("No data found to (%s) columns", strings.Join(colNames, ", "))
 	}
 	jsonStr = strings.TrimSuffix(jsonStr, ",")
 	return jsonStr, nil
