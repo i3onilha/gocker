@@ -15,6 +15,9 @@ build:
 down:
 	@docker compose down
 
+stop:
+	@docker compose stop
+
 bash:
 	@docker compose exec app-dev bash
 
