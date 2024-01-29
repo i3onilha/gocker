@@ -84,7 +84,7 @@ func GetZPLCodeByModel(w http.ResponseWriter, r *http.Request) {
 			}
 			d, err := execQuery(oracleDataSource, sqlQuery, keyReplace, chi.URLParam(r, "serial"), loopVar)
 			if err != nil {
-				http.Error(w, fmt.Sprintf(`{"error": "%s from (%s) label"}`, err.Error(), label.Name), http.StatusBadRequest)
+				http.Error(w, fmt.Sprintf(`{"error": "%s FROM (%s) LABEL"}`, err.Error(), label.Name), http.StatusBadRequest)
 				return
 			}
 			if loopVar {
@@ -245,7 +245,7 @@ func jsonSerialize(rows *sql.Rows) (string, error) {
 		count++
 	}
 	if count == 0 {
-		return "", fmt.Errorf("No data found to (%s) columns", strings.Join(colNames, ", "))
+		return "", fmt.Errorf("NO DATA FOUND TO (%s) COLUMNS", strings.Join(colNames, ", "))
 	}
 	jsonStr = strings.TrimSuffix(jsonStr, ",")
 	return jsonStr, nil
