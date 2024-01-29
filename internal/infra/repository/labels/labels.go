@@ -215,6 +215,7 @@ func (l *Labels) ListZPLByModelAndStationAndDpi(customer, model, station string,
 		var setupOutput []entity.Setup
 		json.Unmarshal([]byte(label.Setup), &setupOutput)
 		result[i] = &entity.ZplDTO{
+			Name:       label.Name,
 			Label:      label.Label,
 			SqlQueries: label.SqlQueries,
 			Setup:      setupOutput,
@@ -239,6 +240,7 @@ func (l *Labels) ListZPLByPartsAndStationAndDpi(customer, partNumber, station st
 		var setupOutput []entity.Setup
 		json.Unmarshal([]byte(label.Setup), &setupOutput)
 		result[i] = &entity.ZplDTO{
+			Name:       label.Name,
 			Label:      label.Label,
 			SqlQueries: label.SqlQueries,
 			Setup:      setupOutput,

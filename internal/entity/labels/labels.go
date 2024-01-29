@@ -36,6 +36,7 @@ type Setup struct {
 	LoopVar    bool   `json:"loop_var"`
 }
 type ZplDTO struct {
+	Name       string  `validate:"required,max=32" json:"name"`
 	Label      string  `validate:"required,min=6,max=65535" json:"label"`
 	SqlQueries string  `validate:"required,min=6,max=65535" json:"sql_queries"`
 	Setup      []Setup `json:"setup"`
