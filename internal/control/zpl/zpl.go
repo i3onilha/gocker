@@ -84,7 +84,7 @@ func GetZPLCodeByModel(w http.ResponseWriter, r *http.Request) {
 			}
 			d, err := execQuery(oracleDataSource, sqlQuery, keyReplace, chi.URLParam(r, "serial"), loopVar)
 			if err != nil {
-				http.Error(w, fmt.Sprintf(`{"error": "%s"}`, err.Error()), http.StatusBadRequest)
+				http.Error(w, fmt.Sprintf(`{"error": "%s from %s label"}`, err.Error(), label.Label), http.StatusBadRequest)
 				return
 			}
 			if loopVar {
