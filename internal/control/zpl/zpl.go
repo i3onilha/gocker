@@ -98,7 +98,7 @@ func GetZPLCodeByModel(w http.ResponseWriter, r *http.Request) {
 			var data map[string]interface{}
 			err = json.Unmarshal([]byte(d), &data)
 			if err != nil {
-				http.Error(w, fmt.Sprintf(`{"error": "JSON encoding data %s"}`, err.Error()), http.StatusBadRequest)
+				http.Error(w, fmt.Sprintf(`{"error": "JSON encoding data %s from %s"}`, err.Error(), label.Name), http.StatusBadRequest)
 				return
 			}
 			repLabel.Data = append(repLabel.Data, data)
