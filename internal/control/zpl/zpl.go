@@ -54,12 +54,12 @@ func GetZPLCodeByModel(w http.ResponseWriter, r *http.Request) {
 	}
 	list, err := usec.ListZPLByModelAndStationAndDpi(customer, model, station, dpiNumber)
 	if err != nil {
-		http.Error(w, fmt.Sprintf(`{"error": "%s"}`, err.Error()), http.StatusBadRequest)
+		http.Error(w, fmt.Sprintf(`{"error": "Get ZPL List %s"}`, err.Error()), http.StatusBadRequest)
 		return
 	}
 	oracleDataSource, err := usec.GetOracleDataSource(customer)
 	if err != nil {
-		http.Error(w, fmt.Sprintf(`{"error": "%s"}`, err.Error()), http.StatusBadRequest)
+		http.Error(w, fmt.Sprintf(`{"error": "Oracle data source %s"}`, err.Error()), http.StatusBadRequest)
 		return
 	}
 	repLabels := []RepLabel{}
@@ -70,7 +70,7 @@ func GetZPLCodeByModel(w http.ResponseWriter, r *http.Request) {
 		sqlQueries := make(map[string]string)
 		err := json.Unmarshal([]byte(label.SqlQueries), &sqlQueries)
 		if err != nil {
-			http.Error(w, fmt.Sprintf(`{"error": "%s"}`, err.Error()), http.StatusBadRequest)
+			http.Error(w, fmt.Sprintf(`{"error": "JSON encoding SQL %s"}`, err.Error()), http.StatusBadRequest)
 			return
 		}
 		for key, sqlQuery := range sqlQueries {
@@ -98,7 +98,7 @@ func GetZPLCodeByModel(w http.ResponseWriter, r *http.Request) {
 			var data map[string]interface{}
 			err = json.Unmarshal([]byte(d), &data)
 			if err != nil {
-				http.Error(w, fmt.Sprintf(`{"error": "%s"}`, err.Error()), http.StatusBadRequest)
+				http.Error(w, fmt.Sprintf(`{"error": "JSON encoding data %s"}`, err.Error()), http.StatusBadRequest)
 				return
 			}
 			repLabel.Data = append(repLabel.Data, data)
