@@ -205,7 +205,7 @@ func execQuery(oracleDataSource, sqlQuery, key, value string, loopVar bool) (str
 	if err != nil {
 		return "", err
 	}
-	jsonStr, err := jsonSerialize(rows)
+	jsonStr, err := jsonSerializeRows(rows)
 	if err != nil {
 		return "", err
 	}
@@ -215,7 +215,7 @@ func execQuery(oracleDataSource, sqlQuery, key, value string, loopVar bool) (str
 	return jsonStr, nil
 }
 
-func jsonSerialize(rows *sql.Rows) (string, error) {
+func jsonSerializeRows(rows *sql.Rows) (string, error) {
 	colNames, err := rows.Columns()
 	if err != nil {
 		return "", err
