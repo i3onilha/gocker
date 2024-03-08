@@ -49,7 +49,7 @@ dbdump:
 	@mysqldump -h mysql-dev -u root -p dbdev_sagemcom > databases/sql/mysql/backup/$$(date +"%Y-%m-%-d").sql
 
 start:
-	@cp .env-example .env && air
+	@clear;cp .env-example .env && air
 
 start-test:
 	@go build -o test/ internal/cmd/server/server.go && cp .env-test .env && ./test/server
