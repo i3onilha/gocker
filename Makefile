@@ -1,16 +1,16 @@
 dev: up bash
 
 up:
-	@docker compose up -d app-dev
+	@docker compose up -d sagemcom-dev
 
 ps:
 	@docker compose ps
 
 logs:
-	@docker compose logs app-dev --follow
+	@docker compose logs sagemcom-dev --follow
 
 build:
-	@docker compose down && docker compose build --no-cache app-dev && docker compose up -d app-dev && docker compose exec app-dev bash
+	@docker compose down && docker compose build --no-cache sagemcom-dev && docker compose up -d sagemcom-dev && docker compose exec sagemcom-dev bash
 
 down:
 	@docker compose down
@@ -19,7 +19,7 @@ stop:
 	@docker compose stop
 
 bash:
-	@docker compose exec app-dev bash
+	@docker compose exec sagemcom-dev bash
 
 bashoracle:
 	@docker compose exec oracle-dev bash
@@ -40,7 +40,7 @@ sqlc:
 	@sqlc generate -f sqlc.mysql.yaml
 
 dbup:
-	@mysql -h mysql-dev -u default -p < databases/sql/mysql/schema/labels.sql
+	@mysql -h mysql-dev -u default -p < databases/sql/mysql/schema/import_pallets_serials.sql
 
 dbdown:
 	@mysql -h mysql-dev -u default -p < databases/sql/mysql/down.sql

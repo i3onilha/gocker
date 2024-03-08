@@ -3,7 +3,7 @@ package mysql
 import (
 	"database/sql"
 
-	"github.com/i3onilha/MESEnterpriseSmart/internal/infra/mysql/labels"
+	"github.com/i3onilha/MESEnterpriseSmart/internal/infra/mysql/importserials"
 )
 
 const (
@@ -11,20 +11,20 @@ const (
 )
 
 type MySQL struct {
-	Labels         *labels.Queries
+	ImportSerials  *importserials.Queries
 	db             *sql.DB
 	driver         string
 	dataSourceName string
 }
 
 func New(dataSourceName string) (*MySQL, error) {
-	conn, err := sql.Open(labels.Driver, dataSourceName)
+	conn, err := sql.Open(importserials.Driver, dataSourceName)
 	if err != nil {
 		return nil, err
 	}
-	labels := labels.New(conn)
+	importserials := importserials.New(conn)
 	return &MySQL{
-		Labels:         labels,
+		ImportSerials:  importserials,
 		db:             conn,
 		driver:         driver,
 		dataSourceName: dataSourceName,

@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 
@@ -10,9 +12,6 @@ import (
 	"github.com/go-chi/cors"
 	"github.com/go-chi/render"
 	"github.com/i3onilha/MESEnterpriseSmart/config"
-	"github.com/i3onilha/MESEnterpriseSmart/internal/control/copylabel"
-	"github.com/i3onilha/MESEnterpriseSmart/internal/control/labels"
-	"github.com/i3onilha/MESEnterpriseSmart/internal/control/zpl"
 )
 
 type RepSQL struct {
@@ -22,6 +21,11 @@ type RepSQL struct {
 type RepLabel struct {
 	Label string                   `json:"label"`
 	Data  []map[string]interface{} `json:"data"`
+}
+
+type ResponseError struct {
+	Status  string `json:"status"`
+	Message string `json:"message,omitempty"`
 }
 
 func main() {
@@ -43,29 +47,21 @@ func main() {
 	r.Use(render.SetContentType(render.ContentTypeJSON))
 	r.Route("/", func(r chi.Router) {
 		r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-			w.Write([]byte(`{"status": "OK"}`))
+			w.Write([]byte(`{"appname": "SAGEMCOM Service", "status": "OK"}`))
 		})
-		r.Get("/version", func(w http.ResponseWriter, r *http.Request) {
-			w.Write([]byte("v0.0.1"))
-		})
-		r.Route("/labels", func(r chi.Router) {
-			r.Post("/{session}", labels.Create)
-			r.Get("/{customer}/{part_number}/partnumber", labels.ListByParts)
-			r.Get("/{customer}/{model}/model", labels.ListByModel)
-			r.Put("/{session}", labels.Update)
-			r.Delete("/{id}", labels.Delete)
-			r.Route("/list", func(r chi.Router) {
-				r.Get("/model/{customer}/{model}/{station}/{dpi}", labels.ListByModelAndStationAndDpi)
-				r.Get("/partnumber/{customer}/{part_number}/{station}/{dpi}", labels.ListByPartsAndStationAndDpi)
+		r.Route("/get-data-csv-file", func(r chi.Router) {
+			r.Post("/csv", func(w http.ResponseWriter, r *http.Request) {
+				csvBuf, err := ioutil.ReadAll(r.Body)
+				if err != nil {
+					responseError := ResponseError{
+						Status:  "NOK",
+						Message: err.Error(),
+					}
+					json.NewEncoder(w).Encode(responseError)
+					return
+				}
+				fmt.Println(string(csvBuf))
 			})
-		})
-		r.Route("/zpl", func(r chi.Router) {
-			r.Get("/model/{customer}/{model}/{station}/{dpi}/{serial}/{key}", zpl.GetZPLCodeByModel)
-			r.Get("/partnumber/{customer}/{part_number}/{station}/{dpi}/{serial}/{key}", zpl.GetZPLCodeByPartnumber)
-		})
-		r.Route("/copy", func(r chi.Router) {
-			r.Get("/model/{customer}/{model_from}/{model_to}/{station_from}/{station_to}/{dpi_from}/{dpi_to}", copylabel.CopyModel)
-			r.Get("/partnumber/{customer}/{partnumber_from}/{partnumber_to}/{station_from}/{station_to}/{dpi_from}/{dpi_to}", copylabel.CopyPartnumber)
 		})
 	})
 	var err error

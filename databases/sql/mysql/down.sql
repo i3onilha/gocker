@@ -1,4 +1,2 @@
 USE dbdev;
-DROP TABLE labels_deletes;
-DROP TABLE labels_data;
-DROP TABLE labels;
+DROP TABLE import_pallets_serials;

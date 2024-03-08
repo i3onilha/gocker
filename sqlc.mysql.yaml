@@ -5,5 +5,5 @@ sql:
     queries: "databases/sql/mysql/queries"
     gen:
       go:
-        package: "labels"
-        out: "internal/infra/mysql/labels"
+        package: "importserials"
+        out: "internal/infra/mysql/importserials"
