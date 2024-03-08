@@ -18,7 +18,7 @@ type MySQL struct {
 }
 
 func New(dataSourceName string) (*MySQL, error) {
-	conn, err := sql.Open(importserials.Driver, dataSourceName)
+	conn, err := sql.Open(driver, dataSourceName)
 	if err != nil {
 		return nil, err
 	}
