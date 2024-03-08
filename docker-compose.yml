@@ -52,7 +52,7 @@ services:
       - backend
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: dbdev
+      MYSQL_DATABASE: dbdev_sagemcom
       MYSQL_USER: default
       MYSQL_PASSWORD: secret
     platform: linux/amd64
