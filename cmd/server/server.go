@@ -1,9 +1,7 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 
@@ -12,21 +10,8 @@ import (
 	"github.com/go-chi/cors"
 	"github.com/go-chi/render"
 	"github.com/i3onilha/MESEnterpriseSmart/config"
+	"github.com/i3onilha/MESEnterpriseSmart/internal/control"
 )
-
-type RepSQL struct {
-	REP_QUERY string `json:"REP_QUERY"`
-}
-
-type RepLabel struct {
-	Label string                   `json:"label"`
-	Data  []map[string]interface{} `json:"data"`
-}
-
-type ResponseError struct {
-	Status  string `json:"status"`
-	Message string `json:"message,omitempty"`
-}
 
 func main() {
 	r := chi.NewRouter()
@@ -49,19 +34,8 @@ func main() {
 		r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 			w.Write([]byte(`{"appname": "SAGEMCOM Service", "status": "OK"}`))
 		})
-		r.Route("/get-data-csv-file", func(r chi.Router) {
-			r.Post("/csv", func(w http.ResponseWriter, r *http.Request) {
-				csvBuf, err := ioutil.ReadAll(r.Body)
-				if err != nil {
-					responseError := ResponseError{
-						Status:  "NOK",
-						Message: err.Error(),
-					}
-					json.NewEncoder(w).Encode(responseError)
-					return
-				}
-				fmt.Println(string(csvBuf))
-			})
+		r.Route("/", func(r chi.Router) {
+			r.Post("/get-data-csv-file/{comma}", control.GetDataCSVFile)
 		})
 	})
 	var err error
