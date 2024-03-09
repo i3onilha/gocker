@@ -10,17 +10,40 @@ import (
 	"database/sql"
 )
 
-const listSerialsByPallet = `-- name: ListSerialsByPallet :many
+const create = `-- name: Create :execresult
+INSERT INTO import_pallets_serials (pallet, masterbox, serial_number, part_number, uuid)
+  VALUES(?, ?, ?, ?, ?)
+`
+
+type CreateParams struct {
+	Pallet       sql.NullString
+	Masterbox    sql.NullString
+	SerialNumber sql.NullString
+	PartNumber   sql.NullString
+	Uuid         sql.NullString
+}
+
+func (q *Queries) Create(ctx context.Context, arg CreateParams) (sql.Result, error) {
+	return q.db.ExecContext(ctx, create,
+		arg.Pallet,
+		arg.Masterbox,
+		arg.SerialNumber,
+		arg.PartNumber,
+		arg.Uuid,
+	)
+}
+
+const getByMasterBox = `-- name: GetByMasterBox :many
 SELECT
-  a.id, a.pallet, a.masterbox, a.serial_number, a.part_number, a.created_at
+  a.id, a.pallet, a.masterbox, a.serial_number, a.part_number, a.uuid, a.created_at
 FROM
   import_pallets_serials a
-WHERE a.pallet = ?
+WHERE a.masterbox = ?
 ORDER BY a.pallet ASC, a.created_at DESC
 `
 
-func (q *Queries) ListSerialsByPallet(ctx context.Context, pallet sql.NullString) ([]ImportPalletsSerial, error) {
-	rows, err := q.db.QueryContext(ctx, listSerialsByPallet, pallet)
+func (q *Queries) GetByMasterBox(ctx context.Context, masterbox sql.NullString) ([]ImportPalletsSerial, error) {
+	rows, err := q.db.QueryContext(ctx, getByMasterBox, masterbox)
 	if err != nil {
 		return nil, err
 	}
@@ -34,6 +57,167 @@ func (q *Queries) ListSerialsByPallet(ctx context.Context, pallet sql.NullString
 			&i.Masterbox,
 			&i.SerialNumber,
 			&i.PartNumber,
+			&i.Uuid,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getByPallet = `-- name: GetByPallet :many
+SELECT
+  a.id, a.pallet, a.masterbox, a.serial_number, a.part_number, a.uuid, a.created_at
+FROM
+  import_pallets_serials a
+WHERE a.pallet = ?
+ORDER BY a.pallet ASC, a.created_at DESC
+`
+
+func (q *Queries) GetByPallet(ctx context.Context, pallet sql.NullString) ([]ImportPalletsSerial, error) {
+	rows, err := q.db.QueryContext(ctx, getByPallet, pallet)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ImportPalletsSerial
+	for rows.Next() {
+		var i ImportPalletsSerial
+		if err := rows.Scan(
+			&i.ID,
+			&i.Pallet,
+			&i.Masterbox,
+			&i.SerialNumber,
+			&i.PartNumber,
+			&i.Uuid,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getByPartNumber = `-- name: GetByPartNumber :many
+SELECT
+  a.id, a.pallet, a.masterbox, a.serial_number, a.part_number, a.uuid, a.created_at
+FROM
+  import_pallets_serials a
+WHERE a.part_number = ?
+ORDER BY a.pallet ASC, a.created_at DESC
+`
+
+func (q *Queries) GetByPartNumber(ctx context.Context, partNumber sql.NullString) ([]ImportPalletsSerial, error) {
+	rows, err := q.db.QueryContext(ctx, getByPartNumber, partNumber)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ImportPalletsSerial
+	for rows.Next() {
+		var i ImportPalletsSerial
+		if err := rows.Scan(
+			&i.ID,
+			&i.Pallet,
+			&i.Masterbox,
+			&i.SerialNumber,
+			&i.PartNumber,
+			&i.Uuid,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getBySerialNumber = `-- name: GetBySerialNumber :many
+SELECT
+  a.id, a.pallet, a.masterbox, a.serial_number, a.part_number, a.uuid, a.created_at
+FROM
+  import_pallets_serials a
+WHERE a.serial_number = ?
+ORDER BY a.pallet ASC, a.created_at DESC
+`
+
+func (q *Queries) GetBySerialNumber(ctx context.Context, serialNumber sql.NullString) ([]ImportPalletsSerial, error) {
+	rows, err := q.db.QueryContext(ctx, getBySerialNumber, serialNumber)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ImportPalletsSerial
+	for rows.Next() {
+		var i ImportPalletsSerial
+		if err := rows.Scan(
+			&i.ID,
+			&i.Pallet,
+			&i.Masterbox,
+			&i.SerialNumber,
+			&i.PartNumber,
+			&i.Uuid,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getByUUID = `-- name: GetByUUID :many
+SELECT
+  a.id, a.pallet, a.masterbox, a.serial_number, a.part_number, a.uuid, a.created_at
+FROM
+  import_pallets_serials a
+WHERE a.part_number = ?
+ORDER BY a.pallet ASC, a.created_at DESC
+`
+
+func (q *Queries) GetByUUID(ctx context.Context, partNumber sql.NullString) ([]ImportPalletsSerial, error) {
+	rows, err := q.db.QueryContext(ctx, getByUUID, partNumber)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ImportPalletsSerial
+	for rows.Next() {
+		var i ImportPalletsSerial
+		if err := rows.Scan(
+			&i.ID,
+			&i.Pallet,
+			&i.Masterbox,
+			&i.SerialNumber,
+			&i.PartNumber,
+			&i.Uuid,
 			&i.CreatedAt,
 		); err != nil {
 			return nil, err

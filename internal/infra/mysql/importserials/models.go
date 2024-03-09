@@ -15,5 +15,6 @@ type ImportPalletsSerial struct {
 	Masterbox    sql.NullString
 	SerialNumber sql.NullString
 	PartNumber   sql.NullString
+	Uuid         sql.NullString
 	CreatedAt    time.Time
 }
