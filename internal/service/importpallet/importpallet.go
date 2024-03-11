@@ -41,7 +41,7 @@ func NewImportPallet(ctx context.Context, data ImportParams) (*ImportPallet, err
 	}, nil
 }
 
-func (i ImportPallet) ImportSerial(uuid string) error {
+func (i *ImportPallet) ImportSerial(uuid string) error {
 	data, err := unmarshalcsv.UnmarshalCSV(i.data.CsvBuf, i.data.Comma)
 	if err != nil {
 		return err
@@ -69,7 +69,7 @@ func (i ImportPallet) ImportSerial(uuid string) error {
 	return nil
 }
 
-func (i ImportPallet) GetByPallet(pallet string) ([]importserials.ImportPalletsSerial, error) {
+func (i *ImportPallet) GetByPallet(pallet string) ([]importserials.ImportPalletsSerial, error) {
 	dataSourceName := i.ctx.Value("datasourcename").(string)
 	db, err := mysql.New(dataSourceName)
 	if err != nil {
