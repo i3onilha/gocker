@@ -11,9 +11,15 @@ import (
 	"github.com/go-chi/render"
 	"github.com/i3onilha/MESEnterpriseSmart/config"
 	"github.com/i3onilha/MESEnterpriseSmart/internal/control"
+	"github.com/i3onilha/MESEnterpriseSmart/internal/middlewares"
 )
 
 func main() {
+	var err error
+	c, err := config.New()
+	if err != nil {
+		log.Fatal("Error loading config: ", err)
+	}
 	r := chi.NewRouter()
 	r.Use(cors.Handler(cors.Options{
 		// AllowedOrigins:   []string{"https://foo.com"}, // Use this to allow specific origin hosts
@@ -30,19 +36,17 @@ func main() {
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.URLFormat)
 	r.Use(render.SetContentType(render.ContentTypeJSON))
+	r.Use(middlewares.WithConfig("datasourcename", c.GetDB().GetDataSourceName()))
 	r.Route("/", func(r chi.Router) {
 		r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 			w.Write([]byte(`{"appname": "SAGEMCOM Service", "status": "OK"}`))
 		})
 		r.Route("/", func(r chi.Router) {
 			r.Post("/get-data-csv-file/{comma}", control.GetDataCSVFile)
+			r.Post("/save-list/{uuid}/{comma}", control.SaveList)
+			r.Get("/get-list/{key}/{value}", control.GetByPallet)
 		})
 	})
-	var err error
-	c, err := config.New()
-	if err != nil {
-		log.Fatal("Error loading config: ", err)
-	}
 	port := fmt.Sprintf(":%s", c.GetPort())
 	log.Println(fmt.Sprintf("Starting server on port %s", port))
 	err = http.ListenAndServe(port, r)

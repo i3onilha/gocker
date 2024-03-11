@@ -1,8 +1,8 @@
-DROP DATABASE `dbdev_sagemcom`;
+DROP DATABASE IF EXISTS `dbdev`;
 
-CREATE DATABASE `dbdev_sagemcom`;
+CREATE DATABASE `dbdev`;
 
-USE `dbdev_sagemcom`;
+USE `dbdev`;
 
 DROP TABLE IF EXISTS `import_pallets_serials`;
 

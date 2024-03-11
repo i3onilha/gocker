@@ -4,16 +4,11 @@ import (
 	"bytes"
 	"encoding/csv"
 	"encoding/json"
+
+	dto "github.com/i3onilha/MESEnterpriseSmart/internal/infra/dto/importpallet"
 )
 
-type Row struct {
-	Palete       string `json:"pallet"`
-	Masterbox    string `json:"masterbox"`
-	SerialNumber string `json:"serial_number"`
-	Partnumber   string `json:"partnumber"`
-}
-
-func UnmarshalCSV(buf []byte, comma rune) ([]Row, error) {
+func UnmarshalCSV(buf []byte, comma rune) ([]dto.ResDto, error) {
 	reader := csv.NewReader(bytes.NewReader(buf))
 	reader.Comma = comma
 	records, err := reader.ReadAll()
@@ -34,17 +29,17 @@ func UnmarshalCSV(buf []byte, comma rune) ([]Row, error) {
 	if err != nil {
 		return nil, err
 	}
-	rows := make([]Row, 0)
+	rows := make([]dto.ResDto, 0)
 	err = json.Unmarshal(csvBuf, &rows)
 	if err != nil {
 		return nil, err
 	}
-	res := make([]Row, len(rows))
+	res := make([]dto.ResDto, len(rows))
 	for i := 0; i < len(rows); i++ {
-		res[i].Palete = rows[i].Palete
-		res[i].Masterbox = rows[i].Masterbox
+		res[i].Pallet = rows[i].Pallet
+		res[i].MasterBox = rows[i].MasterBox
 		res[i].SerialNumber = rows[i].SerialNumber
-		res[i].Partnumber = rows[i].Partnumber
+		res[i].PartNumber = rows[i].PartNumber
 	}
 	return res, nil
 }

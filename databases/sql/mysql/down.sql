@@ -1,2 +1,2 @@
-USE dbdev_sagemcom;
+USE dbdev;
 DROP TABLE import_pallets_serials;

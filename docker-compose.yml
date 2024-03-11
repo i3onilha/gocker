@@ -5,10 +5,8 @@ services:
       context: .
         # Only will build production stage from our dockerfile
       target: production
-    depends_on:
-      - mysql-dev
     ports:
-      - 1808:1808
+      - 6686:6686
     networks:
       - backend
   sagemcom-dev:
@@ -52,7 +50,7 @@ services:
       - backend
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: dbdev_sagemcom
+      MYSQL_DATABASE: dbdev
       MYSQL_USER: default
       MYSQL_PASSWORD: secret
     platform: linux/amd64

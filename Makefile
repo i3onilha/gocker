@@ -40,13 +40,13 @@ sqlc:
 	@sqlc generate -f sqlc.mysql.yaml
 
 dbup:
-	@mysql -h mysql-dev -u default -p < databases/sql/mysql/schema/import_pallets_serials.sql
+	@mysql -h mysql-dev -u default -p < databases/sql/mysql/schema/importserials.sql
 
 dbdown:
 	@mysql -h mysql-dev -u default -p < databases/sql/mysql/down.sql
 
 dbdump:
-	@mysqldump -h mysql-dev -u root -p dbdev_sagemcom > databases/sql/mysql/backup/$$(date +"%Y-%m-%-d").sql
+	@mysqldump -h mysql-dev -u root -p dbdev > databases/sql/mysql/backup/$$(date +"%Y-%m-%-d").sql
 
 start:
 	@clear;cp .env-example .env && air

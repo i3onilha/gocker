@@ -3,6 +3,7 @@ package mysql
 import (
 	"database/sql"
 
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/i3onilha/MESEnterpriseSmart/internal/infra/mysql/importserials"
 )
 
