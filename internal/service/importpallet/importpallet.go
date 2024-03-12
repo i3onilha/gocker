@@ -47,7 +47,6 @@ func (i *ImportPallet) ImportSerial(uuid string) error {
 		return err
 	}
 	dataSourceName := i.ctx.Value("datasourcename").(string)
-	fmt.Println("dataSourceName", dataSourceName)
 	db, err := mysql.New(dataSourceName)
 	if err != nil {
 		return err
