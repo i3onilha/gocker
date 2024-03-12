@@ -12,7 +12,7 @@ import (
 
 const create = `-- name: Create :execresult
 INSERT INTO import_pallets_serials (pallet, masterbox, serial_number, part_number, uuid)
-  VALUES(?, ?, ?, ?, ?)
+	VALUES(:1, :2, :3, :4, :5)
 `
 
 type CreateParams struct {
@@ -38,8 +38,8 @@ SELECT
   a.pallet, a.masterbox, a.serial_number, a.part_number, a.uuid
 FROM
   import_pallets_serials a
-WHERE a.masterbox = ?
-ORDER BY a.pallet ASC, a.created_at DESC
+WHERE a.masterbox = :1
+ORDER BY a.pallet ASC
 `
 
 func (q *Queries) GetByMasterBox(ctx context.Context, masterbox sql.NullString) ([]ImportPalletsSerial, error) {
@@ -76,8 +76,8 @@ SELECT
   a.pallet, a.masterbox, a.serial_number, a.part_number, a.uuid
 FROM
   import_pallets_serials a
-WHERE a.pallet = ?
-ORDER BY a.pallet ASC, a.created_at DESC
+WHERE a.pallet = :1
+ORDER BY a.pallet ASC
 `
 
 func (q *Queries) GetByPallet(ctx context.Context, pallet sql.NullString) ([]ImportPalletsSerial, error) {
@@ -114,8 +114,8 @@ SELECT
   a.pallet, a.masterbox, a.serial_number, a.part_number, a.uuid
 FROM
   import_pallets_serials a
-WHERE a.part_number = ?
-ORDER BY a.pallet ASC, a.created_at DESC
+WHERE a.part_number = :1
+ORDER BY a.pallet ASC
 `
 
 func (q *Queries) GetByPartNumber(ctx context.Context, partNumber sql.NullString) ([]ImportPalletsSerial, error) {
@@ -152,8 +152,8 @@ SELECT
   a.pallet, a.masterbox, a.serial_number, a.part_number, a.uuid
 FROM
   import_pallets_serials a
-WHERE a.serial_number = ?
-ORDER BY a.pallet ASC, a.created_at DESC
+WHERE a.serial_number = :1
+ORDER BY a.pallet ASC
 `
 
 func (q *Queries) GetBySerialNumber(ctx context.Context, serialNumber sql.NullString) ([]ImportPalletsSerial, error) {
@@ -190,8 +190,8 @@ SELECT
   a.pallet, a.masterbox, a.serial_number, a.part_number, a.uuid
 FROM
   import_pallets_serials a
-WHERE a.part_number = ?
-ORDER BY a.pallet ASC, a.created_at DESC
+WHERE a.part_number = :1
+ORDER BY a.pallet ASC
 `
 
 func (q *Queries) GetByUUID(ctx context.Context, partNumber sql.NullString) ([]ImportPalletsSerial, error) {
