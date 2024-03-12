@@ -21,7 +21,16 @@ func (d *db) GetDriver() string {
 }
 
 func (d *db) GetDataSourceName() string {
-	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", d.username, d.password, d.host, d.port, d.database)
+	if d.driver == "mysql" {
+		return d.username + ":" + d.password + "@tcp(" + d.host + ":" + d.port + ")/" + d.database + "?parseTime=true"
+	}
+	return fmt.Sprintf(`user="%s" password="%s" connectString="%s:%s/%s"`,
+		d.username,
+		d.password,
+		d.host,
+		d.port,
+		d.database,
+	)
 }
 
 type config struct {
