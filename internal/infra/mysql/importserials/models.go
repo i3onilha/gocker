@@ -6,15 +6,12 @@ package importserials
 
 import (
 	"database/sql"
-	"time"
 )
 
 type ImportPalletsSerial struct {
-	ID           int32
 	Pallet       sql.NullString
 	Masterbox    sql.NullString
 	SerialNumber sql.NullString
 	PartNumber   sql.NullString
 	Uuid         sql.NullString
-	CreatedAt    time.Time
 }

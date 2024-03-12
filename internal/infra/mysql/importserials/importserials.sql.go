@@ -35,7 +35,7 @@ func (q *Queries) Create(ctx context.Context, arg CreateParams) (sql.Result, err
 
 const getByMasterBox = `-- name: GetByMasterBox :many
 SELECT
-  a.id, a.pallet, a.masterbox, a.serial_number, a.part_number, a.uuid, a.created_at
+  a.pallet, a.masterbox, a.serial_number, a.part_number, a.uuid
 FROM
   import_pallets_serials a
 WHERE a.masterbox = ?
@@ -52,13 +52,11 @@ func (q *Queries) GetByMasterBox(ctx context.Context, masterbox sql.NullString) 
 	for rows.Next() {
 		var i ImportPalletsSerial
 		if err := rows.Scan(
-			&i.ID,
 			&i.Pallet,
 			&i.Masterbox,
 			&i.SerialNumber,
 			&i.PartNumber,
 			&i.Uuid,
-			&i.CreatedAt,
 		); err != nil {
 			return nil, err
 		}
@@ -75,7 +73,7 @@ func (q *Queries) GetByMasterBox(ctx context.Context, masterbox sql.NullString) 
 
 const getByPallet = `-- name: GetByPallet :many
 SELECT
-  a.id, a.pallet, a.masterbox, a.serial_number, a.part_number, a.uuid, a.created_at
+  a.pallet, a.masterbox, a.serial_number, a.part_number, a.uuid
 FROM
   import_pallets_serials a
 WHERE a.pallet = ?
@@ -92,13 +90,11 @@ func (q *Queries) GetByPallet(ctx context.Context, pallet sql.NullString) ([]Imp
 	for rows.Next() {
 		var i ImportPalletsSerial
 		if err := rows.Scan(
-			&i.ID,
 			&i.Pallet,
 			&i.Masterbox,
 			&i.SerialNumber,
 			&i.PartNumber,
 			&i.Uuid,
-			&i.CreatedAt,
 		); err != nil {
 			return nil, err
 		}
@@ -115,7 +111,7 @@ func (q *Queries) GetByPallet(ctx context.Context, pallet sql.NullString) ([]Imp
 
 const getByPartNumber = `-- name: GetByPartNumber :many
 SELECT
-  a.id, a.pallet, a.masterbox, a.serial_number, a.part_number, a.uuid, a.created_at
+  a.pallet, a.masterbox, a.serial_number, a.part_number, a.uuid
 FROM
   import_pallets_serials a
 WHERE a.part_number = ?
@@ -132,13 +128,11 @@ func (q *Queries) GetByPartNumber(ctx context.Context, partNumber sql.NullString
 	for rows.Next() {
 		var i ImportPalletsSerial
 		if err := rows.Scan(
-			&i.ID,
 			&i.Pallet,
 			&i.Masterbox,
 			&i.SerialNumber,
 			&i.PartNumber,
 			&i.Uuid,
-			&i.CreatedAt,
 		); err != nil {
 			return nil, err
 		}
@@ -155,7 +149,7 @@ func (q *Queries) GetByPartNumber(ctx context.Context, partNumber sql.NullString
 
 const getBySerialNumber = `-- name: GetBySerialNumber :many
 SELECT
-  a.id, a.pallet, a.masterbox, a.serial_number, a.part_number, a.uuid, a.created_at
+  a.pallet, a.masterbox, a.serial_number, a.part_number, a.uuid
 FROM
   import_pallets_serials a
 WHERE a.serial_number = ?
@@ -172,13 +166,11 @@ func (q *Queries) GetBySerialNumber(ctx context.Context, serialNumber sql.NullSt
 	for rows.Next() {
 		var i ImportPalletsSerial
 		if err := rows.Scan(
-			&i.ID,
 			&i.Pallet,
 			&i.Masterbox,
 			&i.SerialNumber,
 			&i.PartNumber,
 			&i.Uuid,
-			&i.CreatedAt,
 		); err != nil {
 			return nil, err
 		}
@@ -195,7 +187,7 @@ func (q *Queries) GetBySerialNumber(ctx context.Context, serialNumber sql.NullSt
 
 const getByUUID = `-- name: GetByUUID :many
 SELECT
-  a.id, a.pallet, a.masterbox, a.serial_number, a.part_number, a.uuid, a.created_at
+  a.pallet, a.masterbox, a.serial_number, a.part_number, a.uuid
 FROM
   import_pallets_serials a
 WHERE a.part_number = ?
@@ -212,13 +204,11 @@ func (q *Queries) GetByUUID(ctx context.Context, partNumber sql.NullString) ([]I
 	for rows.Next() {
 		var i ImportPalletsSerial
 		if err := rows.Scan(
-			&i.ID,
 			&i.Pallet,
 			&i.Masterbox,
 			&i.SerialNumber,
 			&i.PartNumber,
 			&i.Uuid,
-			&i.CreatedAt,
 		); err != nil {
 			return nil, err
 		}
