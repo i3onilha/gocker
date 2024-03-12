@@ -1,5 +1,5 @@
 services:
-  sagemcom-prod:
+  app-prod:
     build:
       dockerfile: Dockerfile
       context: .
