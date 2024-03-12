@@ -2,6 +2,7 @@ package control
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -136,6 +137,14 @@ func CheckPallet(w http.ResponseWriter, r *http.Request) {
 		response := Res{
 			Status:  "NOK",
 			Message: err.Error(),
+		}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	if response == nil {
+		response := Res{
+			Status:  "OK",
+			Message: fmt.Sprintf("O pallet %s ainda nao foi salvo", pallet),
 		}
 		json.NewEncoder(w).Encode(response)
 		return
