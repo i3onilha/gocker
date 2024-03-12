@@ -37,6 +37,7 @@ func main() {
 	r.Use(middleware.URLFormat)
 	r.Use(render.SetContentType(render.ContentTypeJSON))
 	r.Use(middlewares.WithConfig("datasourcename", c.GetDB().GetDataSourceName()))
+	r.Use(middlewares.WithConfig("driver", c.GetDB().GetDriver()))
 	r.Route("/", func(r chi.Router) {
 		r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 			w.Write([]byte(`{"appname": "SAGEMCOM Service", "status": "OK"}`))
