@@ -95,8 +95,43 @@ func GetByPallet(w http.ResponseWriter, r *http.Request) {
 	importParams := importpallet.ImportParams{
 		Comma: ',',
 	}
-	importer, _ := importpallet.NewImportPallet(ctx, importParams)
+	importer, err := importpallet.NewImportPallet(ctx, importParams)
+	if err != nil {
+		response := Res{
+			Status:  "NOK",
+			Message: err.Error(),
+		}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
 	response, err := importer.GetList(key, value)
+	if err != nil {
+		response := Res{
+			Status:  "NOK",
+			Message: err.Error(),
+		}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	json.NewEncoder(w).Encode(response)
+}
+
+func CheckPallet(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	pallet := chi.URLParam(r, "pallet")
+	importParams := importpallet.ImportParams{
+		Comma: ',',
+	}
+	importer, err := importpallet.NewImportPallet(ctx, importParams)
+	if err != nil {
+		response := Res{
+			Status:  "NOK",
+			Message: err.Error(),
+		}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	response, err := importer.CheckPallet(pallet)
 	if err != nil {
 		response := Res{
 			Status:  "NOK",

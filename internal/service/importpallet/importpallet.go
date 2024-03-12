@@ -90,3 +90,17 @@ func (i *ImportPallet) GetList(key, value string) ([]importserials.ImportPallets
 	}
 	return nil, fmt.Errorf("%s column do not exists", key)
 }
+
+func (i *ImportPallet) CheckPallet(pallet string) ([]importserials.GetPalletAlreadyDoneRow, error) {
+	driver := i.ctx.Value("driver").(string)
+	dataSourceName := i.ctx.Value("datasourcename").(string)
+	conn, err := db.New(driver, dataSourceName)
+	if err != nil {
+		return nil, err
+	}
+	defer conn.Close()
+	return conn.ImportSerials.GetPalletAlreadyDone(i.ctx, sql.NullString{
+		String: pallet,
+		Valid:  true,
+	})
+}

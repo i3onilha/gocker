@@ -8,6 +8,41 @@ import (
 	"database/sql"
 )
 
+type Dqc41c struct {
+	CartonNo     string
+	Model        sql.NullString
+	LineNo       sql.NullString
+	Qty          sql.NullInt32
+	InsertDt     sql.NullTime
+	InsertUid    sql.NullString
+	LastUpd      sql.NullTime
+	Uid1         sql.NullString
+	Color        sql.NullString
+	Customer     sql.NullString
+	RefJoNo      sql.NullString
+	JoNo         sql.NullString
+	SwRev        sql.NullString
+	PackingDate  sql.NullTime
+	UidNo        sql.NullString
+	CustPoNo     sql.NullString
+	EcoNo        sql.NullString
+	CustCartonNo sql.NullString
+	ActQty       sql.NullInt32
+	StationID    sql.NullString
+	Weight       sql.NullString
+	Ip           sql.NullString
+	State        sql.NullInt32
+	MoNo         sql.NullString
+	Via          sql.NullString
+}
+
+type Dqc41cs1 struct {
+	CartonNo  string
+	SerNo     string
+	InsertUid sql.NullString
+	Uid1      sql.NullString
+}
+
 type ImportPalletsSerial struct {
 	Pallet       sql.NullString
 	Masterbox    sql.NullString

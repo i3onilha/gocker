@@ -222,3 +222,60 @@ func (q *Queries) GetByUUID(ctx context.Context, partNumber sql.NullString) ([]I
 	}
 	return items, nil
 }
+
+const getPalletAlreadyDone = `-- name: GetPalletAlreadyDone :many
+SELECT
+  c1.carton_no,
+  c1.ser_no,
+  t.pallet, t.masterbox, t.serial_number, t.part_number, t.uuid
+FROM
+  import_pallets_serials t
+  LEFT JOIN dqc41cs                 c ON t.masterbox = c.cust_carton_no
+  LEFT JOIN dqc41cs1                c1 ON t.serial_number = c1.ser_no
+  AND c.carton_no = c1.carton_no
+WHERE
+	t.pallet = :1
+  AND ( c1.carton_no IS NOT NULL
+  OR c1.ser_no IS NOT NULL )
+`
+
+type GetPalletAlreadyDoneRow struct {
+	CartonNo     sql.NullString
+	SerNo        sql.NullString
+	Pallet       sql.NullString
+	Masterbox    sql.NullString
+	SerialNumber sql.NullString
+	PartNumber   sql.NullString
+	Uuid         sql.NullString
+}
+
+func (q *Queries) GetPalletAlreadyDone(ctx context.Context, pallet sql.NullString) ([]GetPalletAlreadyDoneRow, error) {
+	rows, err := q.db.QueryContext(ctx, getPalletAlreadyDone, pallet)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetPalletAlreadyDoneRow
+	for rows.Next() {
+		var i GetPalletAlreadyDoneRow
+		if err := rows.Scan(
+			&i.CartonNo,
+			&i.SerNo,
+			&i.Pallet,
+			&i.Masterbox,
+			&i.SerialNumber,
+			&i.PartNumber,
+			&i.Uuid,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}

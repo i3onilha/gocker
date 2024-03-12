@@ -45,6 +45,7 @@ func main() {
 		r.Route("/", func(r chi.Router) {
 			r.Post("/get-data-csv-file/{comma}", control.GetDataCSVFile)
 			r.Post("/save-list/{uuid}/{comma}", control.SaveList)
+			r.Get("/check/{pallet}", control.CheckPallet)
 			r.Get("/get-list/{key}/{value}", control.GetByPallet)
 		})
 	})
