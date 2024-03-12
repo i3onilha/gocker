@@ -17,6 +17,13 @@ type Res struct {
 
 func GetDataCSVFile(w http.ResponseWriter, r *http.Request) {
 	comma := []rune(chi.URLParam(r, "comma"))
+	if len(comma) != 1 {
+		response := Res{
+			Status:  "NOK",
+			Message: "Comma format not allowed",
+		}
+		json.NewEncoder(w).Encode(response)
+	}
 	csvBuf, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		response := Res{
