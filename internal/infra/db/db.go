@@ -1,30 +1,27 @@
-package mysql
+package db
 
 import (
 	"database/sql"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/i3onilha/MESEnterpriseSmart/internal/infra/mysql/importserials"
+	_ "github.com/godror/godror"
+	"github.com/i3onilha/MESEnterpriseSmart/internal/infra/db/importserials"
 )
 
-const (
-	driver = "mysql"
-)
-
-type MySQL struct {
+type DB struct {
 	ImportSerials  *importserials.Queries
 	db             *sql.DB
 	driver         string
 	dataSourceName string
 }
 
-func New(dataSourceName string) (*MySQL, error) {
+func New(driver, dataSourceName string) (*DB, error) {
 	conn, err := sql.Open(driver, dataSourceName)
 	if err != nil {
 		return nil, err
 	}
 	importserials := importserials.New(conn)
-	return &MySQL{
+	return &DB{
 		ImportSerials:  importserials,
 		db:             conn,
 		driver:         driver,
@@ -32,14 +29,14 @@ func New(dataSourceName string) (*MySQL, error) {
 	}, nil
 }
 
-func (m *MySQL) Close() error {
+func (m *DB) Close() error {
 	return m.db.Close()
 }
 
-func (m *MySQL) GetDriver() string {
+func (m *DB) GetDriver() string {
 	return m.driver
 }
 
-func (m *MySQL) GetDataSourceName() string {
+func (m *DB) GetDataSourceName() string {
 	return m.dataSourceName
 }
