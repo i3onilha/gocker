@@ -1,9 +1,3 @@
-DROP DATABASE IF EXISTS `dbdev`;
-
-CREATE DATABASE `dbdev`;
-
-USE `dbdev`;
-
 DROP TABLE IF EXISTS `import_pallets_serials`;
 
 CREATE TABLE `import_pallets_serials` (
