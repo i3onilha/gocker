@@ -4,8 +4,9 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"github.com/i3onilha/MESEnterpriseSmart/internal/infra/mysql"
-	"github.com/i3onilha/MESEnterpriseSmart/internal/infra/mysql/importserials"
+
+	db "github.com/i3onilha/MESEnterpriseSmart/internal/infra/db"
+	"github.com/i3onilha/MESEnterpriseSmart/internal/infra/db/importserials"
 	"github.com/i3onilha/MESEnterpriseSmart/internal/infra/unmarshalcsv"
 )
 
@@ -46,12 +47,13 @@ func (i *ImportPallet) ImportSerial(uuid string) error {
 	if err != nil {
 		return err
 	}
+	driver := i.ctx.Value("driver").(string)
 	dataSourceName := i.ctx.Value("datasourcename").(string)
-	db, err := mysql.New(dataSourceName)
+	conn, err := db.New(driver, dataSourceName)
 	if err != nil {
 		return err
 	}
-	defer db.Close()
+	defer conn.Close()
 	for _, item := range data {
 		arg := importserials.CreateParams{
 			Pallet:       sql.NullString{String: item.Pallet, Valid: true},
@@ -60,7 +62,7 @@ func (i *ImportPallet) ImportSerial(uuid string) error {
 			PartNumber:   sql.NullString{String: item.PartNumber, Valid: true},
 			Uuid:         sql.NullString{String: uuid, Valid: true},
 		}
-		_, err = db.ImportSerials.Create(i.ctx, arg)
+		_, err = conn.ImportSerials.Create(i.ctx, arg)
 		if err != nil {
 			return err
 		}
@@ -69,13 +71,14 @@ func (i *ImportPallet) ImportSerial(uuid string) error {
 }
 
 func (i *ImportPallet) GetByPallet(pallet string) ([]importserials.ImportPalletsSerial, error) {
+	driver := i.ctx.Value("driver").(string)
 	dataSourceName := i.ctx.Value("datasourcename").(string)
-	db, err := mysql.New(dataSourceName)
+	conn, err := db.New(driver, dataSourceName)
 	if err != nil {
 		return nil, err
 	}
-	defer db.Close()
-	return db.ImportSerials.GetByPallet(i.ctx, sql.NullString{
+	defer conn.Close()
+	return conn.ImportSerials.GetByPallet(i.ctx, sql.NullString{
 		String: pallet,
 		Valid:  true,
 	})

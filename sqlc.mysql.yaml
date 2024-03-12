@@ -6,4 +6,4 @@ sql:
     gen:
       go:
         package: "importserials"
-        out: "internal/infra/mysql/importserials"
+        out: "internal/infra/db/importserials"
