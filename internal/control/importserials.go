@@ -13,7 +13,9 @@ import (
 
 type Res struct {
 	Status  string `json:"status"`
+	Type    string `json:"type"`
 	Message string `json:"message,omitempty"`
+	Detail  string `json:"detail,omitempty"`
 }
 
 func GetDataCSVFile(w http.ResponseWriter, r *http.Request) {
@@ -21,6 +23,7 @@ func GetDataCSVFile(w http.ResponseWriter, r *http.Request) {
 	if len(comma) != 1 {
 		res := Res{
 			Status:  "NOK",
+			Type:    "danger",
 			Message: "Comma format not allowed",
 		}
 		json.NewEncoder(w).Encode(res)
@@ -29,6 +32,7 @@ func GetDataCSVFile(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		res := Res{
 			Status:  "NOK",
+			Type:    "danger",
 			Message: err.Error(),
 		}
 		json.NewEncoder(w).Encode(res)
@@ -38,6 +42,7 @@ func GetDataCSVFile(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		res := Res{
 			Status:  "NOK",
+			Type:    "danger",
 			Message: err.Error(),
 		}
 		json.NewEncoder(w).Encode(res)
@@ -54,6 +59,7 @@ func SaveList(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		res := Res{
 			Status:  "NOK",
+			Type:    "danger",
 			Message: err.Error(),
 		}
 		json.NewEncoder(w).Encode(res)
@@ -68,6 +74,7 @@ func SaveList(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		res := Res{
 			Status:  "NOK",
+			Type:    "danger",
 			Message: err.Error(),
 		}
 		json.NewEncoder(w).Encode(res)
@@ -77,6 +84,7 @@ func SaveList(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		res := Res{
 			Status:  "NOK",
+			Type:    "danger",
 			Message: err.Error(),
 		}
 		json.NewEncoder(w).Encode(res)
@@ -84,6 +92,7 @@ func SaveList(w http.ResponseWriter, r *http.Request) {
 	}
 	res := Res{
 		Status:  "OK",
+		Type:    "info",
 		Message: "SERIALS IMPORTED WITH SUCCESS.",
 	}
 	json.NewEncoder(w).Encode(res)
@@ -100,6 +109,7 @@ func GetByPallet(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		res := Res{
 			Status:  "NOK",
+			Type:    "danger",
 			Message: err.Error(),
 		}
 		json.NewEncoder(w).Encode(res)
@@ -109,6 +119,7 @@ func GetByPallet(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		res := Res{
 			Status:  "NOK",
+			Type:    "danger",
 			Message: err.Error(),
 		}
 		json.NewEncoder(w).Encode(res)
@@ -127,6 +138,7 @@ func CheckPallet(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		res := Res{
 			Status:  "NOK",
+			Type:    "danger",
 			Message: err.Error(),
 		}
 		json.NewEncoder(w).Encode(res)
@@ -136,6 +148,7 @@ func CheckPallet(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		res := Res{
 			Status:  "NOK",
+			Type:    "danger",
 			Message: err.Error(),
 		}
 		json.NewEncoder(w).Encode(res)
@@ -144,6 +157,7 @@ func CheckPallet(w http.ResponseWriter, r *http.Request) {
 	if res == nil {
 		res := Res{
 			Status:  "OK",
+			Type:    "info",
 			Message: fmt.Sprintf("O pallet %s ainda nao foi salvo", pallet),
 		}
 		json.NewEncoder(w).Encode(res)
