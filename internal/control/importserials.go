@@ -19,28 +19,28 @@ type Res struct {
 func GetDataCSVFile(w http.ResponseWriter, r *http.Request) {
 	comma := []rune(chi.URLParam(r, "comma"))
 	if len(comma) != 1 {
-		response := Res{
+		res := Res{
 			Status:  "NOK",
 			Message: "Comma format not allowed",
 		}
-		json.NewEncoder(w).Encode(response)
+		json.NewEncoder(w).Encode(res)
 	}
 	csvBuf, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		response := Res{
+		res := Res{
 			Status:  "NOK",
 			Message: err.Error(),
 		}
-		json.NewEncoder(w).Encode(response)
+		json.NewEncoder(w).Encode(res)
 		return
 	}
 	data, err := unmarshalcsv.UnmarshalCSV(csvBuf, comma[0])
 	if err != nil {
-		response := Res{
+		res := Res{
 			Status:  "NOK",
 			Message: err.Error(),
 		}
-		json.NewEncoder(w).Encode(response)
+		json.NewEncoder(w).Encode(res)
 		return
 	}
 	json.NewEncoder(w).Encode(data)
@@ -52,11 +52,11 @@ func SaveList(w http.ResponseWriter, r *http.Request) {
 	csvBuf, err := ioutil.ReadAll(r.Body)
 	ctx := r.Context()
 	if err != nil {
-		response := Res{
+		res := Res{
 			Status:  "NOK",
 			Message: err.Error(),
 		}
-		json.NewEncoder(w).Encode(response)
+		json.NewEncoder(w).Encode(res)
 		return
 	}
 	importParams := importpallet.ImportParams{
@@ -66,27 +66,27 @@ func SaveList(w http.ResponseWriter, r *http.Request) {
 	}
 	importer, err := importpallet.NewImportPallet(ctx, importParams)
 	if err != nil {
-		response := Res{
+		res := Res{
 			Status:  "NOK",
 			Message: err.Error(),
 		}
-		json.NewEncoder(w).Encode(response)
+		json.NewEncoder(w).Encode(res)
 		return
 	}
 	err = importer.ImportSerial(uuid)
 	if err != nil {
-		response := Res{
+		res := Res{
 			Status:  "NOK",
 			Message: err.Error(),
 		}
-		json.NewEncoder(w).Encode(response)
+		json.NewEncoder(w).Encode(res)
 		return
 	}
-	response := Res{
+	res := Res{
 		Status:  "OK",
 		Message: "SERIALS IMPORTED WITH SUCCESS.",
 	}
-	json.NewEncoder(w).Encode(response)
+	json.NewEncoder(w).Encode(res)
 }
 
 func GetByPallet(w http.ResponseWriter, r *http.Request) {
@@ -98,23 +98,23 @@ func GetByPallet(w http.ResponseWriter, r *http.Request) {
 	}
 	importer, err := importpallet.NewImportPallet(ctx, importParams)
 	if err != nil {
-		response := Res{
+		res := Res{
 			Status:  "NOK",
 			Message: err.Error(),
 		}
-		json.NewEncoder(w).Encode(response)
+		json.NewEncoder(w).Encode(res)
 		return
 	}
-	response, err := importer.GetList(key, value)
+	res, err := importer.GetList(key, value)
 	if err != nil {
-		response := Res{
+		res := Res{
 			Status:  "NOK",
 			Message: err.Error(),
 		}
-		json.NewEncoder(w).Encode(response)
+		json.NewEncoder(w).Encode(res)
 		return
 	}
-	json.NewEncoder(w).Encode(response)
+	json.NewEncoder(w).Encode(res)
 }
 
 func CheckPallet(w http.ResponseWriter, r *http.Request) {
@@ -125,29 +125,29 @@ func CheckPallet(w http.ResponseWriter, r *http.Request) {
 	}
 	importer, err := importpallet.NewImportPallet(ctx, importParams)
 	if err != nil {
-		response := Res{
+		res := Res{
 			Status:  "NOK",
 			Message: err.Error(),
 		}
-		json.NewEncoder(w).Encode(response)
+		json.NewEncoder(w).Encode(res)
 		return
 	}
-	response, err := importer.CheckPallet(pallet)
+	res, err := importer.CheckPallet(pallet)
 	if err != nil {
-		response := Res{
+		res := Res{
 			Status:  "NOK",
 			Message: err.Error(),
 		}
-		json.NewEncoder(w).Encode(response)
+		json.NewEncoder(w).Encode(res)
 		return
 	}
-	if response == nil {
-		response := Res{
+	if res == nil {
+		res := Res{
 			Status:  "OK",
 			Message: fmt.Sprintf("O pallet %s ainda nao foi salvo", pallet),
 		}
-		json.NewEncoder(w).Encode(response)
+		json.NewEncoder(w).Encode(res)
 		return
 	}
-	json.NewEncoder(w).Encode(response)
+	json.NewEncoder(w).Encode(res)
 }
