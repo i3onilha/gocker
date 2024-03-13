@@ -15,7 +15,6 @@ type Res struct {
 	Status  string `json:"status"`
 	Type    string `json:"type"`
 	Message string `json:"message,omitempty"`
-	Detail  string `json:"detail,omitempty"`
 }
 
 func GetDataCSVFile(w http.ResponseWriter, r *http.Request) {
@@ -158,10 +157,14 @@ func CheckPallet(w http.ResponseWriter, r *http.Request) {
 		res := Res{
 			Status:  "OK",
 			Type:    "info",
-			Message: fmt.Sprintf("O pallet %s ainda nao foi salvo", pallet),
+			Message: fmt.Sprintf("O pallet %s validado com sucesso.", pallet),
 		}
 		json.NewEncoder(w).Encode(res)
 		return
 	}
-	json.NewEncoder(w).Encode(res)
+	json.NewEncoder(w).Encode(Res{
+		Status:  "NOK",
+		Type:    "danger",
+		Message: fmt.Sprintf("O pallet %s possue dados que ja foram salvos anteriormente.", pallet),
+	})
 }
