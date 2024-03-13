@@ -47,6 +47,17 @@ func (i *ImportPallet) ImportSerial(uuid string) error {
 	if err != nil {
 		return err
 	}
+	if len(data) == 0 {
+		return fmt.Errorf("Not found any data in the file send.")
+	}
+	pallet := data[0].Pallet
+	res, err := i.CheckPallet(pallet)
+	if err != nil {
+		return err
+	}
+	if res != nil {
+		return fmt.Errorf("O pallet %s possue dados que ja foram salvos anteriormente.", pallet)
+	}
 	driver := i.ctx.Value("driver").(string)
 	dataSourceName := i.ctx.Value("datasourcename").(string)
 	conn, err := db.New(driver, dataSourceName)
