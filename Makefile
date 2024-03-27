@@ -1,3 +1,5 @@
+.PHONY: build
+
 dev: up bash
 
 up:
@@ -5,6 +7,9 @@ up:
 
 ps:
 	@docker compose ps
+
+build:
+	@GOOS=windows GOARCH=amd64 wails build
 
 logs:
 	@docker compose logs app-dev --follow
