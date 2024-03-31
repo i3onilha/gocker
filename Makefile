@@ -1,28 +1,25 @@
-dev: upddev bashdev
+dev: up bash
 
 up:
-	@docker compose up
-
-upddev:
 	@docker compose up -d app-dev
+
+bash:
+	@docker compose exec app-dev bash
 
 ps:
 	@docker compose ps
 
 logs:
-	@docker compose logs --follow
+	@docker compose logs app-dev --follow
 
-build-dev:
+build:
 	@docker compose down && docker compose build --no-cache app-dev && docker compose up -d app-dev && docker compose exec app-dev bash
 
 build-prod:
-	@docker compose down && docker compose build --no-cache app && docker compose up -d app
+	@docker compose down && docker compose build --no-cache app-prod && docker compose up -d app-prod
 
 down:
 	@docker compose down
-
-bashdev:
-	@docker compose exec app-dev bash
 
 t:
 	@clear;go test ./...
@@ -32,3 +29,14 @@ tv:
 
 cover:
 	@go test -coverprofile=test/coverage.out ./... && go tool cover -html=test/coverage.out -o test/coverage.html && go run test/cover.go
+
+bashoracle:
+	@docker compose exec oracle-dev bash
+
+bashmysql:
+	@mysql -h mysql-dev -u default -p
+
+server:
+	@go build -o test/server main.go && cp .env-example .env && ./test/server
+server-test:
+	@go build -o test/server main.go && cp .env-test .env && ./test/server

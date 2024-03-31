@@ -170,6 +170,6 @@ WORKDIR /app
 
 COPY --from=builder /home/go/sourcecode/service /app/service
 
-COPY --from=builder /home/go/sourcecode/.env /app/.env
+COPY --from=builder /home/go/sourcecode/.env-prod /app/.env
 
 CMD ["/app/service"]
