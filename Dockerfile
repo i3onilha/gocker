@@ -84,12 +84,9 @@ RUN unzip /opt/oracle/instantclient-basic-linux.${ORACLE_INSTANT_CLIENT_ARCH}-${
     && if [ ${OCI_VERSION} -lt 18 ] ; then ln -s ${ORACLE_INSTANT_CLIENT_PATH}${ORACLE_INSTANT_CLIENT_VERSION}/libocci.so.${ORACLE_INSTANT_CLIENT_MAJOR}.${ORACLE_INSTANT_CLIENT_MINOR} ${ORACLE_INSTANT_CLIENT_PATH}${ORACLE_INSTANT_CLIENT_VERSION}/libocci.so ; fi \
     && rm -rf /opt/oracle/*.zip
 
-RUN git clone --depth 1 --branch v9.0.1224 https://github.com/vim/vim.git /tmp/vim-installation && \
-    cd /tmp/vim-installation/src/ && \
-    ./configure && \
-    make && \
-    make install && \
-    rm -rf /tmp/vim-installation
+RUN curl -LO https://github.com/neovim/neovim/releases/download/v0.9.5/nvim-linux64.tar.gz && \
+    tar -C /opt -xzf nvim-linux64.tar.gz && \
+    rm nvim-linux64.tar.gz
 
 RUN useradd -ms /bin/bash go && echo "go:secret" | chpasswd && adduser go sudo
 
@@ -109,27 +106,18 @@ RUN mkdir -p NVM_DIR \
     && npm config set fetch-retry-mintimeout ${NPM_FETCH_RETRY_MINTIMEOUT} \
     && npm config set fetch-retry-maxtimeout ${NPM_FETCH_RETRY_MAXTIMEOUT} \
     && npm install -g yarn \
-    && npm install -g npm
+    && npm install -g npm \
+    && git clone --depth=1 https://github.com/i3onilha/nvim $HOME/.config/nvim
 
 RUN git clone --depth 1 https://github.com/junegunn/fzf.git $HOME/.fzf && $HOME/.fzf/install
 
 RUN git clone --bare -b godevenv https://github.com/i3onilha/.dotfiles.git $HOME/.dotfiles && \
-    git clone -b heavenly2 https://github.com/i3onilha/.vim.git $HOME/.vim && \
     git clone https://github.com/i3onilha/.tmux.git $HOME/.tmux && \
-    ln -sf .vim/.vimrc $HOME && \
     ln -sf .tmux/.tmux.conf $HOME && \
     cp $HOME/.tmux/.tmux.conf.local $HOME && \
-    cd ~/.vim && \
-    git submodule init && \
-    git submodule update && \
-    curl -o- https://raw.githubusercontent.com/crusoexia/vim-monokai/master/colors/monokai.vim > ~/.vim/colors/monokai.vim && \
-    cd ~ && \
     git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME config --local status.showUntrackedFiles no && \
     git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME reset HEAD . && \
     git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME checkout -- .
-
-RUN export PATH="$HOME/.nvm/versions/node/$NODE_VERSION/bin:$PATH" && \
-    yarn install --cwd ~/.vim/bundle/coc.nvim
 
 WORKDIR $SOURCE_CODE
 
