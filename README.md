@@ -38,14 +38,9 @@ Gocker is a lightweight, minimal Docker clone written in Go. It allows you to cr
    cd gocker
    ```
 
-2. Build the project:
+2. Start new project:
    ```bash
-   go build -o gocker
-   ```
-
-3. Run the binary:
-   ```bash
-   sudo ./gocker
+   make dev 
    ```
 
 ## Usage
