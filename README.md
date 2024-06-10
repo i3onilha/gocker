@@ -2,10 +2,8 @@
 # Gocker
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Go Report Card](https://goreportcard.com/badge/github.com/i3onilha/gocker)](https://goreportcard.com/report/github.com/i3onilha/gocker)
-[![Build Status](https://travis-ci.com/i3onilha/gocker.svg?branch=main)](https://travis-ci.com/i3onilha/gocker)
 
-Gocker is a lightweight, minimal Docker clone written in Go. It allows you to create and manage containers using the same fundamental concepts as Docker, but with a simpler and more educational approach. This project is perfect for those who want to understand the inner workings of containerization technology.
+Gocker is a start up, minimal containerized Docker environment. It allows you to create and manage a new container using the same fundamental concepts as Docker. This project is perfect for those who want to get start a new Golang project with all tools necessary. 
 
 ## Features
 
@@ -42,37 +40,6 @@ Gocker is a lightweight, minimal Docker clone written in Go. It allows you to cr
    ```bash
    make dev 
    ```
-
-## Usage
-
-### Creating a Container
-
-To create a new container, use the following command:
-```bash
-sudo ./gocker run -it --name my-container /bin/bash
-```
-
-### Starting a Container
-
-To start an existing container, use:
-```bash
-sudo ./gocker start my-container
-```
-
-### Stopping a Container
-
-To stop a running container, use:
-```bash
-sudo ./gocker stop my-container
-```
-
-### Deleting a Container
-
-To delete a container, use:
-```bash
-sudo ./gocker delete my-container
-```
-
 ## Contributing
 
 Contributions are welcome! Please follow these steps:
