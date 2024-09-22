@@ -1,4 +1,4 @@
-FROM golang:1.20.5-buster AS development
+FROM golang:1.23.1-bullseye AS development
 
 LABEL maintainer="Jean Bonilha <jeanbonilha.webdev@gmail.com>"
 
@@ -27,17 +27,11 @@ ENV NPM_FETCH_RETRY_MAXTIMEOUT 60000
 
 ENV SOURCE_CODE ${HOME_USER}/sourcecode
 
-RUN apt-key adv --keyserver pgp.mit.edu --recv-keys 3A79BD29
-
 RUN go install golang.org/x/tools/gopls@v0.11.0
 RUN go install golang.org/x/tools/cmd/godoc@v0.5.0
 RUN go install github.com/go-delve/delve/cmd/dlv@v1.20.1
 RUN go install github.com/kyleconroy/sqlc/cmd/sqlc@v1.18.0
 RUN go install github.com/wailsapp/wails/v2/cmd/wails@v2.5.1
-
-RUN sed -i 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/' /etc/apt/sources.list && \
-    sed -i 's/security.debian.org/mirrors.tuna.tsinghua.edu.cn/' /etc/apt/sources.list && \
-    sed -i 's/security-cdn.debian.org/mirrors.tuna.tsinghua.edu.cn/' /etc/apt/sources.list
 
 RUN set -xe; \
     apt-get update && \
@@ -70,7 +64,17 @@ RUN set -xe; \
     libssl-dev \
     libgtk-3-dev \
     libwebkit2gtk-4.0-dev \
-    nsis
+    nsis \
+    ripgrep \
+    fontconfig \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN mkdir -p /usr/share/fonts/truetype/nerd-fonts \
+    && wget -O /tmp/nerd-fonts.zip https://github.com/ryanoasis/nerd-fonts/releases/latest/download/FontPatcher.zip \
+    && unzip /tmp/nerd-fonts.zip -d /usr/share/fonts/truetype/nerd-fonts \
+    && rm /tmp/nerd-fonts.zip \
+    && fc-cache -fv
 
 RUN mkdir /opt/oracle \
     && cd /opt/oracle \
@@ -84,7 +88,7 @@ RUN unzip /opt/oracle/instantclient-basic-linux.${ORACLE_INSTANT_CLIENT_ARCH}-${
     && if [ ${OCI_VERSION} -lt 18 ] ; then ln -s ${ORACLE_INSTANT_CLIENT_PATH}${ORACLE_INSTANT_CLIENT_VERSION}/libocci.so.${ORACLE_INSTANT_CLIENT_MAJOR}.${ORACLE_INSTANT_CLIENT_MINOR} ${ORACLE_INSTANT_CLIENT_PATH}${ORACLE_INSTANT_CLIENT_VERSION}/libocci.so ; fi \
     && rm -rf /opt/oracle/*.zip
 
-RUN curl -LO https://github.com/neovim/neovim/releases/download/v0.9.5/nvim-linux64.tar.gz && \
+RUN curl -LO https://github.com/neovim/neovim/releases/download/v0.10.0/nvim-linux64.tar.gz && \
     tar -C /opt -xzf nvim-linux64.tar.gz && \
     rm nvim-linux64.tar.gz
 
@@ -108,6 +112,8 @@ RUN mkdir -p NVM_DIR \
     && npm install -g yarn \
     && npm install -g npm \
     && git clone --depth=1 https://github.com/i3onilha/nvim $HOME/.config/nvim
+
+RUN /opt/nvim-linux64/bin/nvim -c 'q'
 
 RUN git clone --depth 1 https://github.com/junegunn/fzf.git $HOME/.fzf && $HOME/.fzf/install
 
