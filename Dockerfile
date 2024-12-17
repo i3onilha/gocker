@@ -1,4 +1,4 @@
-FROM golang:1.23.1-bullseye AS development
+FROM golang:1.23.4-bullseye AS development
 
 LABEL maintainer="Jean Bonilha <jeanbonilha.webdev@gmail.com>"
 
@@ -18,7 +18,7 @@ ENV OCI_INCLUDE_DIR="${ORACLE_INSTANT_CLIENT_PATH}${ORACLE_INSTANT_CLIENT_VERSIO
 ENV OCI_LIB_DIR="${ORACLE_INSTANT_CLIENT_PATH}${ORACLE_INSTANT_CLIENT_VERSION}"
 ENV OCI_VERSION=${ORACLE_INSTANT_CLIENT_MAJOR}
 
-ENV NODE_VERSION v18.17.0
+ENV NODE_VERSION v22.12.0
 ENV NVM_DIR ${HOME_USER}/.nvm
 ENV NPM_FETCH_RETRIES 2
 ENV NPM_FETCH_RETRY_FACTOR 10
@@ -31,7 +31,8 @@ RUN go install golang.org/x/tools/gopls@v0.11.0
 RUN go install golang.org/x/tools/cmd/godoc@v0.5.0
 RUN go install github.com/go-delve/delve/cmd/dlv@v1.20.1
 RUN go install github.com/kyleconroy/sqlc/cmd/sqlc@v1.18.0
-RUN go install github.com/wailsapp/wails/v2/cmd/wails@v2.5.1
+RUN go install github.com/wailsapp/wails/v2/cmd/wails@v2.8.1
+RUN go install github.com/air-verse/air@v1.52.3
 
 RUN set -xe; \
     apt-get update && \
@@ -88,7 +89,7 @@ RUN unzip /opt/oracle/instantclient-basic-linux.${ORACLE_INSTANT_CLIENT_ARCH}-${
     && if [ ${OCI_VERSION} -lt 18 ] ; then ln -s ${ORACLE_INSTANT_CLIENT_PATH}${ORACLE_INSTANT_CLIENT_VERSION}/libocci.so.${ORACLE_INSTANT_CLIENT_MAJOR}.${ORACLE_INSTANT_CLIENT_MINOR} ${ORACLE_INSTANT_CLIENT_PATH}${ORACLE_INSTANT_CLIENT_VERSION}/libocci.so ; fi \
     && rm -rf /opt/oracle/*.zip
 
-RUN curl -LO https://github.com/neovim/neovim/releases/download/v0.10.0/nvim-linux64.tar.gz && \
+RUN curl -LO https://github.com/neovim/neovim/releases/download/v0.10.2/nvim-linux64.tar.gz && \
     tar -C /opt -xzf nvim-linux64.tar.gz && \
     rm nvim-linux64.tar.gz
 
@@ -99,8 +100,8 @@ RUN rm -rf /etc/localtime && \
 
 USER go
 
-RUN mkdir -p NVM_DIR \
-    && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash \
+RUN mkdir -p $NVM_DIR \
+    && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash \
     && . $NVM_DIR/nvm.sh \
     && nvm install ${NODE_VERSION} \
     && nvm use ${NODE_VERSION} \
@@ -111,7 +112,8 @@ RUN mkdir -p NVM_DIR \
     && npm config set fetch-retry-maxtimeout ${NPM_FETCH_RETRY_MAXTIMEOUT} \
     && npm install -g yarn \
     && npm install -g npm \
-    && git clone --depth=1 https://github.com/i3onilha/nvim $HOME/.config/nvim
+    && git clone --depth=1 https://github.com/i3onilha/nvim $HOME/.config/nvim \
+    && rm -rf $HOME/.config/nvim/.git
 
 RUN /opt/nvim-linux64/bin/nvim -c 'q'
 
@@ -125,11 +127,13 @@ RUN git clone --bare -b godevenv https://github.com/i3onilha/.dotfiles.git $HOME
     git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME reset HEAD . && \
     git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME checkout -- .
 
+RUN export PATH="$HOME/.nvm/versions/node/$NODE_VERSION/bin:$PATH"
+
 WORKDIR $SOURCE_CODE
 
 COPY . .
 
-FROM golang:1.20.5-bullseye AS builder
+FROM golang:1.23.4-bullseye AS builder
 
 WORKDIR /home/go/sourcecode
 
@@ -139,7 +143,7 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o service ./main.go
+RUN go build -o service ./cmd/server/server.go
 
 FROM oraclelinux:7-slim AS production
 
