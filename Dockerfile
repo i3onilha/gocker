@@ -33,7 +33,6 @@ RUN go install github.com/go-delve/delve/cmd/dlv@v1.20.1
 RUN go install github.com/kyleconroy/sqlc/cmd/sqlc@v1.18.0
 RUN go install github.com/wailsapp/wails/v2/cmd/wails@v2.8.1
 RUN go install github.com/air-verse/air@v1.52.3
-RUN go install golang.org/x/tools/cmd/goimports@latest
 
 RUN set -xe; \
     apt-get update && \
@@ -114,9 +113,8 @@ RUN mkdir -p $NVM_DIR \
     && npm install -g yarn \
     && npm install -g npm \
     && git clone --depth=1 https://github.com/i3onilha/nvim $HOME/.config/nvim \
-    && rm -rf $HOME/.config/nvim/.git
-
-RUN /opt/nvim-linux64/bin/nvim -c 'q'
+    && rm -rf $HOME/.config/nvim/.git \
+    && /opt/nvim-linux64/bin/nvim -c 'q'
 
 RUN git clone --depth 1 https://github.com/junegunn/fzf.git $HOME/.fzf && $HOME/.fzf/install
 

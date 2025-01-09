@@ -20,6 +20,7 @@ services:
     volumes:
       - .:/home/go/sourcecode
       - ~/.ssh:/home/go/.ssh:ro
+      - ../:/out
     depends_on:
       - mysql-dev
       - oracle-dev
