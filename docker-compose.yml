@@ -5,10 +5,8 @@ services:
       context: .
         # Only will build production stage from our dockerfile
       target: production
-    depends_on:
-      - mysql-dev
     ports:
-      - 1808:1808
+      - "${APP_PORT}:3000"
     networks:
       - backend
   app-dev:
@@ -22,33 +20,32 @@ services:
       - ~/.ssh:/home/go/.ssh:ro
       - ../:/out
     depends_on:
-      - mysql-dev
-      - oracle-dev
+      - mysql-service
+      - oracle-service
+      - mongodb-service
     networks:
       - backend
     ports:
-      - 6464:6464
-      - 6767:6767
-      - 7192:7192
-      - 5173:5173
-      - 34115:34115
+      - "${GODOC_PORT}:6464"
+      - "${APP_PORT}:3000"
+      - "${COVER_TEST_PORT}:6767"
     command: godoc -http=:6464
-  oracle-dev:
+  oracle-service:
     image: oracleinanutshell/oracle-xe-11g:1.0.0
-    container_name: oracle-dev
+    container_name: oracle-service
     restart: always
     ports:
-      - 1521:1521
+      - "${ORACLE_PORT}:1521"
     networks:
       - backend
-  mysql-dev:
+  mysql-service:
     image: mysql:5.7
-    container_name: mysql-dev
+    container_name: mysql-service
     restart: always
     volumes:
-      - /mysql-labels:/var/lib/mysql
+      - /mysql-db:/var/lib/mysql
     ports:
-      - 3306:3306
+      - "${MYSQL_PORT}:3306"
     networks:
       - backend
     environment:
@@ -57,6 +54,18 @@ services:
       MYSQL_USER: default
       MYSQL_PASSWORD: secret
     platform: linux/amd64
+  mongodb-service:
+    image: mongo:6.0
+    container_name: mongodb-service
+    ports:
+      - "${MONGODB_PORT}:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    volumes:
+      - /mongodb-service:/data/db
+    networks:
+      - backend
 networks:
   backend:
     driver: bridge

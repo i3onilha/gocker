@@ -38,5 +38,6 @@ bashmysql:
 
 server:
 	@go build -o test/server main.go && cp .env-example .env && ./test/server
+
 server-test:
 	@go build -o test/server main.go && cp .env-test .env && ./test/server

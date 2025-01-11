@@ -1,4 +1,4 @@
-FROM golang:1.23.4-bullseye AS development
+FROM golang:1.24.0-bullseye AS development
 
 LABEL maintainer="Jean Bonilha <jeanbonilha.webdev@gmail.com>"
 
@@ -27,9 +27,7 @@ ENV NPM_FETCH_RETRY_MAXTIMEOUT 60000
 
 ENV SOURCE_CODE ${HOME_USER}/sourcecode
 
-RUN go install golang.org/x/tools/gopls@v0.11.0
 RUN go install golang.org/x/tools/cmd/godoc@v0.5.0
-RUN go install github.com/go-delve/delve/cmd/dlv@v1.20.1
 RUN go install github.com/kyleconroy/sqlc/cmd/sqlc@v1.18.0
 RUN go install github.com/wailsapp/wails/v2/cmd/wails@v2.8.1
 RUN go install github.com/air-verse/air@v1.52.3
@@ -113,8 +111,7 @@ RUN mkdir -p $NVM_DIR \
     && npm install -g yarn \
     && npm install -g npm \
     && git clone --depth=1 https://github.com/i3onilha/nvim $HOME/.config/nvim \
-    && rm -rf $HOME/.config/nvim/.git \
-    && /opt/nvim-linux64/bin/nvim -c 'q'
+    && /opt/nvim-linux64/bin/nvim -c 'MasonInstallAll' -c 'q'
 
 RUN git clone --depth 1 https://github.com/junegunn/fzf.git $HOME/.fzf && $HOME/.fzf/install
 
@@ -132,7 +129,7 @@ WORKDIR $SOURCE_CODE
 
 COPY . .
 
-FROM golang:1.23.4-bullseye AS builder
+FROM golang:1.24.0-bullseye AS builder
 
 WORKDIR /home/go/sourcecode
 
