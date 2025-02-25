@@ -7,7 +7,8 @@ import (
 )
 
 func main() {
-	fmt.Println("Starting server on port 6767")
+	port := ":6767"
+	fmt.Println(fmt.Sprintf("Starting server on port %s", port))
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		file := "./test/coverage.html"
 		http.ServeFile(w, r, file)
