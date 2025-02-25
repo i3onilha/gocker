@@ -28,6 +28,7 @@ services:
     ports:
       - "${DEV_PORT_GODOC}:6464"
       - "${DEV_PORT_APP}:3000"
+      - "${DEV_PORT_COVER_TEST}:6767"
     command: godoc -http=:6464
   oracle-dev:
     image: oracleinanutshell/oracle-xe-11g:1.0.0
