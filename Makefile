@@ -30,11 +30,11 @@ tv:
 cover:
 	@go test -coverprofile=test/coverage.out ./... && go tool cover -html=test/coverage.out -o test/coverage.html && go run test/cover.go
 
-bashoracle:
+oracle:
 	@docker compose exec oracle-dev bash
 
-bashmysql:
-	@mysql -h mysql-dev -u default -p
+mysql:
+	@mysql -h mysql-service -u default -p
 
 server:
 	@go build -o test/server main.go && cp .env-example .env && ./test/server
