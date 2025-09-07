@@ -1,4 +1,4 @@
-FROM golang:1.24.0-bullseye AS development
+FROM golang:latest AS development
 
 LABEL maintainer="Jean Bonilha <jeanbonilha.webdev@gmail.com>"
 
@@ -27,10 +27,9 @@ ENV NPM_FETCH_RETRY_MAXTIMEOUT 60000
 
 ENV SOURCE_CODE ${HOME_USER}/sourcecode
 
-RUN go install golang.org/x/tools/cmd/godoc@v0.5.0
-RUN go install github.com/kyleconroy/sqlc/cmd/sqlc@v1.18.0
-RUN go install github.com/wailsapp/wails/v2/cmd/wails@v2.8.1
-RUN go install github.com/air-verse/air@v1.52.3
+RUN go install golang.org/x/tools/cmd/godoc@latest
+RUN go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
+RUN go install github.com/air-verse/air@latest
 
 RUN set -xe; \
     apt-get update && \
@@ -59,10 +58,8 @@ RUN set -xe; \
     apt-transport-https \
     ca-certificates \
     gnupg-agent \
-    software-properties-common \
     libssl-dev \
     libgtk-3-dev \
-    libwebkit2gtk-4.0-dev \
     nsis \
     ripgrep \
     fontconfig \
@@ -87,9 +84,9 @@ RUN unzip /opt/oracle/instantclient-basic-linux.${ORACLE_INSTANT_CLIENT_ARCH}-${
     && if [ ${OCI_VERSION} -lt 18 ] ; then ln -s ${ORACLE_INSTANT_CLIENT_PATH}${ORACLE_INSTANT_CLIENT_VERSION}/libocci.so.${ORACLE_INSTANT_CLIENT_MAJOR}.${ORACLE_INSTANT_CLIENT_MINOR} ${ORACLE_INSTANT_CLIENT_PATH}${ORACLE_INSTANT_CLIENT_VERSION}/libocci.so ; fi \
     && rm -rf /opt/oracle/*.zip
 
-RUN curl -LO https://github.com/neovim/neovim/releases/download/v0.10.2/nvim-linux64.tar.gz && \
-    tar -C /opt -xzf nvim-linux64.tar.gz && \
-    rm nvim-linux64.tar.gz
+RUN curl -LO https://github.com/neovim/neovim/releases/download/v0.11.4/nvim-linux-x86_64.tar.gz && \
+    tar -C /opt -xzf nvim-linux-x86_64.tar.gz && \
+    rm nvim-linux-x86_64.tar.gz
 
 RUN useradd -ms /bin/bash go && echo "go:secret" | chpasswd && adduser go sudo
 
@@ -110,8 +107,7 @@ RUN mkdir -p $NVM_DIR \
     && npm config set fetch-retry-maxtimeout ${NPM_FETCH_RETRY_MAXTIMEOUT} \
     && npm install -g yarn \
     && npm install -g npm \
-    && git clone --depth=1 https://github.com/i3onilha/nvim $HOME/.config/nvim \
-    && /opt/nvim-linux64/bin/nvim -c 'MasonInstallAll' -c 'q'
+    && git clone --depth=1 https://github.com/i3onilha/nvim $HOME/.config/nvim
 
 RUN git clone --depth 1 https://github.com/junegunn/fzf.git $HOME/.fzf && $HOME/.fzf/install
 
@@ -129,7 +125,7 @@ WORKDIR $SOURCE_CODE
 
 COPY . .
 
-FROM golang:1.24.0-bullseye AS builder
+FROM golang:latest AS builder
 
 WORKDIR /home/go/sourcecode
 
